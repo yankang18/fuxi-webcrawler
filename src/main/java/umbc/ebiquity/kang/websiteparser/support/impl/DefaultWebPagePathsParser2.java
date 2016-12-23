@@ -19,7 +19,7 @@ import umbc.ebiquity.kang.websiteparser.impl.WebPagePath;
 import umbc.ebiquity.kang.websiteparser.object.HTMLTags;
 import umbc.ebiquity.kang.websiteparser.support.IWebPageParsedPathsHolder;
 
-public class DefaultWebPagePathsParser {
+public class DefaultWebPagePathsParser2 {
 
 	private List<IWebPagePath> webPagePathList;
 	private Map<String, Integer> tagCounterMapper;
@@ -29,7 +29,7 @@ public class DefaultWebPagePathsParser {
 	private ILeafNodeDetermintor leafNodeDetermintor;
 	private IWebPageParsedPathsHolder webPageParsedPathHolder;
 
-	public DefaultWebPagePathsParser(IWebPage webPage) { 
+	public DefaultWebPagePathsParser2(IWebPage webPage) { 
 		this.webPage = webPage;
 		this.baseURL = webPage.getBaseURL();
 		this.parsed = false;
@@ -69,12 +69,13 @@ public class DefaultWebPagePathsParser {
 
 	private void appendWebPagePathNode(WebPagePath path, Element elem) {
 
-		if (leafNodeDetermintor.isLeafNode(elem)) {
+		if (isLeafElement(elem)) {
 			
 			WebPageNode webPageNode = path.getLastNode();
-			WebPageNode newWebPageNode = this.createWebPageNode(webPageNode.getFullContent());
-			newWebPageNode.setLeafNode(true);
-			path.addNode(newWebPageNode);
+			webPageNode.toValueElementNode();
+//			WebPageNode newWebPageNode = this.createWebPageNode(webPageNode.getFullContent());
+//			newWebPageNode.setLeafNode(true);
+//			path.addNode(newWebPageNode); 
 			
 		} else {
 			
@@ -227,6 +228,11 @@ public class DefaultWebPagePathsParser {
 				}
 			}
 		}
+	}
+
+	private boolean isLeafElement(Element elem) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	// TODO: what is text node.

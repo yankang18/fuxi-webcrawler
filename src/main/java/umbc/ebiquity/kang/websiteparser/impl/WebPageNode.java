@@ -15,8 +15,10 @@ import umbc.ebiquity.kang.websiteparser.object.HTMLTags;
 
 public class WebPageNode implements IWebPageNode{
 	
-	public enum WebTagNodeType {TextNode, ElementNode}
-//	private String tag;
+	public enum WebTagNodeType {
+		TextNode, ElementNode, ValueElementNode
+	}
+
 	private WebPageNode parent;
 	private WebPageNode child;
 	private WebPagePath residePath;
@@ -26,13 +28,11 @@ public class WebPageNode implements IWebPageNode{
 	
 	private Element element;
 	private int tagCount;
-//	private TextNode textNode;
 	private String textContent;
 	private Collection<WebPageNode> children;
 	private Collection<WebPageNode> sibling;
 	private Map<String, String> attributes;
 	private boolean isLeafNode = true;
-//	private Collection<Topic> topics;
 	
 	public WebPageNode(Element node, int tagCount) {
 		this.element = node;
@@ -43,20 +43,28 @@ public class WebPageNode implements IWebPageNode{
 		} else {
 			this.isLeafNode = false;
 		}
-		this.textContent = null;
+		this.textContent = ""; 
 		this.init();
 	}
 	
 	public WebPageNode(String textNodeContent) {
-//		this.textNode = node;
 		this.nodeType = WebTagNodeType.TextNode;
 		this.isLeafNode = true;
 		this.textContent = textNodeContent;
 		this.init();
 	}
 	
+	public void toValueElementNode() {
+		this.nodeType = WebTagNodeType.ValueElementNode;
+		this.textContent = this.element.text().trim();
+		this.isLeafNode = true;
+	}
+	
+	private void setContent(String content){
+		this.textContent = content;
+	}
+	
 	private void init(){
-//		this.textContent = null;
 		this.prefixPathID = null;
 		this.parent =  null;
 		this.child = null;
@@ -68,7 +76,6 @@ public class WebPageNode implements IWebPageNode{
 
 	public String getTag() {
 		if (nodeType == WebTagNodeType.ElementNode) {
-//			return element.tagName().toLowerCase() + "(" + this.tagCount + ")";
 			return element.tagName().toLowerCase();
 		} else {
 			return "text";
@@ -79,33 +86,16 @@ public class WebPageNode implements IWebPageNode{
 		return  "(" + this.tagCount + ")";
 	}
 	
-//	public String getTextContent() {
-//		String textContent;
-//		if (nodeType == WebPageNodeType.TextNode) {
-//			textContent = this.textContent;
-//		} else if (this.getTag().equals("img")) {
-//			textContent = this.getHiddenText();
-//		} else {
-//			if (this.textContent == null) {
-//				this.extractContent();
-//			}
-//			textContent = this.textContent;
-//		}
-//		return TextProcessingUtils.escapeSpecial(textContent);
-//	}
-	
-	public String getOwnContent() {
+	public String getContent() {
 		String textContent;
-		if (nodeType == WebTagNodeType.TextNode) {
-			textContent = this.textContent;
-		} else if (this.getTag().equals("img")) {
+		if (this.getTag().equals("img")) {
 			textContent = this.getHiddenText();
 		} else {
-			textContent = this.element.ownText().trim();
+			textContent = this.textContent;
 		}
 		return TextProcessingUtils.escapeSpecial(textContent);
 	}
-	 
+
 	public String getFullContent() {
 		String textContent;
 		if (nodeType == WebTagNodeType.TextNode) {
@@ -118,6 +108,7 @@ public class WebPageNode implements IWebPageNode{
 		return TextProcessingUtils.escapeSpecial(textContent);
 	}
 	
+	// TODO: should move this to a separate class???
 	private String getHiddenText() {
 		String elemAlt = element.attr("alt");
 		String elemTitle = element.attr("title");
@@ -125,6 +116,8 @@ public class WebPageNode implements IWebPageNode{
 			return elemAlt;
 		} else if (elemTitle != null && !TextProcessingUtils.isStringEmpty(elemTitle)) {
 			return elemTitle;
+		} else {
+			// TODO parse the src of the image
 		}
 		return "";
 	}
@@ -154,27 +147,6 @@ public class WebPageNode implements IWebPageNode{
 		return this.attributes.get(key);
 	}
 
-	/***
-	 * 
-	 */
-	private void extractContent() {
-		if (nodeType == WebTagNodeType.TextNode) {
-//			textContent = textNode.text();
-		} else {
-			textContent = element.text();
-			for (Element child : element.children()) {
-				if (!HTMLTags.getIgnoredTags().contains(child.tagName())) {
-					textContent = textContent.replace(child.text(), "");
-				}
-				// if (!HTMLTags.getIgnoredTags().contains(child.tagName())
-				// && !HTMLTags.getTopicTags().contains(child.tagName())) {
-				// textContent = textContent.replace(child.text(), "");
-				// }
-			}
-			textContent = textContent.trim();
-		}
-	}
-	
 	private void populateAttributeMap(){
 		
 		if (this.attributes == null) {
@@ -191,39 +163,31 @@ public class WebPageNode implements IWebPageNode{
 		}
 	}
 	
-	private void populateChildrenCollection(){
+	private void populateChildrenCollection() {
 		if (this.children == null) {
 			this.children = new ArrayList<WebPageNode>();
-			if(nodeType == WebTagNodeType.TextNode){
+			if (nodeType == WebTagNodeType.TextNode || nodeType == WebTagNodeType.ValueElementNode) {
 				return;
 			}
 			for (Element child : this.element.children()) {
-				WebPageNode nodeWrapper = new WebPageNode(child,1);
+				WebPageNode nodeWrapper = new WebPageNode(child, 1);
 				this.children.add(nodeWrapper);
 			}
 		}
 	}
-	
-	private void populateSiblingCollection(){
+
+	private void populateSiblingCollection() {
 		if (this.sibling == null) {
 			this.sibling = new ArrayList<WebPageNode>();
-			if(nodeType == WebTagNodeType.TextNode){
+			if (nodeType == WebTagNodeType.TextNode) {
 				return;
 			}
 			for (Element child : this.element.siblingElements()) {
-				WebPageNode nodeWrapper = new WebPageNode(child,1);
+				WebPageNode nodeWrapper = new WebPageNode(child, 1);
 				this.sibling.add(nodeWrapper);
 			}
 		}
 	}
-
-//	public void setNodeType(NodeType nodetype) {
-//		this.nodetype = nodetype;
-//	}
-
-//	public NodeType getNodeType() {
-//		return nodetype;
-//	}
 
 	public boolean isLeafNode(){
 		return this.isLeafNode;
@@ -339,9 +303,10 @@ public class WebPageNode implements IWebPageNode{
 		} else {
 			node = new WebPageNode(this.element, this.tagCount);
 			node.setTagNodeType(this.nodeType);
+			node.setContent(this.textContent); 
+			node.setLeafNode(this.isLeafNode);
 		}
 		
-		node.setLeafNode(this.isLeafNode);
 		node.setPrefixPathID(this.getPrefixPathID());
 		return node;
 	}

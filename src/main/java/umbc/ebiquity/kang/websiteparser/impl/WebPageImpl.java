@@ -113,6 +113,7 @@ public class WebPageImpl implements IWebPage {
 	/***
 	 * 
 	 */
+	@Deprecated
 	public void analyzeWebPage() {
 		this.extractWebPageTopics(getWebPageDocument());
 		this.constructWebPagePaths(getWebPageDocument());
@@ -144,10 +145,7 @@ public class WebPageImpl implements IWebPage {
 	 * 
 	 */
 	
-	/***
-	 * 
-	 * @param webPageDoc
-	 */
+	@Deprecated
 	private void constructWebPagePaths(Document webPageDoc) {
 //		print("\n@ Constructing WebPagePaths from: <%s>", this.getPageURLString());
 		Element body = webPageDoc.body();
@@ -167,6 +165,7 @@ public class WebPageImpl implements IWebPage {
 		}
 	}
 	
+	@Deprecated
 	private void appendWebPagePathNode(WebPagePath path, Element element) {
 		
 		if (!this.hasOnlyOneTextNode(element)) {
@@ -556,6 +555,7 @@ public class WebPageImpl implements IWebPage {
 //		}
 	}
 	
+	@Override
 	public Map<String, String> getExternalLinks(){
 //		if (this.linksExtracted == false) {
 //			this.extractLinks();

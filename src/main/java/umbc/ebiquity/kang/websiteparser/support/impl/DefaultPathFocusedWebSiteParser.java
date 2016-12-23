@@ -19,14 +19,14 @@ public class DefaultPathFocusedWebSiteParser implements IPathFocusedWebSiteParse
 	}
 
 	public IWebSiteParsedPathsHolder parse() {
-		List<IWebPageParsedPathsHolder> webPagePaths = new ArrayList<IWebPageParsedPathsHolder>();
+		List<IWebPageParsedPathsHolder> webPagePathHolders = new ArrayList<IWebPageParsedPathsHolder>();
 		for (IWebPage webPage : website.getWebPages()) {
 			// TODO: may user static method to parse web page for saving memory
 			DefaultWebPagePathsParser webPagePathsImpl = new DefaultWebPagePathsParser(webPage);
 			IWebPageParsedPathsHolder webPagePathHolder = webPagePathsImpl.parse();
-			webPagePaths.add(webPagePathHolder);
+			webPagePathHolders.add(webPagePathHolder);
 		}
-		return new DefaultWebSiteParsedPathsHolder(website.getWebSiteURL(), webPagePaths);
+		return new DefaultWebSiteParsedPathsHolder(website.getWebSiteURL(), webPagePathHolders);
 	}
 
 }

@@ -6,6 +6,7 @@ import java.net.URL;
 import umbc.ebiquity.kang.websiteparser.ICrawler;
 
 public class WebSiteCrawlerFactory {
+	
 	public static ICrawler createCrawler(URL siteURL, int maxNumberPagesToVisit) throws IOException {
 		return new WebSiteCrawler(siteURL, maxNumberPagesToVisit);
 	}

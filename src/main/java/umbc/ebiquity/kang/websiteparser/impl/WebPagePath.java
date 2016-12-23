@@ -11,8 +11,6 @@ public class WebPagePath implements IWebPagePath {
 	private String pathId;
 	private LinkedList<WebPageNode> nodeList;
 	private String host;
-	private boolean isPathPatternCreated = false;
-	private boolean isPathIdCreated = false;
 	private String pathPattern;
 	
 	public WebPagePath(){
@@ -33,16 +31,10 @@ public class WebPagePath implements IWebPagePath {
 	}
 
 	public String getPathID() {
-		if (isPathIdCreated) {
-			return pathId;
-		}
 		return computePathId();
 	}
 
 	public String getPathPattern() {
-		if (isPathPatternCreated) {
-			return pathPattern;
-		}
 		return computePathPattern();
 	}
 
@@ -99,7 +91,6 @@ public class WebPagePath implements IWebPagePath {
 				builder.append(node.getTag() + node.getTagCount() + content + "/");
 			}
 		}
-		isPathIdCreated = true;
 		pathId = builder.toString();
 		return pathId;
 	}
@@ -120,7 +111,6 @@ public class WebPagePath implements IWebPagePath {
 				builder.append(node.getTag() + attributes + content + "/");
 			}
 		}
-		this.isPathPatternCreated = true;
 		this.pathPattern = builder.toString();
 		return pathPattern;
 	}
