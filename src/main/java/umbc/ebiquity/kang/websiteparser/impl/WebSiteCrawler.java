@@ -11,21 +11,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import umbc.ebiquity.kang.htmldocument.IHtmlDocument;
 import umbc.ebiquity.kang.websiteparser.ICrawledWebSite;
 import umbc.ebiquity.kang.websiteparser.ICrawler;
-import umbc.ebiquity.kang.websiteparser.IWebPage;
-import umbc.ebiquity.kang.websiteparser.object.CrawlerUrl;
+import umbc.ebiquity.kang.websiteparser.IWebPageDocument;
 
 public class WebSiteCrawler implements ICrawler {
 
 	private final static int MAX_VISIT_PAGE = 1000;
-	private Queue<IWebPage> webPageQueue;
-	private HashMap<String, IWebPage> visitedPageDir;
+	private Queue<IWebPageDocument> webPageQueue;
+	private HashMap<String, IWebPageDocument> visitedPageDir;
 	private HashSet<String> visitedPage;
 	
 	private String homePageURLString;
 	private URL webSiteURL;
-	private IWebPage homePage;
+	private IWebPageDocument homePage;
 	private int maxNumberPagesToVisit;
 	private boolean isCrawled;
 	private ICrawledWebSite crawledWebSite;
@@ -34,8 +34,8 @@ public class WebSiteCrawler implements ICrawler {
 		this.webSiteURL = siteURL;
 		this.homePageURLString = siteURL.toString().trim();
 		this.homePage = new WebPageImpl(new CrawlerUrl(homePageURLString, 0));
-		this.webPageQueue = new LinkedList<IWebPage>();
-		this.visitedPageDir = new HashMap<String, IWebPage>();
+		this.webPageQueue = new LinkedList<IWebPageDocument>();
+		this.visitedPageDir = new HashMap<String, IWebPageDocument>();
 		this.visitedPage = new HashSet<String>();
 		this.isCrawled = false;
 		this.maxNumberPagesToVisit = maxNumberPagesToVisit;
@@ -52,32 +52,38 @@ public class WebSiteCrawler implements ICrawler {
 		if (isCrawled)
 			return crawledWebSite;
 		
-		this.webPageQueue.clear();
+		webPageQueue.clear();
 		homePage.load();
-		this.homePage.extractLinks(visitedPage);
-		this.webPageQueue.add(homePage);
+		homePage.extractLinks(visitedPage);
+		webPageQueue.add(homePage);
 		
 		String hostName = homePage.getHostName();
 
 		// BFS crawling
 		while (this.continueCrawling()) {
-			IWebPage top = webPageQueue.remove();		
+			IWebPageDocument top = webPageQueue.remove();		
 			Map<String, String> links = top.getExternalLinks();
 			for(String webPageUrl : links.keySet()){
 				if (this.isValidated(webPageUrl)) {
-					IWebPage webPage;
-					String text = links.get(webPageUrl);
+					IWebPageDocument webPage;
+					String topic = links.get(webPageUrl);
 					try {
 						webPage = new WebPageImpl(new CrawlerUrl(webPageUrl, 0));
-						webPage.load();
 						webPage.setHostName(hostName);
-						webPage.addPredecessor(top);
-//						webPage.setWebPageMainTopic(text);
-						top.addDecendant(webPage);
-						System.out.println("@ Now crawling <" + webPage.getPageURL().getUrlString() + "> with main topic <"
-								+ text + ">");
+						webPage.setWebPageTopic(topic);
+						webPage.load();
+
+						if (relevantContent(webPage)) {
+							System.out.println("@ Now crawling [" + webPage.getUniqueIdentifier()
+							+ "] with main topic [" + topic + "]");
+							
+							webPage.addPredecessor(top);
+							top.addDecendant(webPage);
+							webPageQueue.add(webPage);
+						}
+						
 						this.extractLinks(webPage);
-						this.webPageQueue.add(webPage);
+
 					} catch (IOException e) {
 						continue;
 					}
@@ -90,13 +96,17 @@ public class WebSiteCrawler implements ICrawler {
 		return crawledWebSite; 
 	}
 
-	private CrawledWebSite createCrawledWebSite() {
-		return new CrawledWebSite(new ArrayList<IWebPage>(this.visitedPageDir.values()), this.webSiteURL);
+	protected boolean relevantContent(IWebPageDocument webPage) {
+		return true;
 	}
 
-	private void extractLinks(IWebPage webPage) {
-		visitedPageDir.put(webPage.getPageURL().getUrlString(), webPage);
-		visitedPage.add(webPage.getPageURL().getUrlString());
+	private ICrawledWebSite createCrawledWebSite() {
+		return new CrawledWebSite(new ArrayList<IWebPageDocument>(this.visitedPageDir.values()), this.webSiteURL);
+	}
+
+	private void extractLinks(IWebPageDocument webPage) {
+		visitedPageDir.put(webPage.getUniqueIdentifier(), webPage);
+		visitedPage.add(webPage.getUniqueIdentifier());
 		webPage.extractLinks(visitedPage);
 	}
 

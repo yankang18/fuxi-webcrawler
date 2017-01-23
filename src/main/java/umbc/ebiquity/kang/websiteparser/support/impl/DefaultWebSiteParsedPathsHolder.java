@@ -3,24 +3,24 @@ package umbc.ebiquity.kang.websiteparser.support.impl;
 import java.net.URL;
 import java.util.List;
 
-import umbc.ebiquity.kang.websiteparser.support.IWebPageParsedPathsHolder;
+import umbc.ebiquity.kang.htmldocument.parser.IHtmlDocumentParsedPathsHolder;
 import umbc.ebiquity.kang.websiteparser.support.IWebSiteParsedPathsHolder;
 
 public class DefaultWebSiteParsedPathsHolder implements IWebSiteParsedPathsHolder {
 
 	private URL webSiteURL;
-	private List<IWebPageParsedPathsHolder> webPagePathHolders;
+	private List<IHtmlDocumentParsedPathsHolder> webPagePathHolders;
 
-	DefaultWebSiteParsedPathsHolder(URL webSiteURL, List<IWebPageParsedPathsHolder> webPagePathHolders) {
+	public DefaultWebSiteParsedPathsHolder(URL webSiteURL, List<IHtmlDocumentParsedPathsHolder> webPagePathHolders) {
 		this.webSiteURL = webSiteURL;
-		this.webPagePathHolders = webPagePathHolders;
+		this.webPagePathHolders = webPagePathHolders; 
 	}
 
     /*
      * (non-Javadoc)
      * @see umbc.ebiquity.kang.entityframework.support.IWebSitePathHolder#getWebPagePathHolders()
      */
-	public List<IWebPageParsedPathsHolder> getWebPageParsedPathHolders() {
+	public List<IHtmlDocumentParsedPathsHolder> getHtmlDocumentParsedPathHolders() {
 		return webPagePathHolders;
 	}
 

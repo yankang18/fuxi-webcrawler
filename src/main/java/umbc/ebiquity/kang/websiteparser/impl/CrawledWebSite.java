@@ -4,21 +4,22 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import umbc.ebiquity.kang.htmldocument.IHtmlDocument;
 import umbc.ebiquity.kang.websiteparser.ICrawledWebSite;
-import umbc.ebiquity.kang.websiteparser.IWebPage;
+import umbc.ebiquity.kang.websiteparser.IWebPageDocument;
 
 public class CrawledWebSite implements ICrawledWebSite {
 
-	private List<IWebPage> webPages;
+	private List<IWebPageDocument> webPages;
 	private URL webSiteURL;
 
-	CrawledWebSite(List<IWebPage> webPages, URL webSiteURL) {
+	CrawledWebSite(List<IWebPageDocument> webPages, URL webSiteURL) {
 		this.webPages = webPages;
 		this.webSiteURL = webSiteURL;
 	}
 
 	@Override
-	public List<IWebPage> getWebPages() {
+	public List<IWebPageDocument> getWebPages() {
 		return webPages;
 	}
 

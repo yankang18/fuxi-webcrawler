@@ -7,6 +7,7 @@ import org.jsoup.nodes.TextNode;
 import umbc.ebiquity.kang.textprocessing.util.TextProcessingUtils;
 import umbc.ebiquity.kang.websiteparser.ILeafNodeDetermintor;
 
+@Deprecated
 public class DefaultLeafNodeDetermintor implements ILeafNodeDetermintor {
 
 	DefaultLeafNodeDetermintor() {
