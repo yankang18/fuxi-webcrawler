@@ -8,53 +8,72 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import umbc.ebiquity.kang.htmldocument.IHtmlDocument;
-import umbc.ebiquity.kang.htmldocument.IHtmlDocumentPath;
-import umbc.ebiquity.kang.htmldocument.impl.SingleHtmlDocument;
-import umbc.ebiquity.kang.htmldocument.parser.DefaultHtmlDocumentPathsParser;
-import umbc.ebiquity.kang.htmldocument.parser.IHtmlDocumentParsedPathsHolder;
-import umbc.ebiquity.kang.websiteparser.support.impl.DefaultWebPagePathsParser;
-import umbc.ebiquity.kang.websiteparser.support.impl.DefaultWebSiteParsedPathsHolder;
-import umbc.ebiquity.kang.websiteparser.support.impl.HTMLTreeOverlayBuilder;
-import umbc.ebiquity.kang.websiteparser.support.impl.EntityNode;
-import umbc.ebiquity.kang.websiteparser.support.IHTMLTreeOverlay;
+import umbc.ebiquity.kang.htmldocument.IHtmlPath;
+import umbc.ebiquity.kang.htmldocument.impl.SandardHtmlDocument;
+import umbc.ebiquity.kang.htmldocument.parser.IHtmlParsedPathsHolder;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayRefiner;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.StandardHTMLTreeBlankNodePruner;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeOverlayConstructor;
+import umbc.ebiquity.kang.htmldocument.parser.impl.StandardHtmlPathsParser;
+import umbc.ebiquity.kang.websiteparser.support.ITemplateNodeMatcher;
+import umbc.ebiquity.kang.websiteparser.support.ITemplateNodeMatcherRegistry;
 import umbc.ebiquity.kang.websiteparser.support.IWebSiteParsedPathsHolder;
-import umbc.ebiquity.kang.websiteparser.support.IWebSiteTemplateMarker;
-import umbc.ebiquity.kang.websiteparser.support.impl.BlankNodeResolver;
-import umbc.ebiquity.kang.websiteparser.support.impl.INode;
-import umbc.ebiquity.kang.websiteparser.support.impl.ValueNode;
+import umbc.ebiquity.kang.websiteparser.support.impl.DefaultWebSiteParsedPathsHolder;
+import umbc.ebiquity.kang.websiteparser.support.impl.SimpleTemplateNodeMatcher;
+import umbc.ebiquity.kang.websiteparser.support.impl.TemplateNodeMatcherRegistry;
+import umbc.ebiquity.kang.websiteparser.support.impl.TemplateNodePruner;
 import umbc.ebiquity.kang.websiteparser.support.impl.WebSiteEntityTreesBuilder;
-import umbc.ebiquity.kang.websiteparser.support.impl.WebSiteTemplateMarker;
 
 public class CrawlerTest {
 
-//	@Ignore
+	@Ignore
 	@Test
 	public void xxx() throws IOException {
 		CrawlerUrl url = new CrawlerUrl("http://www.accutrex.com/abrasive-waterjet-cutting", 1);
 //		CrawlerUrl url = new CrawlerUrl("http://www.accutrex.com/aerospace", 1);
 		IHtmlDocument webpage = new WebPageImpl(url);
 		webpage.load();
-		DefaultHtmlDocumentPathsParser webPagePathsImpl = new DefaultHtmlDocumentPathsParser(webpage);
-		IHtmlDocumentParsedPathsHolder webPagePathHolder = webPagePathsImpl.parse();
+		StandardHtmlPathsParser htmlDocumentPathsParser = new StandardHtmlPathsParser(webpage);
+		IHtmlParsedPathsHolder pathHolder = htmlDocumentPathsParser.parse();
 
-		for (IHtmlDocumentPath path : webPagePathHolder.listHtmlDocumentPaths()) {
+		for (IHtmlPath path : pathHolder.listHtmlPaths()) {
 			System.out.println(path.getPathID());
 		}
 		
-		HTMLTreeOverlayBuilder constructor = new HTMLTreeOverlayBuilder();
-		IHTMLTreeOverlay overLay = constructor.build(webPagePathHolder);
+		System.out.println(pathHolder.getDomainName());
+		System.out.println(pathHolder.getUniqueIdentifier());
+		
+		HTMLTreeOverlayConstructor constructor = new HTMLTreeOverlayConstructor();
+		IHTMLTreeOverlay overLay = constructor.build(pathHolder);
 		
 		
-		HTMLTreeOverlayBuilder.pettyPrint(overLay.getTreeRoot());
+		System.out.println("@2");
+		HTMLTreeOverlayConstructor.pettyPrint(overLay.getTreeRoot());
 		
-		BlankNodeResolver cc = new BlankNodeResolver();
-		overLay = cc.resolve(overLay);
+		ITemplateNodeMatcherRegistry templateElementMatcherRegistry = new TemplateNodeMatcherRegistry();
+		SimpleTemplateNodeMatcher templateElementMatcher = new SimpleTemplateNodeMatcher();
+		templateElementMatcher.addAttribute("id", "header");
+		templateElementMatcher.addAttribute("id", "footer");
+		templateElementMatcher.addAttribute("id", "sidebar");
+		templateElementMatcher.addAttribute("id", "sidebar-left");
+		templateElementMatcher.addTag("nav"); 
+		templateElementMatcherRegistry.register(pathHolder.getDomainName(), templateElementMatcher); 
+		IHTMLTreeOverlayRefiner templateNodePruner = new TemplateNodePruner(templateElementMatcherRegistry);
+		overLay = templateNodePruner.refine(overLay);
 		
-		HTMLTreeOverlayBuilder.pettyPrint(overLay.getTreeRoot());
+		System.out.println("@3");
+		HTMLTreeOverlayConstructor.pettyPrint(overLay.getTreeRoot());
 		
+		
+		StandardHTMLTreeBlankNodePruner cc = new StandardHTMLTreeBlankNodePruner();
+		overLay = cc.refine(overLay);
+		
+		System.out.println("@4");
+		HTMLTreeOverlayConstructor.pettyPrint(overLay.getTreeRoot());
 	}
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void xxx2() throws IOException {
 //		String location = "///Users/yankang/Documents/Temp/abrasive-waterjet-cutting.html";
@@ -66,44 +85,44 @@ public class CrawlerTest {
 		System.out.println(input.getPath());
 		System.out.println(input.getParent());
 		
-		IHtmlDocument webpage = new SingleHtmlDocument(input);
+		IHtmlDocument webpage = new SandardHtmlDocument(input);
 		webpage.load();
-		DefaultHtmlDocumentPathsParser webPagePathsImpl = new DefaultHtmlDocumentPathsParser(webpage);
-		IHtmlDocumentParsedPathsHolder webPagePathHolder = webPagePathsImpl.parse();
+		StandardHtmlPathsParser webPagePathsImpl = new StandardHtmlPathsParser(webpage);
+		IHtmlParsedPathsHolder webPagePathHolder = webPagePathsImpl.parse();
 
-		for (IHtmlDocumentPath path : webPagePathHolder.listHtmlDocumentPaths()) {
+		for (IHtmlPath path : webPagePathHolder.listHtmlPaths()) {
 			System.out.println(path.getPathID());
 		}
 		
-		HTMLTreeOverlayBuilder constructor = new HTMLTreeOverlayBuilder();
+		HTMLTreeOverlayConstructor constructor = new HTMLTreeOverlayConstructor();
 		IHTMLTreeOverlay overLay = constructor.build(webPagePathHolder);
 		
 		
-		HTMLTreeOverlayBuilder.pettyPrint(overLay.getTreeRoot());
+		HTMLTreeOverlayConstructor.pettyPrint(overLay.getTreeRoot());
 		
-		BlankNodeResolver cc = new BlankNodeResolver();
-		overLay = cc.resolve(overLay);
+		StandardHTMLTreeBlankNodePruner cc = new StandardHTMLTreeBlankNodePruner();
+		overLay = cc.refine(overLay);
 		
-		HTMLTreeOverlayBuilder.pettyPrint(overLay.getTreeRoot());
+		HTMLTreeOverlayConstructor.pettyPrint(overLay.getTreeRoot());
 		
 		WebSiteEntityTreesBuilder builder = new WebSiteEntityTreesBuilder();
 		
 		builder.build(null);
+	}
+	
+	@Test
+	public void xxx4(){
+		
 	}
 
 	@Ignore
 	@Test
 	public void xxx3() {
 		
-		List<IHtmlDocumentParsedPathsHolder> webPagePathHolders = new ArrayList<IHtmlDocumentParsedPathsHolder>();
+		List<IHtmlParsedPathsHolder> webPagePathHolders = new ArrayList<IHtmlParsedPathsHolder>();
 		
 		IWebSiteParsedPathsHolder webSiteParsedHolder = new DefaultWebSiteParsedPathsHolder(null,
 				webPagePathHolders);
-		
-		IWebSiteTemplateMarker ident = new WebSiteTemplateMarker();
-		
-		
-		
 		
 
 	}

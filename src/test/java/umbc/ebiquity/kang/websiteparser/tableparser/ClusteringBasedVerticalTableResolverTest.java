@@ -11,26 +11,26 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
-import umbc.ebiquity.kang.websiteparser.tableresolver.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.websiteparser.tableresolver.ITableHeaderResolver.TableStatus;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.ClusteringBasedVerticalTableResolver;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.DataCell;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.HTMLHeaderTagBasedTableResolver;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.TableCell;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.TableRecord;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.TableResolveResult;
+import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
+import umbc.ebiquity.kang.webtable.spliter.impl.ClusteringBasedVerticalTableSpliter;
+import umbc.ebiquity.kang.webtable.spliter.impl.DataCell;
+import umbc.ebiquity.kang.webtable.spliter.impl.HTMLHeaderTagBasedTableSpliter;
+import umbc.ebiquity.kang.webtable.spliter.impl.TableCell;
+import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
+import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
 
 public class ClusteringBasedVerticalTableResolverTest {
 
 	@Test
 	public void testResolveVerticalTableWithHeaderTagInTableBody() throws IOException {
 		
-		ClusteringBasedVerticalTableResolver resolver = new ClusteringBasedVerticalTableResolver();
+		ClusteringBasedVerticalTableSpliter resolver = new ClusteringBasedVerticalTableSpliter();
 		File input = new File("///Users/yankang/Documents/Temp/VerticalHeaderTableWithHeadinTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0); 
 		
-		TableResolveResult result = resolver.resolve(element);
+		TableSplitingResult result = resolver.split(element);
 		assertEquals(TableStatus.RegularTable, result.getTableStatus());
 		assertEquals(DataTableHeaderType.VHT, result.getDataTableHeaderType());
 		

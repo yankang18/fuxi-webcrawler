@@ -7,24 +7,19 @@ import java.util.Set;
 
 import org.jsoup.nodes.Document;
 
-import umbc.ebiquity.kang.htmldocument.impl.HtmlDocumentPath;
+import umbc.ebiquity.kang.htmldocument.impl.HtmlPath;
 import umbc.ebiquity.kang.websiteparser.impl.CrawlerUrl;
 
-public interface IHtmlDocument {
-
-	void extractLinks(Set<String> locOfExcludedDoc);
-
-	Map<String, String> getExternalLinks();
+public interface IHtmlDocument extends IHtmlElement {
 
 	void load() throws IOException;
 
 	Document getDocument();
 
-//	List<IHtmlDocumentPath> listFilteredDocumentPaths();
-
-	String getUniqueIdentifier();
+	// String getDomainName();
+	//
+	// String getUniqueIdentifier();
 
 	boolean isLoaded();
-
 
 }

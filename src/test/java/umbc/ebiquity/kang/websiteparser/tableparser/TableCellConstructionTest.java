@@ -10,9 +10,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.DataCell;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.DataCell.DataCellType;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.TableCell;
+import umbc.ebiquity.kang.webtable.spliter.impl.DataCell;
+import umbc.ebiquity.kang.webtable.spliter.impl.TableCell;
+import umbc.ebiquity.kang.webtable.spliter.impl.DataCell.DataCellType;
 
 public class TableCellConstructionTest {
 	
@@ -22,6 +22,7 @@ public class TableCellConstructionTest {
 		File input = new File("///Users/yankang/Documents/Temp/TableCell.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
+		
 		Element tableRowElem = element.getElementsByTag("tr").get(0);
 		TableCell cell = new TableCell(tableRowElem.getElementsByTag("td").get(0), "tr", 1);  
 		

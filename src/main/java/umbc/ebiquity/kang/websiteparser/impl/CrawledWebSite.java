@@ -1,10 +1,8 @@
 package umbc.ebiquity.kang.websiteparser.impl;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
-import umbc.ebiquity.kang.htmldocument.IHtmlDocument;
 import umbc.ebiquity.kang.websiteparser.ICrawledWebSite;
 import umbc.ebiquity.kang.websiteparser.IWebPageDocument;
 

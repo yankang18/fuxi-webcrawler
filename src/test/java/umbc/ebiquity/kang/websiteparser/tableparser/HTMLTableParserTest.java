@@ -8,20 +8,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.HTMLHeaderTagBasedTableResolver;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.TableResolveResult;
+import umbc.ebiquity.kang.webtable.spliter.impl.HTMLHeaderTagBasedTableSpliter;
+import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
 
 public class HTMLTableParserTest {
 	
 	@Test
 	public void xxx() throws IOException {
 		
-		HTMLHeaderTagBasedTableResolver parser = new HTMLHeaderTagBasedTableResolver();
+		HTMLHeaderTagBasedTableSpliter parser = new HTMLHeaderTagBasedTableSpliter();
 		File input = new File("///Users/yankang/Documents/Temp/VerticalHeaderTable2.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		
 		Element element = doc.getElementsByTag("table").get(0); 
-		TableResolveResult result = parser.resolve(element);
+		TableSplitingResult result = parser.split(element);
 		System.out.println("Table Status: " + result.getTableStatus().name());
 		System.out.println("DataTable Status: " + result.getDataTableHeaderType().name());
 	}

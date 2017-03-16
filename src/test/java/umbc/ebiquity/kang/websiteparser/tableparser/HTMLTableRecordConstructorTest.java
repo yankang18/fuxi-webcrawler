@@ -11,10 +11,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.DataCell;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.HTMLTableRecordConstructor;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.TableCell;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.TableRecord;
+import umbc.ebiquity.kang.webtable.spliter.impl.DataCell;
+import umbc.ebiquity.kang.webtable.spliter.impl.HTMLTableRecordsCreator;
+import umbc.ebiquity.kang.webtable.spliter.impl.TableCell;
+import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
 
 public class HTMLTableRecordConstructorTest {
 
@@ -25,7 +25,7 @@ public class HTMLTableRecordConstructorTest {
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("tbody").get(0);
 
-		List<TableRecord> records = HTMLTableRecordConstructor.createHorizontalTableRecord(element, 0, 4, 4);
+		List<TableRecord> records = HTMLTableRecordsCreator.createHorizontalTableRecords(element, 0, 4, 4);
 		assertEquals(5, records.size());
 		TableRecord header = records.get(0);
 		for (TableCell cell : header.getTableCells()) {
@@ -41,7 +41,7 @@ public class HTMLTableRecordConstructorTest {
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("tbody").get(0);
 
-		List<TableRecord> records = HTMLTableRecordConstructor.createVerticalTableRecords(element, 0, 4, 10);
+		List<TableRecord> records = HTMLTableRecordsCreator.createVerticalTableRecords(element, 0, 4, 10);
 		assertEquals(5, records.size());
 		
 		// assert header records

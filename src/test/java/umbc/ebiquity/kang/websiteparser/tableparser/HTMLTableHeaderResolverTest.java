@@ -10,24 +10,24 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
-import umbc.ebiquity.kang.websiteparser.tableresolver.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.websiteparser.tableresolver.ITableHeaderResolver.TableStatus;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.HTMLTableHeaderResolver;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.Position;
-import umbc.ebiquity.kang.websiteparser.tableresolver.impl.TableHeaderResolveResult;
+import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
+import umbc.ebiquity.kang.webtable.spliter.impl.HTMLHeaderTagBasedTableHeaderLocator;
+import umbc.ebiquity.kang.webtable.spliter.impl.HeaderPosition;
+import umbc.ebiquity.kang.webtable.spliter.impl.TableHeaderLocatingResult;
 
 public class HTMLTableHeaderResolverTest {
 	
 	@Test
 	public void testResolveHorizontalTableWithHeaderTagInTableBody() throws IOException {
 		
-		HTMLTableHeaderResolver resolver = new HTMLTableHeaderResolver();
+		HTMLHeaderTagBasedTableHeaderLocator resolver = new HTMLHeaderTagBasedTableHeaderLocator();
 		File input = new File("///Users/yankang/Documents/Temp/HorizontalHeaderTableWithHeadIntheTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("tbody").get(0); 
 		
-		TableHeaderResolveResult result = resolver.resolveHorizontalHeader(element.children(), false);
-		Position position = result.getHorizontalHeaderPosition();
+		TableHeaderLocatingResult result = resolver.locateHorizontalHeader(element.children(), false);
+		HeaderPosition position = result.getHorizontalHeaderPosition();
 		assertEquals(result.getTableStatus(), TableStatus.RegularTable);
 		assertEquals(result.getDataTableType(), DataTableHeaderType.HHT);
 		assertEquals(0, position.getRowStart());
@@ -39,13 +39,13 @@ public class HTMLTableHeaderResolverTest {
 	@Test
 	public void testResolveHorizontalTableWithHeaderTagInTableHead() throws IOException {
 		
-		HTMLTableHeaderResolver resolver = new HTMLTableHeaderResolver();
+		HTMLHeaderTagBasedTableHeaderLocator resolver = new HTMLHeaderTagBasedTableHeaderLocator();
 		File input = new File("///Users/yankang/Documents/Temp/HorizontalHeaderTableWithHeadIntheThead.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("thead").get(0); 
 		
-		TableHeaderResolveResult result = resolver.resolveHorizontalHeader(element.children(), true);
-		Position position = result.getHorizontalHeaderPosition();
+		TableHeaderLocatingResult result = resolver.locateHorizontalHeader(element.children(), true);
+		HeaderPosition position = result.getHorizontalHeaderPosition();
 		System.out.println(result.getMessage());
 		assertEquals(TableStatus.RegularTable, result.getTableStatus());
 		assertEquals(DataTableHeaderType.HHT, result.getDataTableType());
@@ -58,27 +58,27 @@ public class HTMLTableHeaderResolverTest {
 	@Test
 	public void testResolveHorizontalTableWithEmptyTableHead() throws IOException {
 		
-		HTMLTableHeaderResolver resolver = new HTMLTableHeaderResolver();
+		HTMLHeaderTagBasedTableHeaderLocator resolver = new HTMLHeaderTagBasedTableHeaderLocator();
 		File input = new File("///Users/yankang/Documents/Temp/HorizontalHeaderTableWithoutHeadIntheThead.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("thead").get(0); 
 		
-		TableHeaderResolveResult result = resolver.resolveHorizontalHeader(element.children(), true);
+		TableHeaderLocatingResult result = resolver.locateHorizontalHeader(element.children(), true);
 		System.out.println(result.getMessage());
 		assertEquals(TableStatus.UnRegularTable, result.getTableStatus());
 		assertEquals(DataTableHeaderType.UD, result.getDataTableType());
-		assertEquals(TableHeaderResolveResult.NO_CONTENT, result.getMessage());
+		assertEquals(TableHeaderLocatingResult.NO_CONTENT, result.getMessage());
 	}
 	
 	@Test
 	public void testResolveHorizontalTableWithoutHeaderTagInTableBody() throws IOException {
 		
-		HTMLTableHeaderResolver resolver = new HTMLTableHeaderResolver();
+		HTMLHeaderTagBasedTableHeaderLocator resolver = new HTMLHeaderTagBasedTableHeaderLocator();
 		File input = new File("///Users/yankang/Documents/Temp/HorizontalHeaderTableWithoutHeadTagIntheTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("tbody").get(0);
 
-		TableHeaderResolveResult result = resolver.resolveHorizontalHeader(element.children(), false);
+		TableHeaderLocatingResult result = resolver.locateHorizontalHeader(element.children(), false);
 		assertEquals(TableStatus.UnRegularTable, result.getTableStatus());
 		assertEquals(DataTableHeaderType.UD, result.getDataTableType());
 
@@ -87,29 +87,29 @@ public class HTMLTableHeaderResolverTest {
 	@Test
 	public void testResolveHorizontalTableWithEmptyTableBody() throws IOException {
 		
-		HTMLTableHeaderResolver resolver = new HTMLTableHeaderResolver();
+		HTMLHeaderTagBasedTableHeaderLocator resolver = new HTMLHeaderTagBasedTableHeaderLocator();
 		File input = new File("///Users/yankang/Documents/Temp/HorizontalHeaderTableWithoutHeadIntheTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("tbody").get(0); 
 		
-		TableHeaderResolveResult result = resolver.resolveHorizontalHeader(element.children(), false);
+		TableHeaderLocatingResult result = resolver.locateHorizontalHeader(element.children(), false);
 		System.out.println(result.getMessage());
 		assertEquals(TableStatus.UnRegularTable, result.getTableStatus());
 		assertEquals(DataTableHeaderType.UD, result.getDataTableType());
-		assertEquals(TableHeaderResolveResult.NO_CONTENT, result.getMessage());
+		assertEquals(TableHeaderLocatingResult.NO_CONTENT, result.getMessage());
 	}
 	
 	
 	@Test
 	public void testResolveVerticalTableWithHeaderTagInTableBody() throws IOException {
 		
-		HTMLTableHeaderResolver resolver = new HTMLTableHeaderResolver();
+		HTMLHeaderTagBasedTableHeaderLocator resolver = new HTMLHeaderTagBasedTableHeaderLocator();
 		File input = new File("///Users/yankang/Documents/Temp/VerticalHeaderTableWithHeadinTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("tbody").get(0); 
 		
-		TableHeaderResolveResult result = resolver.resolveVeriticalHeader(element.children());
-		Position position = result.getVerticalHeaderPosition();
+		TableHeaderLocatingResult result = resolver.locateVeriticalHeader(element.children());
+		HeaderPosition position = result.getVerticalHeaderPosition();
 		assertEquals(TableStatus.RegularTable, result.getTableStatus());
 		assertEquals(DataTableHeaderType.VHT, result.getDataTableType());
 		assertEquals(0, position.getRowStart());
@@ -121,15 +121,15 @@ public class HTMLTableHeaderResolverTest {
 	@Test
 	public void testResolveVerticalTableWithoutHeaderTagInTableBody() throws IOException {
 		
-		HTMLTableHeaderResolver resolver = new HTMLTableHeaderResolver();
+		HTMLHeaderTagBasedTableHeaderLocator resolver = new HTMLHeaderTagBasedTableHeaderLocator();
 		File input = new File("///Users/yankang/Documents/Temp/VerticalHeaderTableWithoutHeadInTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("tbody").get(0); 
 		
-		TableHeaderResolveResult result = resolver.resolveVeriticalHeader(element.children());
+		TableHeaderLocatingResult result = resolver.locateVeriticalHeader(element.children());
 		assertEquals(TableStatus.RegularTable, result.getTableStatus());
 		assertEquals(DataTableHeaderType.UD, result.getDataTableType());
-		assertEquals(TableHeaderResolveResult.NO_HEADER, result.getMessage());
+		assertEquals(TableHeaderLocatingResult.NO_HEADER, result.getMessage());
 	}
 	
 	

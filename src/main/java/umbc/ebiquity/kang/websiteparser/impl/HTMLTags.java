@@ -12,7 +12,7 @@ public class HTMLTags {
 	private static Set<String> topicTags;
 	
 	private static Set<String> linkTags;
-	private static Set<String> leafTags;
+	private static Set<String> valueTags;
 	private static Set<String> imgTags;
 	private static Set<String> formTags;
 	
@@ -25,7 +25,7 @@ public class HTMLTags {
 	
 	static {
 		
-		leafTags = new HashSet<String>();
+		valueTags = new HashSet<String>();
 		eliminatedTages = new HashSet<String>();
 		ignoredTags = new HashSet<String>();
 		emphasisTags = new HashSet<String>();
@@ -39,11 +39,11 @@ public class HTMLTags {
 		blockTags = new HashSet<String>();
 		headingTags = new HashSet<String>();
 		
-		leafTags.add("a");
-		leafTags.add("span");
-		leafTags.add("font");
-		leafTags.add("img");
-		leafTags.add("p");
+		valueTags.add("a");
+		valueTags.add("span");
+		valueTags.add("font");
+		valueTags.add("img");
+		valueTags.add("p");
 		
 		/*
 		 * 
@@ -274,17 +274,25 @@ public class HTMLTags {
 //		blockTags.add("SPAN");
 		
 	}
-	
-	public static boolean isLeafTag(String tagName) {
-		return leafTags.contains(tagName.toLowerCase().trim());
+
+	public static boolean isValueTag(String tagName) {
+		return valueTags.contains(tagName.toLowerCase().trim());
 	}
-	
+
 	public static boolean isHeadingTag(String tagName) {
 		return headingTags.contains(tagName.toLowerCase().trim());
 	}
 
 	public static boolean isTopicTag(String tagName) {
 		return topicTags.contains(tagName.toLowerCase().trim());
+	}
+
+	public static boolean isImageTag(String tagName) {
+		return imgTags.contains(tagName.toLowerCase().trim());
+	}
+
+	public static boolean isLineBreaker(String tagName) {
+		return "br".equalsIgnoreCase(tagName.trim());
 	}
 	
 	public static Set<String> getIgnoredTags(){
@@ -368,7 +376,8 @@ public class HTMLTags {
 			return 3.0;
 		} else {
 			return 0.0;
-		}
+		} 
 	}
+
 
 }
