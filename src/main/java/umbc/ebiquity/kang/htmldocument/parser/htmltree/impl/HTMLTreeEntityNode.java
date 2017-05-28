@@ -6,20 +6,26 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.AbstractHTMLTreeNode;
 
 public class HTMLTreeEntityNode extends AbstractHTMLTreeNode {
 
-	private String name;
+	private String content;
 	private String normalizedName;
-	public HTMLTreeEntityNode(String name, Element element){
+	
+	/**
+	 * 
+	 * @param content
+	 * @param element
+	 */
+	public HTMLTreeEntityNode(String content, Element element){
 		super(element);
-		this.name = name;
-		this.normalizedName = createNormalizedName(name);
+		this.content = content;
+		this.normalizedName = createNormalizedContent(content);
 	}
 	
-	private String createNormalizedName(String name) {
-		return name;
+	private String createNormalizedContent(String content) {
+		return content;
 	}
 
-	public String getName(){
-		return name;
+	public String getContent(){
+		return content;
 	}
 	
 	public String getNormalizedName(){

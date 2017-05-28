@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import umbc.ebiquity.kang.machinelearning.clustering.ICluster;
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimilarity;
 
 public class TableRecordCluster implements ICluster<TableRecord> {

@@ -15,12 +15,12 @@ public class AbstractHTMLTreeNode implements IHTMLTreeNode {
 	private String parentPathID;
 	private String tagName;
 
-	public AbstractHTMLTreeNode(Element element) {
+	protected AbstractHTMLTreeNode(Element element) {
 		children = new ArrayList<IHTMLTreeNode>();
 		elem = element;
 	}
 
-	public AbstractHTMLTreeNode(String tagName) {
+	protected AbstractHTMLTreeNode(String tagName) {
 		children = new ArrayList<IHTMLTreeNode>();
 		this.tagName = tagName;
 	}

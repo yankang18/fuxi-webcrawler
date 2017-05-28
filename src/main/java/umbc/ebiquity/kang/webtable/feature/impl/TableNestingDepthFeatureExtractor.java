@@ -3,10 +3,10 @@ package umbc.ebiquity.kang.webtable.feature.impl;
 import org.jsoup.nodes.Element;
 
 import umbc.ebiquity.kang.webtable.IHTMLDataTable;
+import umbc.ebiquity.kang.webtable.core.HTMLDataTable;
+import umbc.ebiquity.kang.webtable.core.HTMLTableTagDefinition;
 import umbc.ebiquity.kang.webtable.feature.ITableFeatureExtractor;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimiliartySuite;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLDataTable;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLTableTagDefinition;
 
 public class TableNestingDepthFeatureExtractor implements ITableFeatureExtractor {
 

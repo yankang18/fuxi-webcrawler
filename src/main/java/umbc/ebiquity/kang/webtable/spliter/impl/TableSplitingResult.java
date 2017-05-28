@@ -2,12 +2,16 @@ package umbc.ebiquity.kang.webtable.spliter.impl;
 
 import java.util.List;
 
+import umbc.ebiquity.kang.htmldocument.IHtmlElement;
+import umbc.ebiquity.kang.htmldocument.impl.StandardHtmlElement;
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
 
 public class TableSplitingResult implements ITableHeaderResolver {
 
+	private IHtmlElement htmlElement;
 	private TableStatus status;
 	private DataTableHeaderType headerType;
 	private List<TableRecord> verticalHeaderRecords;
@@ -41,7 +45,7 @@ public class TableSplitingResult implements ITableHeaderResolver {
 	}
 
 	public List<TableRecord> getVerticalDataRecords() {
-		return this.verticalDataRecords;
+		return this.verticalDataRecords; 
 	}
 
 	public void setHorizontalHeaderRecords(List<TableRecord> headerRecords) {
@@ -58,5 +62,13 @@ public class TableSplitingResult implements ITableHeaderResolver {
 
 	public List<TableRecord> getHorizontalDataRecords() {
 		return horizontalDataRecords;
+	}
+
+	public void setHtmlElement(IHtmlElement htmlElement) {
+		this.htmlElement = htmlElement;
+	}
+
+	public IHtmlElement getHTMLTableElement() {
+		return htmlElement;
 	}
 }

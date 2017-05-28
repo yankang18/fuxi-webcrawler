@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import umbc.ebiquity.kang.webtable.core.TableRecord;
+import umbc.ebiquity.kang.webtable.core.TableRecordAttributeTracer;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimilarityFactory;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecordAttributeTracer;
 
 public class TableRecordsSimilarityFactory implements ITableRecordsSimilarityFactory {
 

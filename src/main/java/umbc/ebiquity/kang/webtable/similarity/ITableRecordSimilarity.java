@@ -1,6 +1,6 @@
 package umbc.ebiquity.kang.webtable.similarity;
 
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 
 /***
  * This interface defines the behaviors of class computing the similairty

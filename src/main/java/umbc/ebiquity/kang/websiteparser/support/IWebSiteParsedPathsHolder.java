@@ -3,11 +3,11 @@ package umbc.ebiquity.kang.websiteparser.support;
 import java.net.URL;
 import java.util.List;
 
-import umbc.ebiquity.kang.htmldocument.parser.IHtmlParsedPathsHolder;
+import umbc.ebiquity.kang.htmldocument.parser.IHtmlDocumentParsedPathsHolder;
 
 public interface IWebSiteParsedPathsHolder {
 
-	List<IHtmlParsedPathsHolder> getHtmlDocumentParsedPathHolders();
+	List<IHtmlDocumentParsedPathsHolder> getHtmlDocumentParsedPathHolders();
 
 	URL getWebSiteURL();
 }

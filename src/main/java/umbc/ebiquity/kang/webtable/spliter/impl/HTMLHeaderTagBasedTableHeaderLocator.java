@@ -3,6 +3,7 @@ package umbc.ebiquity.kang.webtable.spliter.impl;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import umbc.ebiquity.kang.webtable.core.HTMLTableRecordsCounter;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
 
@@ -27,7 +28,7 @@ public class HTMLHeaderTagBasedTableHeaderLocator {
 	 */
 	public TableHeaderLocatingResult locateHorizontalHeader(Elements elements, boolean isTableHead) {
 		if (elements.size() == 0) {
-			return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UD, isTableHead,
+			return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined, isTableHead,
 					TableHeaderLocatingResult.NO_CONTENT);
 		}
 		
@@ -35,7 +36,7 @@ public class HTMLHeaderTagBasedTableHeaderLocator {
 		Boolean[] header = new Boolean[numberOfRow];
 		init(header);
 
-		int maxCol = 0;
+		int minCol = Integer.MAX_VALUE;
 		for (int index = 0; index < numberOfRow; index++) {
 			Element row = elements.get(index);
 			// Iterate each row that is in "tr" HTML tag.
@@ -45,9 +46,9 @@ public class HTMLHeaderTagBasedTableHeaderLocator {
 					// Iterate each cell in a row to check if all cells in this
 					// row are in "th" HTML tag.
 					//
-					// Or, if all the rows we are examining are in "thead" HTML
-					// tag (specified by isTableHead boolean), check if all
-					// cells in this row are in either "th" or "td" HTML tag.
+					// Or, if the input element is a "thead" element, indicated
+					// by isTableHead boolean, check if all cells in this row
+					// are in either "th" or "td" HTML tag.
 					//
 					// If false, this row is not a head. Otherwise, this row is
 					// a head.
@@ -59,8 +60,8 @@ public class HTMLHeaderTagBasedTableHeaderLocator {
 						}
 					}
 					if (header[index]) {
-						if (maxCol < cells.size()) {
-							maxCol = cells.size();
+						if (minCol > cells.size()) {
+							minCol = cells.size();
 						}
 					}
 				} else {
@@ -68,20 +69,19 @@ public class HTMLHeaderTagBasedTableHeaderLocator {
 				}
 			} else {
 				// not all rows are headers --> not regular
-				return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UD, isTableHead,
+				return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined, isTableHead,
 						TableHeaderLocatingResult.UNEXPECTED_TABLE_ROW);
 			}
 		}
 
 		// no header exists.
 		if (!hasHeaders(header)) {
-			return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UD, isTableHead,
+			return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined, isTableHead,
 					TableHeaderLocatingResult.NO_HEADER);
 		}
 
-		// # If the program reaches here, it means that header exists. 
-
-		// We are going to find the first row that is not a header. Since this
+		// # If the program reaches here, it means that header exists. We are
+		// going to find the first row that is not a header. Since this
 		// row separates the headers and the data, we call this row the
 		// Separator.
 		int split = header.length;
@@ -104,14 +104,14 @@ public class HTMLHeaderTagBasedTableHeaderLocator {
 		// If there still have headers after Separator, we consider the table is
 		// irregular.
 		if (containsHeaderAfterSplit)
-			return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UD, isTableHead,
+			return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined, isTableHead,
 					TableHeaderLocatingResult.UNEXPECTED_HEADER);
 
 		// # If the program reaches here, it means that headers are found and
 		// valid, we are going return these information.
 		TableHeaderLocatingResult result = new TableHeaderLocatingResult(TableStatus.RegularTable,
-				DataTableHeaderType.HHT, isTableHead);
-		result.setHorizontalHeaderPosition(new HeaderPosition(0, split - 1, numberOfRow, maxCol));
+				DataTableHeaderType.HorizontalHeaderTable, isTableHead);
+		result.setHorizontalHeaderPosition(new HeaderPosition(0, split - 1, numberOfRow, minCol));
 		return result;
 	}
 
@@ -132,7 +132,7 @@ public class HTMLHeaderTagBasedTableHeaderLocator {
 	 */
 	public TableHeaderLocatingResult locateVeriticalHeader(Elements elements) {
 		if (elements.size() == 0) {
-			return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UD, false,
+			return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined, false,
 					TableHeaderLocatingResult.NO_CONTENT);
 		}
 
@@ -153,22 +153,22 @@ public class HTMLHeaderTagBasedTableHeaderLocator {
 				}
 			} else {
 				// not all rows are headers --> not regular
-				return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UD, false,
+				return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined, false,
 						TableHeaderLocatingResult.UNEXPECTED_TABLE_ROW);
 			}
 		}
 
 		TableHeaderLocatingResult result = null;
 		if (isVerticalHeader) {
-			int rowBorderCount = HTMLTableRecordsCounter.getMaxVerticalColumnCount(elements);
-			result = new TableHeaderLocatingResult(TableStatus.RegularTable, DataTableHeaderType.VHT, false);
+			int rowBorderCount = HTMLTableRecordsCounter.getMinVerticalColumnCount(elements);
+			result = new TableHeaderLocatingResult(TableStatus.RegularTable, DataTableHeaderType.VerticalHeaderTable, false);
 			// 0, 0 indicates that the header rows starting at index 0 and
 			// ending at index 0 which means that the first row is the header
 			// row.
 			HeaderPosition position = new HeaderPosition(0, 0, rowBorderCount, elements.size());
 			result.setVerticalHeaderPosition(position);
 		} else {
-			result = new TableHeaderLocatingResult(TableStatus.RegularTable, DataTableHeaderType.UD, false,
+			result = new TableHeaderLocatingResult(TableStatus.RegularTable, DataTableHeaderType.UnDetermined, false,
 					TableHeaderLocatingResult.NO_HEADER);
 		}
 		return result;

@@ -1,5 +1,7 @@
 package umbc.ebiquity.kang.htmldocument.impl;
 
+import java.util.UUID;
+
 import org.jsoup.nodes.Element;
 
 import umbc.ebiquity.kang.htmldocument.IHtmlElement;
@@ -14,6 +16,10 @@ public class StandardHtmlElement implements IHtmlElement {
 		this.element = element;
 		this.uniqueIdentifier = uniqueIdentifier;
 		this.domainName = domainName;
+	}
+
+	public static StandardHtmlElement createDefaultStandardHtmlElement(Element element) {
+		return new StandardHtmlElement(element, UUID.randomUUID().toString(), "");
 	}
 
 	@Override

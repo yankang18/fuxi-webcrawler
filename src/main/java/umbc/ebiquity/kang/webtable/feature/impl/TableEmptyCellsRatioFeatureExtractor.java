@@ -5,10 +5,10 @@ import org.jsoup.nodes.Element;
 import umbc.ebiquity.kang.textprocessing.util.TextProcessingUtils;
 import umbc.ebiquity.kang.websiteparser.impl.HTMLTags;
 import umbc.ebiquity.kang.webtable.IHTMLDataTable;
+import umbc.ebiquity.kang.webtable.core.TableCell;
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.feature.ITableFeatureExtractor;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimiliartySuite;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableCell;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
 
 public class TableEmptyCellsRatioFeatureExtractor implements ITableFeatureExtractor {
 

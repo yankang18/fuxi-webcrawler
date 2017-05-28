@@ -9,30 +9,34 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import umbc.ebiquity.kang.webtable.core.DataCell;
+import umbc.ebiquity.kang.webtable.core.TableCell;
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
-import umbc.ebiquity.kang.webtable.spliter.impl.ClusteringBasedVerticalTableSpliter;
-import umbc.ebiquity.kang.webtable.spliter.impl.DataCell;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLHeaderTagBasedTableSpliter;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableCell;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
+import umbc.ebiquity.kang.webtable.spliter.impl.ClusteringBasedVerticalTableHeaderSpliter;
+import umbc.ebiquity.kang.webtable.spliter.impl.HTMLHeaderTagBasedTableHeaderSpliter;
 import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
 
 public class ClusteringBasedVerticalTableResolverTest {
 
+	private static final String TEST_FILE_FOLDER = "TableHeaderLocatorTest/";
+	
+	@Ignore
 	@Test
 	public void testResolveVerticalTableWithHeaderTagInTableBody() throws IOException {
-		
-		ClusteringBasedVerticalTableSpliter resolver = new ClusteringBasedVerticalTableSpliter();
-		File input = new File("///Users/yankang/Documents/Temp/VerticalHeaderTableWithHeadinTbody.html");
+
+		ClusteringBasedVerticalTableHeaderSpliter resolver = new ClusteringBasedVerticalTableHeaderSpliter();
+		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "VerticalHeaderTableWithHeadinTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
-		Element element = doc.getElementsByTag("table").get(0); 
-		
+		Element element = doc.getElementsByTag("table").get(0);
+
 		TableSplitingResult result = resolver.split(element);
 		assertEquals(TableStatus.RegularTable, result.getTableStatus());
-		assertEquals(DataTableHeaderType.VHT, result.getDataTableHeaderType());
+		assertEquals(DataTableHeaderType.VerticalHeaderTable, result.getDataTableHeaderType());
 		
 		List<TableRecord> headerRecords = result.getVerticalHeaderRecords();
 		List<TableRecord> dataRecords = result.getVerticalDataRecords();
@@ -60,4 +64,11 @@ public class ClusteringBasedVerticalTableResolverTest {
 			}
 		}
 	}
+	
+	private File loadFileOrDirectory(String fileName) {
+		// Get file from resources folder
+		ClassLoader classLoader = getClass().getClassLoader();
+		File input = new File(classLoader.getResource(fileName).getFile());
+		return input;
+	} 
 }

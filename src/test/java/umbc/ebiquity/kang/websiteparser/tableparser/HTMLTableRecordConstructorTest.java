@@ -11,21 +11,23 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
-import umbc.ebiquity.kang.webtable.spliter.impl.DataCell;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLTableRecordsCreator;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableCell;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
+import umbc.ebiquity.kang.webtable.core.DataCell;
+import umbc.ebiquity.kang.webtable.core.HTMLTableRecordsParser;
+import umbc.ebiquity.kang.webtable.core.TableCell;
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 
 public class HTMLTableRecordConstructorTest {
 
+	private static final String TEST_FILE_FOLDER = "TableHeaderLocatorTest/";
+	
 	@Test
 	public void testConstructHorizontalTableRecordList() throws IOException {
 
-		File input = new File("///Users/yankang/Documents/Temp/HorizontalHeaderTable.html");
+		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "HorizontalHeaderTable.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("tbody").get(0);
 
-		List<TableRecord> records = HTMLTableRecordsCreator.createHorizontalTableRecords(element, 0, 4, 4);
+		List<TableRecord> records = HTMLTableRecordsParser.createTableRecordsFromHorizontalTableElement(element, 0, 4, 4);
 		assertEquals(5, records.size());
 		TableRecord header = records.get(0);
 		for (TableCell cell : header.getTableCells()) {
@@ -37,11 +39,11 @@ public class HTMLTableRecordConstructorTest {
 	@Test
 	public void testConstructVerticalTableRecordList() throws IOException {
 
-		File input = new File("///Users/yankang/Documents/Temp/VerticalHeaderTable_5_rows.html");
+		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "VerticalHeaderTable_5_rows.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("tbody").get(0);
 
-		List<TableRecord> records = HTMLTableRecordsCreator.createVerticalTableRecords(element, 0, 4, 10);
+		List<TableRecord> records = HTMLTableRecordsParser.createTableRecordsFromVeriticalTableElement(element, 0, 4, 10);
 		assertEquals(5, records.size());
 		
 		// assert header records
@@ -82,4 +84,11 @@ public class HTMLTableRecordConstructorTest {
 	private boolean contains(String container, String value) {
 		return container.contains(value);
 	}
+	
+	private File loadFileOrDirectory(String fileName) {
+		// Get file from resources folder
+		ClassLoader classLoader = getClass().getClassLoader();
+		File input = new File(classLoader.getResource(fileName).getFile());
+		return input;
+	} 
 }

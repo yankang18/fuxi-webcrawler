@@ -10,49 +10,51 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
-import umbc.ebiquity.kang.webtable.spliter.impl.DataCell;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableCell;
-import umbc.ebiquity.kang.webtable.spliter.impl.DataCell.DataCellType;
+import umbc.ebiquity.kang.webtable.core.DataCell;
+import umbc.ebiquity.kang.webtable.core.TableCell;
+import umbc.ebiquity.kang.webtable.core.DataCell.DataCellType;
 
 public class TableCellConstructionTest {
-	
+
+	private static final String TEST_FILE_FOLDER = "TableHeaderLocatorTest/";
+
 	@Test
 	public void testConstructHorizontalTableRecordListWithDepthOne() throws IOException {
 
-		File input = new File("///Users/yankang/Documents/Temp/TableCell.html");
+		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "TableCell.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
-		
+
 		Element tableRowElem = element.getElementsByTag("tr").get(0);
-		TableCell cell = new TableCell(tableRowElem.getElementsByTag("td").get(0), "tr", 1);  
-		
+		TableCell cell = new TableCell(tableRowElem.getElementsByTag("td").get(0), "tr", 1);
+
 		DataCell cell0 = cell.getDataCell("0");
 		DataCell cell1 = cell.getDataCell("1");
-		
+
 		assertEquals("td", cell.getTagName());
 		assertEquals("tr.td", cell.getTagPath());
 		assertEquals("attriute1", cell.getAttributeValue("class"));
-		
+
 		assertEquals("div", cell0.getTagName());
 		assertEquals("tr.td.div", cell0.getTagPath());
 		assertEquals("attriute2", cell0.getAttributeValue("class"));
 		assertEquals(DataCellType.Element, cell0.getDataCellType());
-		
+
 		assertEquals("text", cell1.getTagName());
 		assertEquals("tr.td.text", cell1.getTagPath());
 		assertEquals(null, cell1.getAttributeValue("class"));
 		assertEquals(DataCellType.Value, cell1.getDataCellType());
 		assertEquals("value three", cell1.getValue());
 	}
-	
+
 	@Test
 	public void testConstructHorizontalTableRecordListWithDepthTwo() throws IOException {
 
-		File input = new File("///Users/yankang/Documents/Temp/TableCell.html");
+		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "TableCell.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 		Element tableRowElem = element.getElementsByTag("tr").get(0);
-		TableCell cell = new TableCell(tableRowElem.getElementsByTag("td").get(0), "tr", 2);  
+		TableCell cell = new TableCell(tableRowElem.getElementsByTag("td").get(0), "tr", 2);
 
 		DataCell cell00 = cell.getDataCell("0.0");
 		DataCell cell01 = cell.getDataCell("0.1");
@@ -76,11 +78,11 @@ public class TableCellConstructionTest {
 
 		assertEquals(null, cell10);
 	}
-	
+
 	@Test
 	public void testConstructHorizontalTableRecordListWithDepthThree() throws IOException {
 
-		File input = new File("///Users/yankang/Documents/Temp/TableCell.html");
+		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "TableCell.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 		Element tableRowElem = element.getElementsByTag("tr").get(0);
@@ -99,6 +101,12 @@ public class TableCellConstructionTest {
 		assertEquals(null, cell010.getAttributeValue("class"));
 		assertEquals(DataCellType.Value, cell010.getDataCellType());
 		assertEquals("value two", cell010.getValue());
+	}
 
+	private File loadFileOrDirectory(String fileName) {
+		// Get file from resources folder
+		ClassLoader classLoader = getClass().getClassLoader();
+		File input = new File(classLoader.getResource(fileName).getFile());
+		return input;
 	}
 }

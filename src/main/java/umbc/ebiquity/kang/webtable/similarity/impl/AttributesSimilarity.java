@@ -3,8 +3,8 @@ package umbc.ebiquity.kang.webtable.similarity.impl;
 import java.util.Arrays;
 import java.util.Set;
 
-import umbc.ebiquity.kang.textprocessing.similarity.IWordListSimilarity;
-import umbc.ebiquity.kang.textprocessing.similarity.impl.UnorderedWordPatternWordListSimilarity;
+import umbc.ebiquity.kang.textprocessing.similarity.ITokenListSimilarity;
+import umbc.ebiquity.kang.textprocessing.similarity.impl.UnorderedWordPatternTokenListSimilarity;
 import umbc.ebiquity.kang.webtable.IAttributeTracer;
 import umbc.ebiquity.kang.webtable.ITagAttributeHolder;
 import umbc.ebiquity.kang.webtable.ITagHolder;
@@ -13,14 +13,14 @@ import umbc.ebiquity.kang.webtable.similarity.IAttributesSimilarity;
 public class AttributesSimilarity implements IAttributesSimilarity {
 	
 	private IAttributeTracer tableRecordAttributeTracer;
-	private IWordListSimilarity wordListSimilarity;
+	private ITokenListSimilarity wordListSimilarity;
 	
 	public AttributesSimilarity(IAttributeTracer tableRecordAttributeTracer) {
 		this.tableRecordAttributeTracer = tableRecordAttributeTracer;
-		this.wordListSimilarity = new UnorderedWordPatternWordListSimilarity();
+		this.wordListSimilarity = new UnorderedWordPatternTokenListSimilarity();
 	}
 	
-	public void setWordSimilarity(IWordListSimilarity wordSimilarity) {
+	public void setWordSimilarity(ITokenListSimilarity wordSimilarity) {
 		this.wordListSimilarity = wordSimilarity;
 	}
 	

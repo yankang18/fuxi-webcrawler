@@ -2,7 +2,7 @@ package umbc.ebiquity.kang.htmldocument;
 
 public interface IHtmlPath {
 
-	String getPathID();
+	String getPathIdent();
 
 	IHtmlNode getLastNode();
 

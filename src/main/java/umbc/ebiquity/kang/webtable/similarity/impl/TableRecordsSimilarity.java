@@ -2,9 +2,9 @@ package umbc.ebiquity.kang.webtable.similarity.impl;
 
 import java.util.Set;
 
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordSimilarity;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimilarity;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
 
 public class TableRecordsSimilarity implements ITableRecordsSimilarity {
 	

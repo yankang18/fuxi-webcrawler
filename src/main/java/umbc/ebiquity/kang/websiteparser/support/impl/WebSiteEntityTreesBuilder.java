@@ -3,11 +3,11 @@ package umbc.ebiquity.kang.websiteparser.support.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import umbc.ebiquity.kang.htmldocument.parser.IHtmlParsedPathsHolder;
+import umbc.ebiquity.kang.htmldocument.parser.IHtmlDocumentParsedPathsHolder;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayBuilder;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayRefiner;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.StandardHTMLTreeBlankNodePruner;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.StandardHTMLTreeBlankNodeConsolidator;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeOverlayConstructor;
 import umbc.ebiquity.kang.websiteparser.support.IWebSiteParsedPathsHolder;
 
@@ -19,12 +19,12 @@ public class WebSiteEntityTreesBuilder {
 	
 	public WebSiteEntityTreesBuilder() {
 		overlayBuilder = new HTMLTreeOverlayConstructor();
-		blankNodeResolver = new StandardHTMLTreeBlankNodePruner();
+		blankNodeResolver = new StandardHTMLTreeBlankNodeConsolidator();
 	}
 
 	public void build(IWebSiteParsedPathsHolder webSiteParsedPathsHolder) {
 
-		List<IHtmlParsedPathsHolder> webpages = webSiteParsedPathsHolder.getHtmlDocumentParsedPathHolders();
+		List<IHtmlDocumentParsedPathsHolder> webpages = webSiteParsedPathsHolder.getHtmlDocumentParsedPathHolders();
 
 		List<IHTMLTreeOverlay> htmlTreeOverlayList = buildOverlays(webpages);
 
@@ -45,9 +45,9 @@ public class WebSiteEntityTreesBuilder {
 		return newHtmlTreeOverlayList;
 	}
 
-	private List<IHTMLTreeOverlay> buildOverlays(List<IHtmlParsedPathsHolder> webpages) {
+	private List<IHTMLTreeOverlay> buildOverlays(List<IHtmlDocumentParsedPathsHolder> webpages) {
 		List<IHTMLTreeOverlay> htmlTreeOverlayList = new ArrayList<IHTMLTreeOverlay>(webpages.size());
-		for (IHtmlParsedPathsHolder webpage : webpages) {
+		for (IHtmlDocumentParsedPathsHolder webpage : webpages) {
 			IHTMLTreeOverlay treeOverlay = overlayBuilder.build(webpage);
 			htmlTreeOverlayList.add(treeOverlay);
 		}

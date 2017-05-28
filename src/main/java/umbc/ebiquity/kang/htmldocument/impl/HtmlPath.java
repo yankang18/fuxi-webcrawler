@@ -25,13 +25,13 @@ public class HtmlPath implements IHtmlPath {
 			last.setChild(node);
 		}
 		node.setParent(last);
-		node.setPrefixPathID(this.getPathID());
+		node.setPrefixPathID(this.getPathIdent());
 		node.setResidePath(this);
 		nodeList.add(node);
 	}
 
 	@Override
-	public String getPathID() {
+	public String getPathIdent() {
 		return computePathId();
 	}
 
@@ -51,7 +51,7 @@ public class HtmlPath implements IHtmlPath {
 	@Override
 	public HtmlPath clone(){
 		HtmlPath newPath = new HtmlPath();
-		newPath.setPathID(this.getPathID());
+		newPath.setPathID(this.getPathIdent());
 		newPath.setClonedNodes(this.getClonedNodes());
 		return newPath;
 	}

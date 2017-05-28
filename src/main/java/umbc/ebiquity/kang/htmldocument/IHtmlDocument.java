@@ -16,10 +16,6 @@ public interface IHtmlDocument extends IHtmlElement {
 
 	Document getDocument();
 
-	// String getDomainName();
-	//
-	// String getUniqueIdentifier();
-
 	boolean isLoaded();
 
 }

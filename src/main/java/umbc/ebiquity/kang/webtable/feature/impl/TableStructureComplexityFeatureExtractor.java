@@ -3,11 +3,11 @@ package umbc.ebiquity.kang.webtable.feature.impl;
 import org.jsoup.nodes.Element;
 
 import umbc.ebiquity.kang.webtable.IHTMLDataTable;
+import umbc.ebiquity.kang.webtable.core.HTMLDataTable;
+import umbc.ebiquity.kang.webtable.core.TableCell;
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.feature.ITableFeatureExtractor;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimiliartySuite;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLDataTable;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableCell;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
 
 public class TableStructureComplexityFeatureExtractor implements ITableFeatureExtractor {
 

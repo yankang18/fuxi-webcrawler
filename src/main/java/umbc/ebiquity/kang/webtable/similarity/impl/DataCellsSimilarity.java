@@ -3,9 +3,9 @@ package umbc.ebiquity.kang.webtable.similarity.impl;
 import java.util.Set;
 
 import umbc.ebiquity.kang.webtable.IDataCellHolder;
+import umbc.ebiquity.kang.webtable.core.DataCell;
 import umbc.ebiquity.kang.webtable.similarity.IAttributesSimilarity;
 import umbc.ebiquity.kang.webtable.similarity.IDataCellsSimilarity;
-import umbc.ebiquity.kang.webtable.spliter.impl.DataCell;
 
 public class DataCellsSimilarity implements IDataCellsSimilarity {
 	

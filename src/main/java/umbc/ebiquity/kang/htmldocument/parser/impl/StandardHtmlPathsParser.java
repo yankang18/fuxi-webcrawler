@@ -15,7 +15,7 @@ import umbc.ebiquity.kang.htmldocument.IHtmlPath;
 import umbc.ebiquity.kang.htmldocument.IHtmlElement;
 import umbc.ebiquity.kang.htmldocument.impl.HtmlNode;
 import umbc.ebiquity.kang.htmldocument.impl.HtmlPath;
-import umbc.ebiquity.kang.htmldocument.parser.IHtmlParsedPathsHolder;
+import umbc.ebiquity.kang.htmldocument.parser.IHtmlDocumentParsedPathsHolder;
 import umbc.ebiquity.kang.htmldocument.parser.IHtmlPathsParser;
 import umbc.ebiquity.kang.textprocessing.util.TextProcessingUtils;
 import umbc.ebiquity.kang.websiteparser.impl.HTMLTags;
@@ -26,7 +26,7 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 	private Map<String, Integer> tagCounterMapper;
 	private IHtmlElement htmlElement;
 	private boolean parsed; 
-	private IHtmlParsedPathsHolder parsedPathHolder;
+	private IHtmlDocumentParsedPathsHolder parsedPathHolder;
 
 	public StandardHtmlPathsParser(IHtmlElement htmlElement) {  
 		this.htmlElement = htmlElement;
@@ -36,21 +36,16 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 	}
 
 	@Override
-	public IHtmlParsedPathsHolder parse() {
-
+	public IHtmlDocumentParsedPathsHolder parse() {
 		if (parsed)
 			return parsedPathHolder;
 
-//		Document webPageDoc = htmlDocument.getDocument();
-//		Element body = webPageDoc.body();
 		Element body = htmlElement.getBody();
 		for (Element elem : body.children()) {
 			String childTagName = elem.tagName().toLowerCase();
-			// System.out.println("## " + childTagName);
 			if (isTargetTagName(childTagName)) {
 				HtmlPath path = new HtmlPath();
 				parsedPathList.add(path);
-				// path.setHost(this.getPageURLAsString());
 				HtmlNode webPageNode = this.createWebPageNode(elem);
 				webPageNode.setLeafNode(false);
 				path.addNode(webPageNode);

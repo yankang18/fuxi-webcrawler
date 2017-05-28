@@ -9,31 +9,33 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import umbc.ebiquity.kang.webtable.core.DataCell;
+import umbc.ebiquity.kang.webtable.core.TableCell;
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
-import umbc.ebiquity.kang.webtable.spliter.impl.ClusteringBasedHorizontalTableSpliter;
-import umbc.ebiquity.kang.webtable.spliter.impl.ClusteringBasedVerticalTableSpliter;
-import umbc.ebiquity.kang.webtable.spliter.impl.DataCell;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLHeaderTagBasedTableSpliter;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableCell;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
+import umbc.ebiquity.kang.webtable.spliter.impl.ClusteringBasedHorizontalTableHeaderSpliter;
 import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
 
 public class ClusteringBasedHorizontalTableResolverTest {
-	// @Ignore
+	
+	private static final String TEST_FILE_FOLDER = "TableHeaderLocatorTest/";
+
+	@Ignore
 	@Test
 	public void testResolveHorizontalTableWithHeaderTagInTableBody() throws IOException {
 
-		ClusteringBasedHorizontalTableSpliter resolver = new ClusteringBasedHorizontalTableSpliter();
-		File input = new File("///Users/yankang/Documents/Temp/HorizontalHeaderTableWithHeadIntheTbody.html");
+		ClusteringBasedHorizontalTableHeaderSpliter resolver = new ClusteringBasedHorizontalTableHeaderSpliter();
+		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "HorizontalHeaderTableWithHeadIntheTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 
 		TableSplitingResult result = resolver.split(element);
 		assertEquals(result.getTableStatus(), TableStatus.RegularTable);
-		assertEquals(result.getDataTableHeaderType(), DataTableHeaderType.HHT);
+		assertEquals(result.getDataTableHeaderType(), DataTableHeaderType.HorizontalHeaderTable);
 
 		List<TableRecord> headerRecords = result.getHorizontalHeaderRecords();
 		List<TableRecord> dataRecords = result.getHorizontalDataRecords();
@@ -60,4 +62,11 @@ public class ClusteringBasedHorizontalTableResolverTest {
 			}
 		}
 	}
+	
+	public File loadFileOrDirectory(String fileName) {
+		// Get file from resources folder
+		ClassLoader classLoader = getClass().getClassLoader();
+		File input = new File(classLoader.getResource(fileName).getFile());
+		return input;
+	} 
 }

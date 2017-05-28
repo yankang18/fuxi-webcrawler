@@ -3,9 +3,9 @@ package umbc.ebiquity.kang.htmldocument.parser.impl;
 import java.util.List;
 
 import umbc.ebiquity.kang.htmldocument.IHtmlPath;
-import umbc.ebiquity.kang.htmldocument.parser.IHtmlParsedPathsHolder;
+import umbc.ebiquity.kang.htmldocument.parser.IHtmlDocumentParsedPathsHolder;
 
-public class DefaultHtmlParsedPathsHolder implements IHtmlParsedPathsHolder {
+public class DefaultHtmlParsedPathsHolder implements IHtmlDocumentParsedPathsHolder {
  
 	private String pageURL;
 	private String domainName;

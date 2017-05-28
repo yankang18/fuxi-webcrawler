@@ -14,7 +14,7 @@ import umbc.ebiquity.kang.htmldocument.IHtmlNode;
 import umbc.ebiquity.kang.htmldocument.IHtmlNode.NodeType;
 import umbc.ebiquity.kang.htmldocument.IHtmlPath;
 import umbc.ebiquity.kang.htmldocument.impl.StandardHtmlElement;
-import umbc.ebiquity.kang.htmldocument.parser.IHtmlParsedPathsHolder;
+import umbc.ebiquity.kang.htmldocument.parser.IHtmlDocumentParsedPathsHolder;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.AbstractHTMLTreeNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.ICustomizedHTMLNodeProcessor;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
@@ -30,15 +30,18 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 
 	private IValueTypeResolver valueTypeResolver;
 	private Set<ICustomizedHTMLNodeProcessor> customerizedHtmlNodeProcessors;
+	
 	private Map<String, IHTMLTreeNode> path2ContextNode;
 	private Map<String, List<IHTMLTreeNode>> parent2ContextNodes;
+	private Set<String> pathsToSkip;
 	private IHTMLTreeNode root;
 	private boolean constructed;
 	private String domainName;
 
 	public HTMLTreeOverlayConstructor() {
-		this.valueTypeResolver = new NaiveValueTypeResolver();
-		this.customerizedHtmlNodeProcessors = new HashSet<ICustomizedHTMLNodeProcessor>();
+		valueTypeResolver = new NaiveValueTypeResolver();
+		customerizedHtmlNodeProcessors = new HashSet<ICustomizedHTMLNodeProcessor>();
+		init();
 	}
 
 	public void setValueTypeResolver(IValueTypeResolver valueTypeResolver) {
@@ -50,11 +53,9 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 	}
 
 	@Override
-	public IHTMLTreeOverlay build(IHtmlParsedPathsHolder webPagePathHolder) {
+	public IHTMLTreeOverlay build(IHtmlDocumentParsedPathsHolder webPagePathHolder) {
 		if (isConstructed()) {
 			reset();
-		} else {
-			init();
 		}
 		root = createRoot();
 		int currPathIndex = 0;
@@ -67,11 +68,13 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 	private void reset() {
 		path2ContextNode.clear();
 		parent2ContextNodes.clear();
+		pathsToSkip.clear();
 	}
 
 	private void init() {
 		path2ContextNode = new HashMap<String, IHTMLTreeNode>();
 		parent2ContextNodes = new HashMap<String, List<IHTMLTreeNode>>();
+		pathsToSkip = new HashSet<String>();
 	}
 	
 	private HTMLTreeRootNode createRoot() {
@@ -89,134 +92,157 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 	 */
 	private void doConstruct(IHTMLTreeNode contextNode, List<IHtmlPath> paths, int currPathIndex) {
 		registerContextNode(contextNode);
-		
+
+		// Reaches the bottom of the path list
 		if (currPathIndex >= paths.size())
 			return;
 
 		// Get current path we are traversing
 		IHtmlPath currPath = paths.get(currPathIndex);
-		// Get the last node (i.e., leaf node) of current path
-		IHtmlNode currentNode = currPath.getLastNode();
-		
-		//
-		int prePathIndex = currPathIndex - 1;
-		if (prePathIndex >= 0) {
-			IHtmlPath prePath = paths.get(prePathIndex);
-			if(shouldBackTracking(currPath, prePath)){
-				String pathID = currentNode.getPrefixPathID();
-				IHTMLTreeNode existingContextNode = path2ContextNode.get(pathID);
-				if(existingContextNode == null) {
-					contextNode = root;
-				} else {
-					contextNode = existingContextNode;
-					List<IHTMLTreeNode> contextNodes = parent2ContextNodes.get(pathID);
-					if (!contextNodes.isEmpty()) {
-						IHTMLTreeNode candidateContextNode = contextNodes.get(contextNodes.size() - 1);
-						if (isEntityNode(currentNode)) {
-							//
-							IHTMLTreeNode entityNode = createEntityNode(currentNode, currPath);
-							contextNode = adjustContext(entityNode, candidateContextNode); 
-						} else if(isBlankNode(currentNode)){
-							IHTMLTreeNode entityNode = createBlankNode(currentNode, currPath);
-							contextNode = adjustContext(entityNode, candidateContextNode); 
-						} else if (isValueNode(currentNode)){
-							IHTMLTreeNode entityNode = createValueNode(currentNode, currPath);
-							contextNode = adjustContext(entityNode, candidateContextNode); 
+
+		if (toBeSkipped(currPath)) {
+			doConstruct(contextNode, paths, ++currPathIndex);
+		} else {
+			
+			// Get the last node (i.e., leaf node) of current path
+			IHtmlNode currentNode = currPath.getLastNode();
+
+			//
+			int prePathIndex = currPathIndex - 1;
+			if (prePathIndex >= 0) {
+				IHtmlPath prePath = paths.get(prePathIndex);
+				if (shouldBackTracking(currPath, prePath)) {
+					String pathID = currentNode.getPrefixPathID();
+					IHTMLTreeNode existingContextNode = path2ContextNode.get(pathID);
+					if (existingContextNode == null) {
+						contextNode = root;
+					} else {
+						contextNode = existingContextNode;
+						List<IHTMLTreeNode> contextNodes = parent2ContextNodes.get(pathID);
+						if (!contextNodes.isEmpty()) {
+							IHTMLTreeNode candidateContextNode = contextNodes.get(contextNodes.size() - 1);
+							if (isEntityNode(currentNode)) {
+								//
+								IHTMLTreeNode entityNode = createEntityNode(currentNode, currPath);
+								contextNode = adjustContext(entityNode, candidateContextNode);
+							} else if (isBlankNode(currentNode)) {
+								IHTMLTreeNode entityNode = createBlankNode(currentNode, currPath);
+								contextNode = adjustContext(entityNode, candidateContextNode);
+							} else if (isValueNode(currentNode)) {
+								IHTMLTreeNode entityNode = createValueNode(currentNode, currPath);
+								contextNode = adjustContext(entityNode, candidateContextNode);
+							}
 						}
 					}
 				}
-			} 
-		} 
-		
-		if (isValueNode(currentNode)) {
-			// If the current node is a value node that we defined, this node is
-			// a leaf node of current Entity Graph we are constructing and it
-			// has no child
-			
-			IHTMLTreeNode valueNode = createValueNode(currentNode, currPath);
-			if (valueNode != null) {
-				contextNode.addChild(valueNode);
 			}
 
-			// We are going to traverse the next path and create the next node.
-			// The contextNode is the context node of next node
-			doConstruct(contextNode, paths, ++currPathIndex);
-			
-			
-		} else if (isElementNode(currentNode)) {
-			// The node can be EntityNode or BlankNode (i.e., bnode)
+			if (isValueNode(currentNode)) {
+				// If the current node is a value node that we defined, this
+				// node is a leaf node of current Entity Graph we are
+				// constructing and it has no child
 
-			if (isEntityNode(currentNode)) {
-				// If the current node is an entity node that we defined, this
-				// node is an intermediate node that has child nodes (in rare
-				// cases, it may have no child)
-				IHTMLTreeNode entityNode = createEntityNode(currentNode, currPath);
-				contextNode = adjustContext(entityNode, contextNode); 
-				
-				contextNode.addChild(entityNode);
-				doConstruct(entityNode, paths, ++currPathIndex);
-				
-//				INode lastChild = getLastChild(contextNode);
-//				if (withHeaderTag(entityNode)) {
-//					// If the node is an entity node with heading tag, this node
-//					// is the context node of forthcoming node until reaching
-//					// the boundary.
-//					
-//					contextNode.addChild(entityNode);
-//					doConstruct(entityNode, paths, ++currPathIndex);
-//				} else if (lastChild == null) {
-//					// If the current context node has no last child (i.e.,
-//					// has no child), we just simply consider the node is a
-//					// child of the context node. Then, we continuingly
-//					// traverse the paths and consider the node as the
-//					// context node for the forthcoming nodes.
-//
-//					contextNode.addChild(entityNode);
-//					doConstruct(entityNode, paths, ++currPathIndex);
-//				} else {
-//					if (canBeChild(entityNode, lastChild)) {
-//						// If the context has child nodes, we take the last
-//						// one and check if the node can be applied as a
-//						// child of the last child of the context node. If
-//						// yes, we consider the node as the child of the
-//						// last child of the context node. Then, we
-//						// continuingly traverse the paths and take the node
-//						// as the context node.
-//
-//						lastChild.addChild(entityNode);
-//						doConstruct(entityNode, paths, ++currPathIndex);
-//					} else {
-//						// Otherwise, we consider the node as child of the
-//						// context node. Then, we continuingly traverse the
-//						// paths and take the node as the context node.
-//
-//						contextNode.addChild(entityNode);
-//						doConstruct(entityNode, paths, ++currPathIndex);
-//					}
-//				}
+				IHTMLTreeNode valueNode = createValueNode(currentNode, currPath);
+				if (valueNode != null) {
+					contextNode.addChild(valueNode);
+				}
 
-			} else if (isBlankNode(currentNode)) {
-				// The blank node contains no semantic information directly. It
-				// serves as a structural element that encompasses related
-				// data.Therefore, we consider the blank node as the context
-				// node of data it encompasses.
+				// We are going to traverse the next path and create the next
+				// node. The contextNode is the context node of next node
+				doConstruct(contextNode, paths, ++currPathIndex);
 
-				IHTMLTreeNode bnode = createBlankNode(currentNode, currPath);
-				bnode = customizedProcess(bnode, currentNode, currPath, currPathIndex);
+			} else if (isElementNode(currentNode)) {
+				// The node can be EntityNode or BlankNode (i.e., bnode)
 
-				contextNode.addChild(bnode);
-				doConstruct(bnode, paths, ++currPathIndex);
+				if (isEntityNode(currentNode)) {
+					// If the current node is an entity node that we defined,
+					// this
+					// node is an intermediate node that has child nodes (in
+					// rare
+					// cases, it may have no child)
+					IHTMLTreeNode entityNode = createEntityNode(currentNode, currPath);
+					contextNode = adjustContext(entityNode, contextNode);
+
+					contextNode.addChild(entityNode);
+					doConstruct(entityNode, paths, ++currPathIndex);
+
+					// INode lastChild = getLastChild(contextNode);
+					// if (withHeaderTag(entityNode)) {
+					// // If the node is an entity node with heading tag, this
+					// node
+					// // is the context node of forthcoming node until reaching
+					// // the boundary.
+					//
+					// contextNode.addChild(entityNode);
+					// doConstruct(entityNode, paths, ++currPathIndex);
+					// } else if (lastChild == null) {
+					// // If the current context node has no last child (i.e.,
+					// // has no child), we just simply consider the node is a
+					// // child of the context node. Then, we continuingly
+					// // traverse the paths and consider the node as the
+					// // context node for the forthcoming nodes.
+					//
+					// contextNode.addChild(entityNode);
+					// doConstruct(entityNode, paths, ++currPathIndex);
+					// } else {
+					// if (canBeChild(entityNode, lastChild)) {
+					// // If the context has child nodes, we take the last
+					// // one and check if the node can be applied as a
+					// // child of the last child of the context node. If
+					// // yes, we consider the node as the child of the
+					// // last child of the context node. Then, we
+					// // continuingly traverse the paths and take the node
+					// // as the context node.
+					//
+					// lastChild.addChild(entityNode);
+					// doConstruct(entityNode, paths, ++currPathIndex);
+					// } else {
+					// // Otherwise, we consider the node as child of the
+					// // context node. Then, we continuingly traverse the
+					// // paths and take the node as the context node.
+					//
+					// contextNode.addChild(entityNode);
+					// doConstruct(entityNode, paths, ++currPathIndex);
+					// }
+					// }
+
+				} else if (isBlankNode(currentNode)) {
+					// The blank node contains no semantic information directly.
+					// It serves as a structural element that encompasses
+					// related data.Therefore, we consider the blank node as the
+					// context node of data it encompasses.
+
+					IHTMLTreeNode bnode = createBlankNode(currentNode, currPath);
+					bnode = customizedProcess(bnode, currentNode, currPath, currPathIndex);
+					if (bnode == null) {
+						doConstruct(contextNode, paths, ++currPathIndex);
+					} else {
+						contextNode.addChild(bnode);
+						doConstruct(bnode, paths, ++currPathIndex);
+					}
+
+				} else {
+					// Skip current path
+					doConstruct(contextNode, paths, ++currPathIndex);
+				}
 
 			} else {
 				// Skip current path
 				doConstruct(contextNode, paths, ++currPathIndex);
 			}
-
-		} else {
-			// Skip current path
-			doConstruct(contextNode, paths, ++currPathIndex);
 		}
+	}
 
+	private boolean toBeSkipped(IHtmlPath currPath) {
+		if(pathsToSkip.isEmpty())
+			return false;
+		
+		for (String path : pathsToSkip) {
+			if (currPath.getPathIdent().startsWith(path)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// TODO: add customized process for node
@@ -233,15 +259,15 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 
 		for (ICustomizedHTMLNodeProcessor processor : customerizedHtmlNodeProcessors) {
 			StandardHtmlElement htmlElement = new StandardHtmlElement(currentNode.getWrappedElement(),
-					currentPath.getPathID(), domainName);
+					currentPath.getPathIdent(), domainName);
 			if (processor.isMatched(htmlElement)) {
 				bnode = processor.process(htmlElement);
+				// record the path to be skipped. All the descendants of this
+				// path should be skipped
+				pathsToSkip.add(currentPath.getPathIdent());
 				break;
 			}
 		}
-		// TODO: skip all the paths that are belong to this processed element
-		// (i.e., all the paths that take currPath.getPathID() as ancestor).
-		// Probably use call back mechanism to do this work.
 		return bnode;
 	}
 
@@ -281,17 +307,30 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 	 * @return
 	 */
 	private boolean shouldBackTracking(IHtmlPath currentPath, IHtmlPath previousPath) {
-		return (!currentPath.getPathID().startsWith(previousPath.getPathID())
+		return (!currentPath.getPathIdent().startsWith(previousPath.getPathIdent())
 				&& !currentPath.getLastNode().getPrefixPathID().equals(previousPath.getLastNode().getPrefixPathID()));
 	}
+	
 
 	private IHTMLTreeNode createValueNode(IHtmlNode currentNode, IHtmlPath currentPath) {
-		
+
 		String content = currentNode.getFullContent();
 		Element element = currentNode.getWrappedElement();
-		if (isNotEmpty(content)) {
+
+		// First, get value through the element tagName;
+		// Then, get value through the string content of the Html node;
+		// Finally, get value through the content of the element.
+		HTMLTreeNodeValue value = resolveValueTypeByTagName(element);
+		if (value != null) {
+			// if the value is not null, the element must not be null;
+			HTMLTreeValueNode valueNode = new HTMLTreeValueNode(value, element);
+			valueNode.addValues(getValues(element));
+			populatePathIdInformation(valueNode, currentPath);
+			return valueNode;
+		} else if (isNotEmpty(content)) {
+
 			ValueType valueType = valueTypeResolver.resolve(content);
-			HTMLTreeNodeValue value = new HTMLTreeNodeValue(content, valueType);
+			value = new HTMLTreeNodeValue(content, valueType);
 			HTMLTreeValueNode valueNode = null;
 			if (element != null) {
 				valueNode = new HTMLTreeValueNode(value, element);
@@ -300,12 +339,12 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 				valueNode = new HTMLTreeValueNode(value, currentNode.getTag());
 			}
 			populatePathIdInformation(valueNode, currentPath);
+
 			return valueNode;
 		} else if (element != null) {
 			List<HTMLTreeNodeValue> values = getValues(element);
-			if(!values.isEmpty()) {
+			if (!values.isEmpty()) {
 				HTMLTreeValueNode valueNode = new HTMLTreeValueNode(values.get(0), element);
-				// valueNode.setMainValue(values.get(0));
 				for (int i = 1; i < values.size(); i++) {
 					valueNode.addValue(values.get(i));
 				}
@@ -326,10 +365,25 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 		for (Element e : elements) {
 			if (e.hasAttr(key)) {
 				HTMLTreeNodeValue value = new HTMLTreeNodeValue(e.attr(key), ValueType.Image);
+				// TODO: get description of image
+				// value.setDescription(getImgDescription(e));
 				values.add(value);
 			}
 		}
 		return values;
+	}
+	
+	private HTMLTreeNodeValue resolveValueTypeByTagName(Element element) {
+
+		if(element == null)
+			return null;
+
+		if (element.tagName().equalsIgnoreCase("img")) {
+			HTMLTreeNodeValue value = new HTMLTreeNodeValue(element.attr("src"), ValueType.Image);
+			return value;
+		}
+
+		return null;
 	}
 
 	private IHTMLTreeNode createEntityNode(IHtmlNode currentNode, IHtmlPath currentPath) {
@@ -345,7 +399,7 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 	}
 	
 	private void populatePathIdInformation(AbstractHTMLTreeNode node, IHtmlPath currentPath) {
-		node.setPathID(currentPath.getPathID());
+		node.setPathID(currentPath.getPathIdent());
 		node.setParentPathID(currentPath.getLastNode().getPrefixPathID());
 	}
 
@@ -367,13 +421,13 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 		}
 	}
 
-	public boolean isElementNode(IHtmlNode currentNode) {
-		return NodeType.ElementNode == currentNode.getNodeType();
+	public boolean isElementNode(IHtmlNode node) {
+		return NodeType.ElementNode == node.getNodeType();
 	}
 
-	public boolean isValueNode(IHtmlNode currentNode) {
-		return NodeType.TextNode == currentNode.getNodeType()
-				|| NodeType.ValueElementNode == currentNode.getNodeType();
+	public boolean isValueNode(IHtmlNode node) {
+		return NodeType.TextNode == node.getNodeType()
+				|| NodeType.ValueElementNode == node.getNodeType();
 	}
 
 	private boolean isEntityNode(IHtmlNode node) {
@@ -455,7 +509,7 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 			if (c instanceof HTMLTreeValueNode) {
 				value = ((HTMLTreeValueNode) c).getMainValue().getValue();
 			} else if (c instanceof HTMLTreeEntityNode) {
-				value = ((HTMLTreeEntityNode) c).getName();
+				value = ((HTMLTreeEntityNode) c).getContent();
 			}
 			value = value == null ? "" : "(" + value + ")";
 			System.out.println(intent + c.getTagName() + " " + value);

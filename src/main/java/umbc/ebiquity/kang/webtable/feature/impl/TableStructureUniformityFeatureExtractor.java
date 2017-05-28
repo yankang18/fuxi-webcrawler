@@ -3,10 +3,10 @@ package umbc.ebiquity.kang.webtable.feature.impl;
 import java.util.List;
 
 import umbc.ebiquity.kang.webtable.IHTMLDataTable;
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.feature.ITableFeatureExtractor;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordSimilarity;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimiliartySuite;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
 
 public abstract class TableStructureUniformityFeatureExtractor implements ITableFeatureExtractor {
 

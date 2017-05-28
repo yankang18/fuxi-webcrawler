@@ -11,12 +11,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import umbc.ebiquity.kang.machinelearning.classification.IFeatureData;
+import umbc.ebiquity.kang.webtable.core.HTMLDataTable;
 import umbc.ebiquity.kang.webtable.feature.ITableFeatureExtractor;
 import umbc.ebiquity.kang.webtable.feature.ITableFeaturesExtractor;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimilarityFactory;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimiliartySuite;
 import umbc.ebiquity.kang.webtable.similarity.impl.TableRecordsSimilarityFactory;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLDataTable;
 
 public class TableFeaturesExtractor implements ITableFeaturesExtractor {
 	private ITableRecordsSimilarityFactory tableRecordsSimilarityFactory;
@@ -47,18 +47,18 @@ public class TableFeaturesExtractor implements ITableFeaturesExtractor {
 	}
 
 	@Override
-	public IFeatureData extract(Element tableElement) {
-		String tagName = tableElement.tagName();
+	public IFeatureData extract(Element element) {
+		String tagName = element.tagName();
 		if (!"table".equalsIgnoreCase(tagName))
 			throw new IllegalArgumentException("The input element must be a table element");
 
-		Elements elements = tableElement.getElementsByTag("tbody");
+		Elements elements = element.getElementsByTag("tbody");
 		if (!elements.isEmpty()) {
-			tableElement = elements.get(0);
+			element = elements.get(0);
 		}
 		
-		HTMLDataTable hDataTable = HTMLDataTable.createHorizontalDataTable(tableElement);
-		HTMLDataTable vDataTable = HTMLDataTable.createVerticalDataTable(tableElement);
+		HTMLDataTable hDataTable = HTMLDataTable.convertToHorizontalDataTable(element);
+		HTMLDataTable vDataTable = HTMLDataTable.convertToVerticalDataTable(element);
 
 		ITableRecordsSimiliartySuite hSuite = tableRecordsSimilarityFactory
 				.createTableRecordsSimilairtySuite(hDataTable.getTableRecords());

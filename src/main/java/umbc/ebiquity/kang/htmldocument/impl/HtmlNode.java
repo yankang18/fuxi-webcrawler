@@ -210,7 +210,7 @@ public class HtmlNode implements IHtmlNode{
 	}
 
 	public String getResidePathID() {
-		return residePath.getPathID();
+		return residePath.getPathIdent();
 	}
 	
 	public HtmlPath getResidePath() {

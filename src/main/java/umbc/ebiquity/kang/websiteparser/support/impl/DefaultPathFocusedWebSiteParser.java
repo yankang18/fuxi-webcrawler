@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import umbc.ebiquity.kang.htmldocument.IHtmlDocument;
-import umbc.ebiquity.kang.htmldocument.parser.IHtmlParsedPathsHolder;
+import umbc.ebiquity.kang.htmldocument.parser.IHtmlDocumentParsedPathsHolder;
 import umbc.ebiquity.kang.htmldocument.parser.impl.StandardHtmlPathsParser;
 import umbc.ebiquity.kang.websiteparser.ICrawledWebSite;
 import umbc.ebiquity.kang.websiteparser.support.IPathFocusedWebSiteParser;
@@ -20,11 +20,11 @@ public class DefaultPathFocusedWebSiteParser implements IPathFocusedWebSiteParse
 	}
 
 	public IWebSiteParsedPathsHolder parse() {
-		List<IHtmlParsedPathsHolder> webPagePathHolders = new ArrayList<IHtmlParsedPathsHolder>();
+		List<IHtmlDocumentParsedPathsHolder> webPagePathHolders = new ArrayList<IHtmlDocumentParsedPathsHolder>();
 		for (IHtmlDocument webPage : website.getWebPages()) {
 			// TODO: may user static method to parse web page for saving memory
 			StandardHtmlPathsParser webPagePathsImpl = new StandardHtmlPathsParser(webPage);
-			IHtmlParsedPathsHolder webPagePathHolder = webPagePathsImpl.parse();
+			IHtmlDocumentParsedPathsHolder webPagePathHolder = webPagePathsImpl.parse();
 			webPagePathHolders.add(webPagePathHolder);
 		}
 		return new DefaultWebSiteParsedPathsHolder(website.getWebSiteURL(), webPagePathHolders);

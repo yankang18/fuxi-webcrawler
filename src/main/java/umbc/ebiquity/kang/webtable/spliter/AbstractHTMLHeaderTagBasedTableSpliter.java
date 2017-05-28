@@ -3,36 +3,40 @@ package umbc.ebiquity.kang.webtable.spliter;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import umbc.ebiquity.kang.htmldocument.impl.StandardHtmlElement;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
 import umbc.ebiquity.kang.webtable.spliter.impl.TableHeaderLocatingResult;
 import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
 
-public abstract class AbstractHTMLHeaderTagBasedTableSpliter implements ITableSpliter {
+public abstract class AbstractHTMLHeaderTagBasedTableSpliter implements ITableHeaderSpliter {
 
 	protected TableSplitingResult resolveHeaderFromBody(Element tableElem, IHeaderLocatingBorker broker) {
 		Elements tbodies = tableElem.getElementsByTag("tbody");
+		TableSplitingResult result;
 		if (tbodies.size() > 0) {
 			Element tBody = tbodies.get(0);
 			Elements elements = tBody.children();
 			if (elements.size() > 0) {
-				return convertToTableResolveResult(tBody, broker.locateHeader(elements));
+				result = convertToTableResolveResult(tBody, broker.locateHeader(elements));
 			} else {
 				// no row in tbody --> not regular
-				return convertToTableResolveResult(tBody,
-						new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UD, false));
+				result = convertToTableResolveResult(tBody, new TableHeaderLocatingResult(TableStatus.UnRegularTable,
+						DataTableHeaderType.UnDetermined, false));
 			}
 		} else {
 			// there is no tbody
 			Elements elements = tableElem.children();
 			if (elements.size() > 0) {
-				return convertToTableResolveResult(tableElem, broker.locateHeader(elements));
+				result = convertToTableResolveResult(tableElem, broker.locateHeader(elements));
 			} else {
 				// no row in table --> not regular
-				return convertToTableResolveResult(tableElem,
-						new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UD, false));
+				result = convertToTableResolveResult(tableElem, new TableHeaderLocatingResult(
+						TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined, false));
 			}
 		}
+		result.setHtmlElement(StandardHtmlElement.createDefaultStandardHtmlElement(tableElem));
+		return result;
 	}
 
 	/**

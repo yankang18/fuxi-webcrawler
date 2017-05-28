@@ -19,7 +19,6 @@ public class StandardBlankNodeEntitilizer implements IHTMLTreeNodeEntitilizer {
 
 		IHTMLTreeNode firstNode = children.get(0);
 		HTMLTreeNodeValue mainValue = null;
-		;
 		if (firstNode instanceof HTMLTreeValueNode) {
 			HTMLTreeValueNode firstValueNode = (HTMLTreeValueNode) firstNode;
 			HTMLTreeNodeValue value = firstValueNode.getMainValue();

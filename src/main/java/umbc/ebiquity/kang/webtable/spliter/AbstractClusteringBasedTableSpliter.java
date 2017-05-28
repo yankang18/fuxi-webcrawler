@@ -10,8 +10,13 @@ import java.util.UUID;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import umbc.ebiquity.kang.htmldocument.impl.StandardHtmlElement;
 import umbc.ebiquity.kang.machinelearning.clustering.HierarchicalClusteringAlgorithm;
 import umbc.ebiquity.kang.machinelearning.clustering.ICluster;
+import umbc.ebiquity.kang.webtable.core.HTMLDataTable;
+import umbc.ebiquity.kang.webtable.core.HTMLTableValidator;
+import umbc.ebiquity.kang.webtable.core.TableCell;
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.similarity.IAttributesSimilarity;
 import umbc.ebiquity.kang.webtable.similarity.IDataCellsSimilarity;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimilarity;
@@ -20,14 +25,10 @@ import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimiliartySuite;
 import umbc.ebiquity.kang.webtable.similarity.impl.TableRecordsSimilarityFactory;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLDataTable;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLTableValidator;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableCell;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
 import umbc.ebiquity.kang.webtable.spliter.impl.TableRecordCluster;
 import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
 
-public abstract class AbstractClusteringBasedTableSpliter implements ITableSpliter {
+public abstract class AbstractClusteringBasedTableSpliter implements ITableHeaderSpliter {
 
 	private ITableRecordsSimilarityFactory tableRecordsSimilarityFactory;
 	private ITableRecordsSimiliartySuite tableRecordsSimiliartySuite;
@@ -41,7 +42,7 @@ public abstract class AbstractClusteringBasedTableSpliter implements ITableSplit
 
 	@Override
 	public TableSplitingResult split(Element tableElement) {
-		HTMLTableValidator.validateTableElement(tableElement); 
+		HTMLTableValidator.isTable(tableElement); 
 
 		Element actualTableElem = null;
 		Elements tbodies = tableElement.getElementsByTag("tbody");
@@ -52,7 +53,9 @@ public abstract class AbstractClusteringBasedTableSpliter implements ITableSplit
 		}
 		Set<ICluster<TableRecord>> clusters = clusterTableRecords(actualTableElem);
 		clusters = validateClusterMembers(clusters);
-		return resolveTableBasedOnClusters(clusters);
+		TableSplitingResult result = resolveTableBasedOnClusters(clusters);
+		result.setHtmlElement(StandardHtmlElement.createDefaultStandardHtmlElement(actualTableElem));
+		return result;
 	}
 
 	/**
@@ -158,12 +161,12 @@ public abstract class AbstractClusteringBasedTableSpliter implements ITableSplit
 
 			} else {
 				TableSplitingResult resolveResult = new TableSplitingResult(TableStatus.RegularTable,
-						DataTableHeaderType.UD);
+						DataTableHeaderType.UnDetermined);
 				return resolveResult;
 			}
 
 		} else {
-			TableSplitingResult resolveResult = new TableSplitingResult(TableStatus.RegularTable, DataTableHeaderType.UD);
+			TableSplitingResult resolveResult = new TableSplitingResult(TableStatus.RegularTable, DataTableHeaderType.UnDetermined);
 			return resolveResult;
 		}
 	}

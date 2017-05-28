@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jsoup.nodes.Element;
 
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecord;
+import umbc.ebiquity.kang.webtable.core.TableRecord;
 
 public interface IHTMLDataTable {
 
