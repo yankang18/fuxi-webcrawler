@@ -3,8 +3,7 @@ package umbc.ebiquity.kang.webtable.resolver;
 import java.util.ArrayList;
 import java.util.List;
 
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
-import umbc.ebiquity.kang.webtable.core.TableRecord;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeEntityNode;
 
 /**
  * 
@@ -14,13 +13,13 @@ import umbc.ebiquity.kang.webtable.core.TableRecord;
 public class HeaderIdentificationResult {
 	
 	private boolean hasPrimaryHeaderRecord;
-	private List<IHTMLTreeNode> primaryHeaderRecord;
-	private List<List<IHTMLTreeNode>> secondaryHeaderRecords = new ArrayList<>();;
+	private List<HTMLTreeEntityNode> primaryHeaderRecord;
+	private List<List<HTMLTreeEntityNode>> secondaryHeaderRecords = new ArrayList<>();;
 	
 	/**
 	 * @return the primaryHeaderRecord
 	 */
-	public List<IHTMLTreeNode> getPrimaryHeaderRecord() {
+	public List<HTMLTreeEntityNode> getPrimaryHeaderRecord() {
 		return primaryHeaderRecord;
 	}
 
@@ -28,14 +27,14 @@ public class HeaderIdentificationResult {
 	 * @param primaryHeaderRecord
 	 *            the primaryHeaderRecord to set
 	 */
-	public void setPrimaryHeaderRecord(List<IHTMLTreeNode> primaryHeaderRecord) {
+	public void setPrimaryHeaderRecord(List<HTMLTreeEntityNode> primaryHeaderRecord) {
 		this.primaryHeaderRecord = primaryHeaderRecord;
 
 		if (primaryHeaderRecord != null)
 			hasPrimaryHeaderRecord = true;
 	}
 
-	public void addSecondaryHeaderRecord(List<IHTMLTreeNode> secondaryHeaderRecord) {
+	public void addSecondaryHeaderRecord(List<HTMLTreeEntityNode> secondaryHeaderRecord) {
 		secondaryHeaderRecords.add(secondaryHeaderRecord);
 	}
 
@@ -43,7 +42,7 @@ public class HeaderIdentificationResult {
 	 * 
 	 * @return
 	 */
-	public List<List<IHTMLTreeNode>> getSecondaryHeaderRecords() {
+	public List<List<HTMLTreeEntityNode>> getSecondaryHeaderRecords() {
 		return secondaryHeaderRecords;
 	}
 

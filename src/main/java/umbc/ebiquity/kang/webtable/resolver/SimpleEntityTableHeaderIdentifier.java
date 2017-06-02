@@ -22,7 +22,7 @@ public class SimpleEntityTableHeaderIdentifier implements EntityTableHeaderIdent
 		for (TableRecord record : headerRecords) {
 			List<TableCell> tableCells = record.getTableCells();
 			
-			List<IHTMLTreeNode> entityHeaderNodes = new ArrayList<>(headerRecords.size());
+			List<HTMLTreeEntityNode> entityHeaderNodes = new ArrayList<>(headerRecords.size());
 				
 			double txtFieldCount = 0;
 			double imgFieldCount = 0;
@@ -72,13 +72,13 @@ public class SimpleEntityTableHeaderIdentifier implements EntityTableHeaderIdent
 		return text != null && text.trim().equals("");
 	}
 	
-	private IHTMLTreeNode createEntityNode(Element element) {
+	private HTMLTreeEntityNode createEntityNode(Element element) {
 		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(extractContent(element),
 				element);
 		return entityNode;
 	}
 
-	private IHTMLTreeNode createImageEntityNode(Element element) {
+	private HTMLTreeEntityNode createImageEntityNode(Element element) {
 		element = getFirstImageElement(element); 
 		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(HtmlImageUtil.getText(element),
 				element);

@@ -7,7 +7,8 @@ import static umbc.ebiquity.kang.webtable.core.HTMLTableTagDefinition.TABLE_ROW_
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import umbc.ebiquity.kang.webtable.core.HTMLTableValidator.TableElementValidationResult;
+import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
+import umbc.ebiquity.kang.webtable.util.HTMLTableValidator.TableElementValidationResult;
 
 public class HTMLTableRecordsCounter {
 

@@ -18,14 +18,18 @@ import umbc.ebiquity.kang.webtable.core.TableCell;
 import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
 import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
-
-public class HTMLTableResolver {
+/**
+ * 
+ * @author yankang
+ *
+ */
+public class HTMLTableTreeTranslator {
 
 	private HTMLTreeOverlayConstructor treeOverlayConstructor;
 	private PropertyTableHeaderIdentifier propertyTableHeaderIdentifier;
 	private EntityTableHeaderIdentifier entityTableHeaderIdentifier;
 
-	public HTMLTableResolver() {
+	public HTMLTableTreeTranslator() {
 		treeOverlayConstructor = new HTMLTreeOverlayConstructor();
 		treeOverlayConstructor.registerCustomizedHtmlNodeProcessors(new IgnoringHTMLTableNodeProcessor());
 
@@ -53,7 +57,7 @@ public class HTMLTableResolver {
 		} else if (DataTableHeaderType.HorizontalHeaderTable == headerType) {
 
 			Map<Integer, IHTMLTreeNode> idx2Header = new HashMap<>();
-			List<IHTMLTreeNode> propertyHeaderRecord = propertyTableHeaderIdentifier
+			List<HTMLTreeEntityNode> propertyHeaderRecord = propertyTableHeaderIdentifier
 					.identifyPropertyHeader(tableSplitingResult.getHorizontalHeaderRecords(), 0);
 			indexPropertyHeaderRecord(tableNode, idx2Header, propertyHeaderRecord, 0);
 
@@ -65,7 +69,7 @@ public class HTMLTableResolver {
 		} else if (DataTableHeaderType.VerticalHeaderTable == headerType) {
 
 			Map<Integer, IHTMLTreeNode> idx2Header = new HashMap<>();
-			List<IHTMLTreeNode> propertyHeaderRecord = propertyTableHeaderIdentifier
+			List<HTMLTreeEntityNode> propertyHeaderRecord = propertyTableHeaderIdentifier
 					.identifyPropertyHeader(tableSplitingResult.getVerticalHeaderRecords(), 0);
 			indexPropertyHeaderRecord(tableNode, idx2Header, propertyHeaderRecord, 0);
 
@@ -87,7 +91,7 @@ public class HTMLTableResolver {
 			int skipRowNum = verticalHeaderRecords.size();
 			int skipColNum = horizontalHeaderRecords.size();
 			List<TableRecord> dataRecords = tableSplitingResult.getVerticalDataRecords();
-			List<IHTMLTreeNode> propertyHeaderRecord = propertyTableHeaderIdentifier
+			List<HTMLTreeEntityNode> propertyHeaderRecord = propertyTableHeaderIdentifier
 					.identifyPropertyHeader(verticalHeaderRecords, skipColNum);
 
 			HeaderIdentificationResult entityHeaderRecords = null;
@@ -147,12 +151,12 @@ public class HTMLTableResolver {
 	 */
 	private void indexEntityHeaderRecords(IHTMLTreeNode tableNode, Map<Integer, IHTMLTreeNode> idx2EntityHeader,
 			HeaderIdentificationResult entityHeaderRecords, int startIndex) {
-		List<IHTMLTreeNode> primaryHeaderRecord = entityHeaderRecords.getPrimaryHeaderRecord();
-		List<List<IHTMLTreeNode>> secondaryHeaderRecords = entityHeaderRecords.getSecondaryHeaderRecords();
+		List<HTMLTreeEntityNode> primaryHeaderRecord = entityHeaderRecords.getPrimaryHeaderRecord();
+		List<List<HTMLTreeEntityNode>> secondaryHeaderRecords = entityHeaderRecords.getSecondaryHeaderRecords();
 		for (int i = startIndex; i < primaryHeaderRecord.size(); i++) {
 			IHTMLTreeNode headerNode = primaryHeaderRecord.get(i);
 
-			for (List<IHTMLTreeNode> secondary : secondaryHeaderRecords) {
+			for (List<HTMLTreeEntityNode> secondary : secondaryHeaderRecords) {
 				headerNode.addChild(secondary.get(i));
 			}
 
@@ -180,7 +184,7 @@ public class HTMLTableResolver {
 	 *            records will be translated
 	 */
 	private void indexPropertyHeaderRecord(IHTMLTreeNode tableNode, Map<Integer, IHTMLTreeNode> idx2PropertyHeader,
-			List<IHTMLTreeNode> propertyHeaderRecord, int startIndex) {
+			List<HTMLTreeEntityNode> propertyHeaderRecord, int startIndex) {
 		for (int i = startIndex; i < propertyHeaderRecord.size(); i++) {
 			IHTMLTreeNode headerNode = propertyHeaderRecord.get(i);
 			idx2PropertyHeader.put(i - startIndex, headerNode);

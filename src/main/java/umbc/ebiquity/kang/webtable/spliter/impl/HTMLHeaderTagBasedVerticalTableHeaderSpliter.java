@@ -6,10 +6,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import umbc.ebiquity.kang.webtable.core.HTMLTableRecordsParser;
-import umbc.ebiquity.kang.webtable.core.HTMLTableValidator;
 import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.spliter.AbstractHTMLHeaderTagBasedTableSpliter;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
 
 public class HTMLHeaderTagBasedVerticalTableHeaderSpliter extends AbstractHTMLHeaderTagBasedTableSpliter {
 

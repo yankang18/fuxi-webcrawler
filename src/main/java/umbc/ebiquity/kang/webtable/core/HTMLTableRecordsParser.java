@@ -10,7 +10,8 @@ import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import umbc.ebiquity.kang.webtable.core.HTMLTableValidator.TableElementValidationResult;
+import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
+import umbc.ebiquity.kang.webtable.util.HTMLTableValidator.TableElementValidationResult;
 
 /**
  * 
@@ -39,8 +40,8 @@ public class HTMLTableRecordsParser {
 	}
 
 	/**
-	 * Create horizontal table records from the specified
-	 * {@link org.jsoup.nodes.Element}, which can be table, thead or tbody.
+	 * Create horizontal table records from the input table element, which can
+	 * be table, thead or tbody.
 	 * 
 	 * @param element
 	 *            the Element from where the horizontal table records are
@@ -53,7 +54,9 @@ public class HTMLTableRecordsParser {
 	 *            the number of column each row has
 	 * @return a <code>List</code> of <code>TableRecord</code>s. Each
 	 *         TableRecord contains the same number of cells.
+	 * 
 	 */
+	// Each table record should have the same number of cells.
 	public static List<TableRecord> createTableRecordsFromHorizontalTableElement(Element element, int rowStart, int rowEnd,
 			int colBorderCount) {
 		validateTableStructure(element);
@@ -97,7 +100,7 @@ public class HTMLTableRecordsParser {
 	}
 
 	/***
-	 * Create vertical table records from the specified Element, which can be
+	 * Create vertical table records from the input table element, which can be
 	 * table, thead or tbody.
 	 * 
 	 * @param element
@@ -111,6 +114,7 @@ public class HTMLTableRecordsParser {
 	 *            the number of column each row has
 	 * @return a <code>List</code> of <code>TableRecord</code>s
 	 */
+	// Each table record should have the same number of cells.
 	public static List<TableRecord> createTableRecordsFromVeriticalTableElement(Element element, int rowStart, int rowEnd,
 			int colBorderCount) {
 		validateTableStructure(element);

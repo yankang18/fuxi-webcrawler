@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 import umbc.ebiquity.kang.htmldocument.util.BasicValidator;
 import umbc.ebiquity.kang.webtable.IHTMLDataTable;
 import umbc.ebiquity.kang.webtable.core.HTMLTableRecordsCounter.TableBorder;
+import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
 
 /**
  * This class represents a POJO data table constructed from a HTML table

@@ -28,4 +28,15 @@ public class BasicValidator {
 		if (obj == null)
 			throw new IllegalArgumentException(msg);
 	}
+
+	/**
+	 * 
+	 * @param input
+	 */
+	// TODO: should change the name to a better one
+	public static void is0to1(double input) {
+		if (input < 0 && input > 1) {
+			throw new IllegalArgumentException(input + " is not in range [0, 1]");
+		}
+	}
 }

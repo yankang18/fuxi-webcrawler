@@ -2,10 +2,10 @@ package umbc.ebiquity.kang.webtable.spliter.impl;
 
 import org.jsoup.nodes.Element;
 
-import umbc.ebiquity.kang.webtable.core.HTMLTableValidator;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderSpliter;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
+import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
 
 public class ClusteringBasedTableHeaderSpliter implements ITableHeaderSpliter {
 

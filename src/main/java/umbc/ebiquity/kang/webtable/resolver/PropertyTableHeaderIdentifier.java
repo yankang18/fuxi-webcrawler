@@ -2,7 +2,7 @@ package umbc.ebiquity.kang.webtable.resolver;
 
 import java.util.List;
 
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeEntityNode;
 import umbc.ebiquity.kang.webtable.core.TableRecord;
 
 /**
@@ -23,6 +23,6 @@ public interface PropertyTableHeaderIdentifier {
 	 *            the number of cells to skip from the start of each record
 	 * @return a list of IHTMLTreeNode each of which represents a property
 	 */
-	List<IHTMLTreeNode> identifyPropertyHeader(List<TableRecord> headerRecords, int skipCellNumber);
+	List<HTMLTreeEntityNode> identifyPropertyHeader(List<TableRecord> headerRecords, int skipCellNumber);
 
 }

@@ -25,7 +25,7 @@ public class ClusteringBasedVerticalTableResolverTest {
 
 	private static final String TEST_FILE_FOLDER = "TableHeaderLocatorTest/";
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void testResolveVerticalTableWithHeaderTagInTableBody() throws IOException {
 
@@ -40,11 +40,13 @@ public class ClusteringBasedVerticalTableResolverTest {
 		
 		List<TableRecord> headerRecords = result.getVerticalHeaderRecords();
 		List<TableRecord> dataRecords = result.getVerticalDataRecords();
-		System.out.println(headerRecords.size());
-		System.out.println(dataRecords.size());
+		assertEquals(1, headerRecords.size());
+		assertEquals(4, dataRecords.size());
 		
 		for (TableRecord headRecord : headerRecords) {
-			for (TableCell cell : headRecord.getTableCells()) {
+			List<TableCell> tableCells = headRecord.getTableCells();
+			for (TableCell cell : tableCells) {
+				assertEquals(11, tableCells.size());
 				System.out.println("");
 				for (String key : cell.getDataCellKeySet()) {
 					DataCell dc = cell.getDataCell(key);

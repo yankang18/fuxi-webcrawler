@@ -14,7 +14,6 @@ import umbc.ebiquity.kang.htmldocument.impl.StandardHtmlElement;
 import umbc.ebiquity.kang.machinelearning.clustering.HierarchicalClusteringAlgorithm;
 import umbc.ebiquity.kang.machinelearning.clustering.ICluster;
 import umbc.ebiquity.kang.webtable.core.HTMLDataTable;
-import umbc.ebiquity.kang.webtable.core.HTMLTableValidator;
 import umbc.ebiquity.kang.webtable.core.TableCell;
 import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.similarity.IAttributesSimilarity;
@@ -27,6 +26,7 @@ import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderT
 import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
 import umbc.ebiquity.kang.webtable.spliter.impl.TableRecordCluster;
 import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
+import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
 
 public abstract class AbstractClusteringBasedTableSpliter implements ITableHeaderSpliter {
 
@@ -51,6 +51,7 @@ public abstract class AbstractClusteringBasedTableSpliter implements ITableHeade
 		} else {
 			actualTableElem = tableElement;
 		}
+		
 		Set<ICluster<TableRecord>> clusters = clusterTableRecords(actualTableElem);
 		clusters = validateClusterMembers(clusters);
 		TableSplitingResult result = resolveTableBasedOnClusters(clusters);
@@ -85,7 +86,6 @@ public abstract class AbstractClusteringBasedTableSpliter implements ITableHeade
 	 *         HTML table
 	 */
 	private Set<ICluster<TableRecord>> clusterTableRecords(Element actualTableElem) {
-
 		HTMLDataTable table = convertToDataTable(actualTableElem);
 
 		List<TableRecord> tableRecords = table.getTableRecords();

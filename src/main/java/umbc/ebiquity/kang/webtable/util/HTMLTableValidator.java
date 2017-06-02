@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.webtable.core;
+package umbc.ebiquity.kang.webtable.util;
 
 import static umbc.ebiquity.kang.webtable.core.HTMLTableTagDefinition.TABLE_BODY_TAG;
 import static umbc.ebiquity.kang.webtable.core.HTMLTableTagDefinition.TABLE_DATA_TAG;
@@ -10,6 +10,7 @@ import static umbc.ebiquity.kang.webtable.core.HTMLTableTagDefinition.TABLE_TAG;
 import org.jsoup.nodes.Element;
 
 import umbc.ebiquity.kang.htmldocument.util.BasicValidator;
+import umbc.ebiquity.kang.webtable.core.HTMLTableTagDefinition;
 
 public class HTMLTableValidator {
 
@@ -22,12 +23,9 @@ public class HTMLTableValidator {
 	 */
 	public static void isDataTable(Element element) {
 		BasicValidator.notNull(element, "The input table element cannot be null");
-		if (!HTMLTableTagDefinition.isTableTag(element.tagName()))
-			throw new IllegalArgumentException("The input element must not be null");
-
-		if (element.getElementsByTag("tbody").isEmpty()) {
-			throw new IllegalArgumentException("The input element must be either a table element or a tbody element");
-		}
+		if (!HTMLTableTagDefinition.isTableTag(element.tagName()) && element.getElementsByTag("tbody").isEmpty())
+			throw new IllegalArgumentException(
+					"The input element must be either a table element or a tbody element : " + element);
 	}
 
 	/**
