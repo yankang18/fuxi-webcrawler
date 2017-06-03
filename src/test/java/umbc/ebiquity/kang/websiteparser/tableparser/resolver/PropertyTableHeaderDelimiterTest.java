@@ -14,6 +14,7 @@ import org.junit.Test;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeEntityNode;
 import umbc.ebiquity.kang.webtable.Translator.DictionaryBasedPropertyTableHeaderTranslator;
 import umbc.ebiquity.kang.webtable.Translator.PropertyTableHeaderTranslator;
+import umbc.ebiquity.kang.webtable.delimiter.AbstractClusteringBasedTableHeaderDelimiter;
 import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
 import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
 import umbc.ebiquity.kang.webtable.delimiter.impl.ClusteringBasedVerticalTableHeaderDelimiter;
@@ -31,22 +32,10 @@ public class PropertyTableHeaderDelimiterTest {
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 
-		HeaderDelimitedTable delimitedTable = delimiter.delimit(element);
-		assertEquals(TableStatus.RegularTable, delimitedTable.getTableStatus());
-		assertEquals(DataTableHeaderType.VerticalHeaderTable, delimitedTable.getDataTableHeaderType());
-
-		PropertyTableHeaderTranslator propertyTableHeaderIdentifier = new DictionaryBasedPropertyTableHeaderTranslator();
-
-		List<HTMLTreeEntityNode> propertyHeaderRecord = propertyTableHeaderIdentifier
-				.translate(delimitedTable.getVerticalHeaderRecords(), 0);
-
-		assertEquals(11, propertyHeaderRecord.size());
-		
-		for(HTMLTreeEntityNode node : propertyHeaderRecord){
-			System.out.println(node.getContent());
-		}
+		delimitTableHeader(delimiter, element);
 	}
 	
+	// TODO: change this test to use Horizontal header table
 	@Test
 	public void testDelimitVerticalTableWithoutHeaderTagInTableBody() throws IOException {
 
@@ -55,6 +44,10 @@ public class PropertyTableHeaderDelimiterTest {
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 
+		delimitTableHeader(delimiter, element);
+	}
+
+	private void delimitTableHeader(AbstractClusteringBasedTableHeaderDelimiter delimiter, Element element) {
 		HeaderDelimitedTable delimitedTable = delimiter.delimit(element);
 		assertEquals(TableStatus.RegularTable, delimitedTable.getTableStatus());
 		assertEquals(DataTableHeaderType.VerticalHeaderTable, delimitedTable.getDataTableHeaderType());
