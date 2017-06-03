@@ -1,6 +1,6 @@
-package umbc.ebiquity.kang.webtable.spliter;
+package umbc.ebiquity.kang.webtable.delimiter;
 
-public interface ITableHeaderResolver {
+public interface IDelimitedTable {
 	
 	public enum TableStatus {
 		RegularTable, UnRegularTable

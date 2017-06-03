@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.webtable.resolver;
+package umbc.ebiquity.kang.webtable.Translator;
 
 import java.util.List;
 
@@ -12,10 +12,11 @@ import umbc.ebiquity.kang.webtable.core.TableRecord;
  * @author yankang
  *
  */
-public interface PropertyTableHeaderIdentifier {
+public interface PropertyTableHeaderTranslator {
 
 	/**
-	 * Identify a property header record from a list of table header.
+	 * Translates a list of TableRecord representing property table header to a
+	 * list HTMLTreeEntityNode representing property table header.
 	 * 
 	 * @param headerRecords
 	 *            a list of header records
@@ -23,6 +24,6 @@ public interface PropertyTableHeaderIdentifier {
 	 *            the number of cells to skip from the start of each record
 	 * @return a list of IHTMLTreeNode each of which represents a property
 	 */
-	List<HTMLTreeEntityNode> identifyPropertyHeader(List<TableRecord> headerRecords, int skipCellNumber);
+	List<HTMLTreeEntityNode> translate(List<TableRecord> headerRecords, int skipCellNumber);
 
 }

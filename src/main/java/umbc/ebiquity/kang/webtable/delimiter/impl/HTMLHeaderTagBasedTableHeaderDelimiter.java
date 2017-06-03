@@ -1,10 +1,10 @@
-package umbc.ebiquity.kang.webtable.spliter.impl;
+package umbc.ebiquity.kang.webtable.delimiter.impl;
 
 import org.jsoup.nodes.Element;
 
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderSpliter;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
+import umbc.ebiquity.kang.webtable.delimiter.ITableHeaderDelimiter;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
 import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
 
 /**
@@ -13,32 +13,32 @@ import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
  * 
  * @author yankang
  */
-public class HTMLHeaderTagBasedTableHeaderSpliter implements ITableHeaderSpliter {
+public class HTMLHeaderTagBasedTableHeaderDelimiter implements ITableHeaderDelimiter {
 
-	private ITableHeaderSpliter verticalTableResolver;
-	private ITableHeaderSpliter horizontalTableResolver;
+	private ITableHeaderDelimiter verticalTableResolver;
+	private ITableHeaderDelimiter horizontalTableResolver;
 
-	public HTMLHeaderTagBasedTableHeaderSpliter() {
+	public HTMLHeaderTagBasedTableHeaderDelimiter() {
 		verticalTableResolver = new HTMLHeaderTagBasedVerticalTableHeaderSpliter();
-		horizontalTableResolver = new HTMLHeaderTagBasedHorizontalTableHeaderSpliter();
+		horizontalTableResolver = new HTMLHeaderTagBasedHorizontalTableHeaderDelimiter();
 	}
 
 	@Override
-	public TableSplitingResult split(Element element) {
+	public HeaderDelimitedTable delimit(Element element) {
 		HTMLTableValidator.isTable(element); 
 		
-		TableSplitingResult result1 = verticalTableResolver.split(element);
-		TableSplitingResult result2 = horizontalTableResolver.split(element);
+		HeaderDelimitedTable result1 = verticalTableResolver.delimit(element);
+		HeaderDelimitedTable result2 = horizontalTableResolver.delimit(element);
 
 		if (result1.getTableStatus() == TableStatus.UnRegularTable
 				&& result2.getTableStatus() == TableStatus.UnRegularTable) {
-			return new TableSplitingResult(TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined);
+			return new HeaderDelimitedTable(TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined);
 		}
 
 		System.out.println("Point 1");
 		if (result1.getDataTableHeaderType() == DataTableHeaderType.VerticalHeaderTable
 				&& result2.getDataTableHeaderType() == DataTableHeaderType.HorizontalHeaderTable) {
-			TableSplitingResult result = new TableSplitingResult(TableStatus.RegularTable, DataTableHeaderType.TwoDirectionalHeaderTable);
+			HeaderDelimitedTable result = new HeaderDelimitedTable(TableStatus.RegularTable, DataTableHeaderType.TwoDirectionalHeaderTable);
 			result.setVerticalHeaderRecords(result1.getVerticalHeaderRecords());
 			result.setVerticalDataRecords(result1.getVerticalDataRecords());
 			result.setHorizontalHeaderRecords(result2.getHorizontalHeaderRecords());
@@ -52,7 +52,7 @@ public class HTMLHeaderTagBasedTableHeaderSpliter implements ITableHeaderSpliter
 			System.out.println("Point 4");
 			return result2;
 		} else {
-			return new TableSplitingResult(TableStatus.RegularTable, DataTableHeaderType.UnDetermined);
+			return new HeaderDelimitedTable(TableStatus.RegularTable, DataTableHeaderType.UnDetermined);
 		}
 	}
 

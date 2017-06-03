@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.webtable.spliter;
+package umbc.ebiquity.kang.webtable.delimiter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,32 +16,32 @@ import umbc.ebiquity.kang.machinelearning.clustering.ICluster;
 import umbc.ebiquity.kang.webtable.core.HTMLDataTable;
 import umbc.ebiquity.kang.webtable.core.TableCell;
 import umbc.ebiquity.kang.webtable.core.TableRecord;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
+import umbc.ebiquity.kang.webtable.delimiter.impl.HeaderDelimitedTable;
+import umbc.ebiquity.kang.webtable.delimiter.impl.TableRecordCluster;
 import umbc.ebiquity.kang.webtable.similarity.IAttributesSimilarity;
 import umbc.ebiquity.kang.webtable.similarity.IDataCellsSimilarity;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimilarity;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimilarityFactory;
 import umbc.ebiquity.kang.webtable.similarity.ITableRecordsSimiliartySuite;
 import umbc.ebiquity.kang.webtable.similarity.impl.TableRecordsSimilarityFactory;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableRecordCluster;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
 import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
 
-public abstract class AbstractClusteringBasedTableSpliter implements ITableHeaderSpliter {
+public abstract class AbstractClusteringBasedTableHeaderDelimiter implements ITableHeaderDelimiter {
 
 	private ITableRecordsSimilarityFactory tableRecordsSimilarityFactory;
 	private ITableRecordsSimiliartySuite tableRecordsSimiliartySuite;
 	private ITableRecordsSimilarity tableRecordsSimilarity;
 	private HierarchicalClusteringAlgorithm<TableRecord> algorithm;
 
-	public AbstractClusteringBasedTableSpliter() {
+	public AbstractClusteringBasedTableHeaderDelimiter() {
 		algorithm = new HierarchicalClusteringAlgorithm<TableRecord>();
 		tableRecordsSimilarityFactory = new TableRecordsSimilarityFactory();
 	}
 
 	@Override
-	public TableSplitingResult split(Element tableElement) {
+	public HeaderDelimitedTable delimit(Element tableElement) {
 		HTMLTableValidator.isTable(tableElement); 
 
 		Element actualTableElem = null;
@@ -54,7 +54,7 @@ public abstract class AbstractClusteringBasedTableSpliter implements ITableHeade
 		
 		Set<ICluster<TableRecord>> clusters = clusterTableRecords(actualTableElem);
 		clusters = validateClusterMembers(clusters);
-		TableSplitingResult result = resolveTableBasedOnClusters(clusters);
+		HeaderDelimitedTable result = resolveTableBasedOnClusters(clusters);
 		result.setHtmlElement(StandardHtmlElement.createDefaultStandardHtmlElement(actualTableElem));
 		return result;
 	}
@@ -124,7 +124,7 @@ public abstract class AbstractClusteringBasedTableSpliter implements ITableHeade
 	 * @param clusters
 	 * @return
 	 */
-	private TableSplitingResult resolveTableBasedOnClusters(Set<ICluster<TableRecord>> clusters) {
+	private HeaderDelimitedTable resolveTableBasedOnClusters(Set<ICluster<TableRecord>> clusters) {
 
 		System.out.println("@@@: " + clusters);
 		List<ICluster<TableRecord>> list = new ArrayList<ICluster<TableRecord>>(clusters);
@@ -160,13 +160,13 @@ public abstract class AbstractClusteringBasedTableSpliter implements ITableHeade
 				return doResolveTable(mergedCluster, cluster);
 
 			} else {
-				TableSplitingResult resolveResult = new TableSplitingResult(TableStatus.RegularTable,
+				HeaderDelimitedTable resolveResult = new HeaderDelimitedTable(TableStatus.RegularTable,
 						DataTableHeaderType.UnDetermined);
 				return resolveResult;
 			}
 
 		} else {
-			TableSplitingResult resolveResult = new TableSplitingResult(TableStatus.RegularTable, DataTableHeaderType.UnDetermined);
+			HeaderDelimitedTable resolveResult = new HeaderDelimitedTable(TableStatus.RegularTable, DataTableHeaderType.UnDetermined);
 			return resolveResult;
 		}
 	}
@@ -334,7 +334,7 @@ public abstract class AbstractClusteringBasedTableSpliter implements ITableHeade
 		return (attributeSim + dataCellSim) / 2;
 	}
 
-	protected abstract TableSplitingResult doResolveTable(List<TableRecord> cluster);
+	protected abstract HeaderDelimitedTable doResolveTable(List<TableRecord> cluster);
 
 	/**
 	 * 
@@ -342,7 +342,7 @@ public abstract class AbstractClusteringBasedTableSpliter implements ITableHeade
 	 * @param cluster2
 	 * @return
 	 */
-	protected abstract TableSplitingResult doResolveTable(List<TableRecord> cluster1, List<TableRecord> cluster2);
+	protected abstract HeaderDelimitedTable doResolveTable(List<TableRecord> cluster1, List<TableRecord> cluster2);
 
 	/**
 	 * Convert the specified Element representing a table or tbody element to a

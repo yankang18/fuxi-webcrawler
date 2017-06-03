@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.webtable.resolver;
+package umbc.ebiquity.kang.webtable.Translator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ import umbc.ebiquity.kang.webtable.core.TableRecord;
  * @author yankang
  *
  */
-public class DictionaryBasedPropertyTableHeaderIdentifier implements PropertyTableHeaderIdentifier {
+public class DictionaryBasedPropertyTableHeaderTranslator implements PropertyTableHeaderTranslator {
 	
 	private static Set<String> DICTIONARY;
 	static {
@@ -74,7 +74,7 @@ public class DictionaryBasedPropertyTableHeaderIdentifier implements PropertyTab
 	private double threshold = 0.40;
 
 	@Override
-	public List<HTMLTreeEntityNode> identifyPropertyHeader(List<TableRecord> headerRecords, int skipCellNumber) {
+	public List<HTMLTreeEntityNode> translate(List<TableRecord> headerRecords, int skipCellNumber) {
 
 		List<HTMLTreeEntityNode> propertyHeaderNodes = null;
 		for (TableRecord record : headerRecords) {
@@ -91,7 +91,7 @@ public class DictionaryBasedPropertyTableHeaderIdentifier implements PropertyTab
 				totalSim += computeSimilarity(extractContent(tableCells.get(i)));
 			}
 			if (totalSim / tableCells.size() >= threshold) {
-				System.out.println(DictionaryBasedPropertyTableHeaderIdentifier.class.getName()
+				System.out.println(DictionaryBasedPropertyTableHeaderTranslator.class.getName()
 						+ "#identifyPropertyHeader:" + totalSim / tableCells.size());
 				return propertyHeaderNodes;
 			}

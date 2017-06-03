@@ -1,8 +1,8 @@
-package umbc.ebiquity.kang.webtable.spliter;
+package umbc.ebiquity.kang.webtable.delimiter;
 
 import org.jsoup.nodes.Element;
 
-import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
+import umbc.ebiquity.kang.webtable.delimiter.impl.HeaderDelimitedTable;
 
 /**
  * This interface defines the behavior of implementing classes that separate a
@@ -11,7 +11,7 @@ import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
  * @author yankang
  *
  */
-public interface ITableHeaderSpliter {
+public interface ITableHeaderDelimiter {
 
 	/**
 	 * Splits a HTML table represented by {@link org.jsoup.nodes.Element} to a
@@ -25,6 +25,6 @@ public interface ITableHeaderSpliter {
 	 * @throws IllegalArgumentException if the specified <code>Element</code> is
 	 *             not a HTML table
 	 */
-	TableSplitingResult split(Element element);
+	HeaderDelimitedTable delimit(Element element);
 
 }

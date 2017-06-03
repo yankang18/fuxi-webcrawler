@@ -1,19 +1,19 @@
-package umbc.ebiquity.kang.webtable.spliter;
+package umbc.ebiquity.kang.webtable.delimiter;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import umbc.ebiquity.kang.htmldocument.impl.StandardHtmlElement;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableHeaderLocatingResult;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
+import umbc.ebiquity.kang.webtable.delimiter.impl.HeaderDelimitedTable;
+import umbc.ebiquity.kang.webtable.delimiter.impl.TableHeaderLocatingResult;
 
-public abstract class AbstractHTMLHeaderTagBasedTableSpliter implements ITableHeaderSpliter {
+public abstract class AbstractHTMLHeaderTagBasedTableHeaderDelimiter implements ITableHeaderDelimiter {
 
-	protected TableSplitingResult resolveHeaderFromBody(Element tableElem, IHeaderLocatingBorker broker) {
+	protected HeaderDelimitedTable resolveHeaderFromBody(Element tableElem, IHeaderLocatingBorker broker) {
 		Elements tbodies = tableElem.getElementsByTag("tbody");
-		TableSplitingResult result;
+		HeaderDelimitedTable result;
 		if (tbodies.size() > 0) {
 			Element tBody = tbodies.get(0);
 			Elements elements = tBody.children();
@@ -45,7 +45,7 @@ public abstract class AbstractHTMLHeaderTagBasedTableSpliter implements ITableHe
 	 * @param result
 	 * @return
 	 */
-	protected abstract TableSplitingResult convertToTableResolveResult(Element element, TableHeaderLocatingResult result);
+	protected abstract HeaderDelimitedTable convertToTableResolveResult(Element element, TableHeaderLocatingResult result);
 	
 	protected interface IHeaderLocatingBorker {
 		TableHeaderLocatingResult locateHeader(Elements elements);

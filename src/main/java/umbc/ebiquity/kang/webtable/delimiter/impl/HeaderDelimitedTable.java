@@ -1,15 +1,15 @@
-package umbc.ebiquity.kang.webtable.spliter.impl;
+package umbc.ebiquity.kang.webtable.delimiter.impl;
 
 import java.util.List;
 
 import umbc.ebiquity.kang.htmldocument.IHtmlElement;
 import umbc.ebiquity.kang.htmldocument.impl.StandardHtmlElement;
 import umbc.ebiquity.kang.webtable.core.TableRecord;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
 
-public class TableSplitingResult implements ITableHeaderResolver {
+public class HeaderDelimitedTable implements IDelimitedTable {
 
 	private IHtmlElement htmlElement;
 	private TableStatus status;
@@ -19,7 +19,7 @@ public class TableSplitingResult implements ITableHeaderResolver {
 	private List<TableRecord> horizontalDataRecords;
 	private List<TableRecord> horizontalHeaderRecords;  
 
-	public TableSplitingResult(TableStatus tableStatus, DataTableHeaderType tableType) {
+	public HeaderDelimitedTable(TableStatus tableStatus, DataTableHeaderType tableType) {
 		status = tableStatus;
 		headerType = tableType;
 	}

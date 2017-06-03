@@ -15,11 +15,11 @@ import org.junit.Test;
 import umbc.ebiquity.kang.webtable.core.DataCell;
 import umbc.ebiquity.kang.webtable.core.TableCell;
 import umbc.ebiquity.kang.webtable.core.TableRecord;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
-import umbc.ebiquity.kang.webtable.spliter.impl.ClusteringBasedVerticalTableHeaderSpliter;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLHeaderTagBasedTableHeaderSpliter;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
+import umbc.ebiquity.kang.webtable.delimiter.impl.ClusteringBasedVerticalTableHeaderDelimiter;
+import umbc.ebiquity.kang.webtable.delimiter.impl.HTMLHeaderTagBasedTableHeaderDelimiter;
+import umbc.ebiquity.kang.webtable.delimiter.impl.HeaderDelimitedTable;
 
 public class ClusteringBasedVerticalTableResolverTest {
 
@@ -29,12 +29,12 @@ public class ClusteringBasedVerticalTableResolverTest {
 	@Test
 	public void testResolveVerticalTableWithHeaderTagInTableBody() throws IOException {
 
-		ClusteringBasedVerticalTableHeaderSpliter resolver = new ClusteringBasedVerticalTableHeaderSpliter();
+		ClusteringBasedVerticalTableHeaderDelimiter resolver = new ClusteringBasedVerticalTableHeaderDelimiter();
 		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "VerticalHeaderTableWithHeadinTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 
-		TableSplitingResult result = resolver.split(element);
+		HeaderDelimitedTable result = resolver.delimit(element);
 		assertEquals(TableStatus.RegularTable, result.getTableStatus());
 		assertEquals(DataTableHeaderType.VerticalHeaderTable, result.getDataTableHeaderType());
 		

@@ -15,10 +15,10 @@ import org.junit.Test;
 import umbc.ebiquity.kang.webtable.core.DataCell;
 import umbc.ebiquity.kang.webtable.core.TableCell;
 import umbc.ebiquity.kang.webtable.core.TableRecord;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLHeaderTagBasedTableHeaderSpliter;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
+import umbc.ebiquity.kang.webtable.delimiter.impl.HTMLHeaderTagBasedTableHeaderDelimiter;
+import umbc.ebiquity.kang.webtable.delimiter.impl.HeaderDelimitedTable;
 
 public class HTMLHeaderTagBasedTableHeaderResolverTest {
 
@@ -28,12 +28,12 @@ public class HTMLHeaderTagBasedTableHeaderResolverTest {
 	@Test
 	public void testResolveHorizontalTableWithHeaderTagInTableBody() throws IOException {
 
-		HTMLHeaderTagBasedTableHeaderSpliter resolver = new HTMLHeaderTagBasedTableHeaderSpliter();
+		HTMLHeaderTagBasedTableHeaderDelimiter resolver = new HTMLHeaderTagBasedTableHeaderDelimiter();
 		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "HorizontalHeaderTableWithHeadIntheTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 
-		TableSplitingResult result = resolver.split(element);
+		HeaderDelimitedTable result = resolver.delimit(element);
 		assertEquals(result.getTableStatus(), TableStatus.RegularTable);
 		assertEquals(result.getDataTableHeaderType(), DataTableHeaderType.HorizontalHeaderTable);
 
@@ -66,12 +66,12 @@ public class HTMLHeaderTagBasedTableHeaderResolverTest {
 	// @Ignore
 	@Test
 	public void testResolveHorizontalTableWithHeaderTagInTableHeader() throws IOException {
-		HTMLHeaderTagBasedTableHeaderSpliter resolver = new HTMLHeaderTagBasedTableHeaderSpliter();
+		HTMLHeaderTagBasedTableHeaderDelimiter resolver = new HTMLHeaderTagBasedTableHeaderDelimiter();
 		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "HorizontalHeaderTableWithHeadIntheThead.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 
-		TableSplitingResult result = resolver.split(element);
+		HeaderDelimitedTable result = resolver.delimit(element);
 		assertEquals(result.getTableStatus(), TableStatus.RegularTable);
 		assertEquals(result.getDataTableHeaderType(), DataTableHeaderType.HorizontalHeaderTable);
 
@@ -95,12 +95,12 @@ public class HTMLHeaderTagBasedTableHeaderResolverTest {
 	@Test
 	public void testResolveVerticalTableWithHeaderTagInTableBody() throws IOException {
 
-		HTMLHeaderTagBasedTableHeaderSpliter resolver = new HTMLHeaderTagBasedTableHeaderSpliter();
+		HTMLHeaderTagBasedTableHeaderDelimiter resolver = new HTMLHeaderTagBasedTableHeaderDelimiter();
 		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "VerticalHeaderTableWithHeadinTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 
-		TableSplitingResult result = resolver.split(element);
+		HeaderDelimitedTable result = resolver.delimit(element);
 		assertEquals(TableStatus.RegularTable, result.getTableStatus());
 		assertEquals(DataTableHeaderType.VerticalHeaderTable, result.getDataTableHeaderType());
 

@@ -1,11 +1,11 @@
-package umbc.ebiquity.kang.webtable.spliter.impl;
+package umbc.ebiquity.kang.webtable.delimiter.impl;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import umbc.ebiquity.kang.webtable.core.HTMLTableRecordsCounter;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
 
 /**
  * This class is to locate the position of the headers in a table. The locating
@@ -77,11 +77,11 @@ public class HTMLHeaderTagBasedTableHeaderLocator {
 		// no header exists.
 		if (!hasHeaders(header)) {
 			return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined, isTableHead,
-					TableHeaderLocatingResult.NO_HEADER);
+ TableHeaderLocatingResult.NO_HEADER);
 		}
 
-		// # If the program reaches here, it means that header exists. We are
-		// going to find the first row that is not a header. Since this
+		// # If the program reaches this point, it means that header exists. We
+		// are going to find the first row that is not a header. Since this
 		// row separates the headers and the data, we call this row the
 		// Separator.
 		int split = header.length;
@@ -104,11 +104,11 @@ public class HTMLHeaderTagBasedTableHeaderLocator {
 		// If there still have headers after Separator, we consider the table is
 		// irregular.
 		if (containsHeaderAfterSplit)
-			return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined, isTableHead,
-					TableHeaderLocatingResult.UNEXPECTED_HEADER);
+			return new TableHeaderLocatingResult(TableStatus.UnRegularTable, DataTableHeaderType.UnDetermined,
+					isTableHead, TableHeaderLocatingResult.UNEXPECTED_HEADER);
 
-		// # If the program reaches here, it means that headers are found and
-		// valid, we are going return these information.
+		// # If the program reaches this point, it means that headers are found
+		// and valid, we are going return these information.
 		TableHeaderLocatingResult result = new TableHeaderLocatingResult(TableStatus.RegularTable,
 				DataTableHeaderType.HorizontalHeaderTable, isTableHead);
 		result.setHorizontalHeaderPosition(new HeaderPosition(0, split - 1, numberOfRow, minCol));

@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.webtable.spliter.impl;
+package umbc.ebiquity.kang.webtable.delimiter.impl;
 
 import java.util.List;
 
@@ -7,11 +7,11 @@ import org.jsoup.select.Elements;
 
 import umbc.ebiquity.kang.webtable.core.HTMLTableRecordsParser;
 import umbc.ebiquity.kang.webtable.core.TableRecord;
-import umbc.ebiquity.kang.webtable.spliter.AbstractHTMLHeaderTagBasedTableSpliter;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.AbstractHTMLHeaderTagBasedTableHeaderDelimiter;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
 import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
 
-public class HTMLHeaderTagBasedVerticalTableHeaderSpliter extends AbstractHTMLHeaderTagBasedTableSpliter {
+public class HTMLHeaderTagBasedVerticalTableHeaderSpliter extends AbstractHTMLHeaderTagBasedTableHeaderDelimiter {
 
 	private HTMLHeaderTagBasedTableHeaderLocator headerResolver;
 
@@ -20,7 +20,7 @@ public class HTMLHeaderTagBasedVerticalTableHeaderSpliter extends AbstractHTMLHe
 	}
 	
 	@Override
-	public TableSplitingResult split(Element element) {
+	public HeaderDelimitedTable delimit(Element element) {
 		HTMLTableValidator.isTable(element); 
 		
 		return resolveHeaderFromBody(element, new IHeaderLocatingBorker() {
@@ -32,7 +32,7 @@ public class HTMLHeaderTagBasedVerticalTableHeaderSpliter extends AbstractHTMLHe
 	}
 
 	@Override
-	protected TableSplitingResult convertToTableResolveResult(Element element, TableHeaderLocatingResult result) {
+	protected HeaderDelimitedTable convertToTableResolveResult(Element element, TableHeaderLocatingResult result) {
 		
 		if (DataTableHeaderType.VerticalHeaderTable == result.getDataTableType()) {
 
@@ -43,14 +43,14 @@ public class HTMLHeaderTagBasedVerticalTableHeaderSpliter extends AbstractHTMLHe
 			List<TableRecord> dataRecords = HTMLTableRecordsParser.createTableRecordsFromVeriticalTableElement(element,
 					position.getRowEnd() + 1, position.getRowBorderCount() - 1, position.getColumnBorderCount());
 
-			TableSplitingResult resolveResult = new TableSplitingResult(result.getTableStatus(),
+			HeaderDelimitedTable resolveResult = new HeaderDelimitedTable(result.getTableStatus(),
 					result.getDataTableType());
 			resolveResult.setVerticalHeaderRecords(headerRecords);
 			resolveResult.setVerticalDataRecords(dataRecords);
 			return resolveResult;
 
 		} else {
-			TableSplitingResult resolveResult = new TableSplitingResult(result.getTableStatus(),
+			HeaderDelimitedTable resolveResult = new HeaderDelimitedTable(result.getTableStatus(),
 					result.getDataTableType());
 			return resolveResult;
 		}

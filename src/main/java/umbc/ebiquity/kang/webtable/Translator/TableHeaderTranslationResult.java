@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.webtable.resolver;
+package umbc.ebiquity.kang.webtable.Translator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,12 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeEntityNode;
  * @author yankang
  *
  */
-public class HeaderIdentificationResult {
-	
+public class TableHeaderTranslationResult {
+
 	private boolean hasPrimaryHeaderRecord;
 	private List<HTMLTreeEntityNode> primaryHeaderRecord;
 	private List<List<HTMLTreeEntityNode>> secondaryHeaderRecords = new ArrayList<>();;
-	
+
 	/**
 	 * @return the primaryHeaderRecord
 	 */

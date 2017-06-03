@@ -15,10 +15,10 @@ import org.junit.Test;
 import umbc.ebiquity.kang.webtable.core.DataCell;
 import umbc.ebiquity.kang.webtable.core.TableCell;
 import umbc.ebiquity.kang.webtable.core.TableRecord;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
-import umbc.ebiquity.kang.webtable.spliter.impl.ClusteringBasedHorizontalTableHeaderSpliter;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableSplitingResult;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
+import umbc.ebiquity.kang.webtable.delimiter.impl.ClusteringBasedHorizontalTableHeaderDelimiter;
+import umbc.ebiquity.kang.webtable.delimiter.impl.HeaderDelimitedTable;
 
 public class ClusteringBasedHorizontalTableResolverTest {
 	
@@ -28,12 +28,12 @@ public class ClusteringBasedHorizontalTableResolverTest {
 	@Test
 	public void testResolveHorizontalTableWithHeaderTagInTableBody() throws IOException {
 
-		ClusteringBasedHorizontalTableHeaderSpliter resolver = new ClusteringBasedHorizontalTableHeaderSpliter();
+		ClusteringBasedHorizontalTableHeaderDelimiter resolver = new ClusteringBasedHorizontalTableHeaderDelimiter();
 		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "HorizontalHeaderTableWithHeadIntheTbody.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 
-		TableSplitingResult result = resolver.split(element);
+		HeaderDelimitedTable result = resolver.delimit(element);
 		assertEquals(result.getTableStatus(), TableStatus.RegularTable);
 		assertEquals(result.getDataTableHeaderType(), DataTableHeaderType.HorizontalHeaderTable);
 

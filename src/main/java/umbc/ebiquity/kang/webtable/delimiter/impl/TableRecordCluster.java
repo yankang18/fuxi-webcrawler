@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.webtable.spliter.impl;
+package umbc.ebiquity.kang.webtable.delimiter.impl;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

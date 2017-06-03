@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.webtable.spliter.impl;
+package umbc.ebiquity.kang.webtable.delimiter.impl;
 
 import java.util.List;
 
@@ -7,21 +7,21 @@ import org.jsoup.select.Elements;
 
 import umbc.ebiquity.kang.webtable.core.HTMLTableRecordsParser;
 import umbc.ebiquity.kang.webtable.core.TableRecord;
-import umbc.ebiquity.kang.webtable.spliter.AbstractHTMLHeaderTagBasedTableSpliter;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
+import umbc.ebiquity.kang.webtable.delimiter.AbstractHTMLHeaderTagBasedTableHeaderDelimiter;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
 import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
 
-public class HTMLHeaderTagBasedHorizontalTableHeaderSpliter extends AbstractHTMLHeaderTagBasedTableSpliter  {
+public class HTMLHeaderTagBasedHorizontalTableHeaderDelimiter extends AbstractHTMLHeaderTagBasedTableHeaderDelimiter  {
 
 	private HTMLHeaderTagBasedTableHeaderLocator headersLocator;
 
-	public HTMLHeaderTagBasedHorizontalTableHeaderSpliter() {
+	public HTMLHeaderTagBasedHorizontalTableHeaderDelimiter() {
 		headersLocator = new HTMLHeaderTagBasedTableHeaderLocator();
 	}
 	
 	@Override
-	public TableSplitingResult split(Element element) {
+	public HeaderDelimitedTable delimit(Element element) {
 		HTMLTableValidator.isTable(element);
 		
 		Elements theads = element.getElementsByTag("thead");
@@ -61,7 +61,7 @@ public class HTMLHeaderTagBasedHorizontalTableHeaderSpliter extends AbstractHTML
 	}
 
 	@Override
-	protected TableSplitingResult convertToTableResolveResult(Element element, TableHeaderLocatingResult result) {
+	protected HeaderDelimitedTable convertToTableResolveResult(Element element, TableHeaderLocatingResult result) {
 		
 		if (DataTableHeaderType.HorizontalHeaderTable == result.getDataTableType()) {
 
@@ -72,20 +72,20 @@ public class HTMLHeaderTagBasedHorizontalTableHeaderSpliter extends AbstractHTML
 			List<TableRecord> dataRecords = HTMLTableRecordsParser.createTableRecordsFromHorizontalTableElement(element,
 					position.getRowEnd() + 1, position.getRowBorderCount() - 1, position.getColumnBorderCount());
 
-			TableSplitingResult resolveResult = new TableSplitingResult(result.getTableStatus(),
+			HeaderDelimitedTable resolveResult = new HeaderDelimitedTable(result.getTableStatus(),
 					result.getDataTableType());
 			resolveResult.setHorizontalHeaderRecords(headerRecords);
 			resolveResult.setHorizontalDataRecords(dataRecords);
 			return resolveResult;
 
 		} else {
-			TableSplitingResult resolveResult = new TableSplitingResult(result.getTableStatus(),
+			HeaderDelimitedTable resolveResult = new HeaderDelimitedTable(result.getTableStatus(),
 					result.getDataTableType());
 			return resolveResult;
 		}
 	}
 	
-	private TableSplitingResult convertToTableHeaderResolveResult(Element tBody, Element thead,
+	private HeaderDelimitedTable convertToTableHeaderResolveResult(Element tBody, Element thead,
 			TableHeaderLocatingResult result) {
 
 		if (DataTableHeaderType.HorizontalHeaderTable == result.getDataTableType()) {
@@ -95,14 +95,14 @@ public class HTMLHeaderTagBasedHorizontalTableHeaderSpliter extends AbstractHTML
 					position.getRowEnd(), position.getColumnBorderCount());
 			List<TableRecord> dataRecords = HTMLTableRecordsParser.createHorizontalTableRecords(tBody, 0, position.getColumnBorderCount());
 
-			TableSplitingResult resolveResult = new TableSplitingResult(result.getTableStatus(),
+			HeaderDelimitedTable resolveResult = new HeaderDelimitedTable(result.getTableStatus(),
 					result.getDataTableType());
 			resolveResult.setHorizontalHeaderRecords(headerRecords);
 			resolveResult.setHorizontalDataRecords(dataRecords);
 			return resolveResult;
 
 		} else {
-			TableSplitingResult resolveResult = new TableSplitingResult(result.getTableStatus(),
+			HeaderDelimitedTable resolveResult = new HeaderDelimitedTable(result.getTableStatus(),
 					result.getDataTableType());
 			return resolveResult;
 		}

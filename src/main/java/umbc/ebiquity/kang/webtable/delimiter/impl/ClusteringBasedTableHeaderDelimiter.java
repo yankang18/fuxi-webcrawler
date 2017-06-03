@@ -1,59 +1,59 @@
-package umbc.ebiquity.kang.webtable.spliter.impl;
+package umbc.ebiquity.kang.webtable.delimiter.impl;
 
 import org.jsoup.nodes.Element;
 
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderSpliter;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
+import umbc.ebiquity.kang.webtable.delimiter.ITableHeaderDelimiter;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
 import umbc.ebiquity.kang.webtable.util.HTMLTableValidator;
 
-public class ClusteringBasedTableHeaderSpliter implements ITableHeaderSpliter {
+public class ClusteringBasedTableHeaderDelimiter implements ITableHeaderDelimiter {
 
-    private ITableHeaderSpliter verticalTableResolver;
-    private ITableHeaderSpliter horizontalTableResolver;
+    private ITableHeaderDelimiter verticalTableResolver;
+    private ITableHeaderDelimiter horizontalTableResolver;
     
-	public ClusteringBasedTableHeaderSpliter() {
-		verticalTableResolver = new ClusteringBasedVerticalTableHeaderSpliter();
-		horizontalTableResolver = new ClusteringBasedHorizontalTableHeaderSpliter();
+	public ClusteringBasedTableHeaderDelimiter() {
+		verticalTableResolver = new ClusteringBasedVerticalTableHeaderDelimiter();
+		horizontalTableResolver = new ClusteringBasedHorizontalTableHeaderDelimiter();
 	}
 
 	@Override
-	public TableSplitingResult split(Element element) {
+	public HeaderDelimitedTable delimit(Element element) {
 		HTMLTableValidator.isTable(element); 
 		
-		TableSplitingResult vResult = verticalTableResolver.split(element);
-		TableSplitingResult hResult = horizontalTableResolver.split(element);
+		HeaderDelimitedTable vResult = verticalTableResolver.delimit(element);
+		HeaderDelimitedTable hResult = horizontalTableResolver.delimit(element);
 
 		if (DataTableHeaderType.NonHeaderTable == vResult.getDataTableHeaderType()
 				&& DataTableHeaderType.NonHeaderTable == hResult.getDataTableHeaderType()) {
-			TableSplitingResult result = new TableSplitingResult(TableStatus.RegularTable, DataTableHeaderType.NonHeaderTable);
+			HeaderDelimitedTable result = new HeaderDelimitedTable(TableStatus.RegularTable, DataTableHeaderType.NonHeaderTable);
 			result.setHorizontalDataRecords(hResult.getHorizontalDataRecords());
 			result.setVerticalDataRecords(vResult.getVerticalDataRecords());
 			return result;
 		} else if (DataTableHeaderType.VerticalHeaderTable == vResult.getDataTableHeaderType()
 				&& DataTableHeaderType.UnDetermined == hResult.getDataTableHeaderType()
 				|| DataTableHeaderType.NonHeaderTable == hResult.getDataTableHeaderType()) {
-			TableSplitingResult result = new TableSplitingResult(TableStatus.RegularTable, DataTableHeaderType.VerticalHeaderTable);
+			HeaderDelimitedTable result = new HeaderDelimitedTable(TableStatus.RegularTable, DataTableHeaderType.VerticalHeaderTable);
 			result.setVerticalHeaderRecords(vResult.getVerticalHeaderRecords());
 			result.setVerticalDataRecords(vResult.getVerticalDataRecords());
 			return result;
 		} else if (DataTableHeaderType.HorizontalHeaderTable == hResult.getDataTableHeaderType()
 				&& (DataTableHeaderType.UnDetermined == vResult.getDataTableHeaderType()
 						|| DataTableHeaderType.NonHeaderTable == vResult.getDataTableHeaderType())) {
-			TableSplitingResult result = new TableSplitingResult(TableStatus.RegularTable, DataTableHeaderType.HorizontalHeaderTable);
+			HeaderDelimitedTable result = new HeaderDelimitedTable(TableStatus.RegularTable, DataTableHeaderType.HorizontalHeaderTable);
 			result.setHorizontalHeaderRecords(hResult.getHorizontalHeaderRecords());
 			result.setHorizontalDataRecords(hResult.getHorizontalDataRecords());
 			return result;
 		} else if (DataTableHeaderType.VerticalHeaderTable == vResult.getDataTableHeaderType()
 				&& DataTableHeaderType.HorizontalHeaderTable == hResult.getDataTableHeaderType()) {
-			TableSplitingResult result = new TableSplitingResult(TableStatus.RegularTable, DataTableHeaderType.TwoDirectionalHeaderTable);
+			HeaderDelimitedTable result = new HeaderDelimitedTable(TableStatus.RegularTable, DataTableHeaderType.TwoDirectionalHeaderTable);
 			result.setVerticalHeaderRecords(vResult.getVerticalHeaderRecords());
 			result.setVerticalDataRecords(vResult.getVerticalDataRecords());
 			result.setHorizontalHeaderRecords(hResult.getHorizontalHeaderRecords());
 			result.setHorizontalDataRecords(hResult.getHorizontalDataRecords());
 			return result;
 		} else {
-			TableSplitingResult result = new TableSplitingResult(TableStatus.RegularTable, DataTableHeaderType.UnDetermined);
+			HeaderDelimitedTable result = new HeaderDelimitedTable(TableStatus.RegularTable, DataTableHeaderType.UnDetermined);
 			return result;
 		}
 

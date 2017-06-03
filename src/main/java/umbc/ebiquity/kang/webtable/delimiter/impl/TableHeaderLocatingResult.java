@@ -1,8 +1,8 @@
-package umbc.ebiquity.kang.webtable.spliter.impl;
+package umbc.ebiquity.kang.webtable.delimiter.impl;
 
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable;
 
-public class TableHeaderLocatingResult implements ITableHeaderResolver {
+public class TableHeaderLocatingResult implements IDelimitedTable {
 
 	private TableStatus status;
 	private DataTableHeaderType type;

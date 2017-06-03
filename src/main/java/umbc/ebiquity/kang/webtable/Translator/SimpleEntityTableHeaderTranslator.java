@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.webtable.resolver;
+package umbc.ebiquity.kang.webtable.Translator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +12,13 @@ import umbc.ebiquity.kang.htmldocument.util.HtmlImageUtil;
 import umbc.ebiquity.kang.webtable.core.TableCell;
 import umbc.ebiquity.kang.webtable.core.TableRecord; 
 
-public class SimpleEntityTableHeaderIdentifier implements EntityTableHeaderIdentifier {
+public class SimpleEntityTableHeaderTranslator implements EntityTableHeaderTranslator {
 
 	private double threshold = 0.60;
 	
 	@Override
-	public HeaderIdentificationResult identifyEntityHeaders(List<TableRecord> headerRecords, int skipCellNum) {
-		HeaderIdentificationResult result = new HeaderIdentificationResult();
+	public TableHeaderTranslationResult translator(List<TableRecord> headerRecords, int skipCellNum) {
+		TableHeaderTranslationResult result = new TableHeaderTranslationResult();
 		for (TableRecord record : headerRecords) {
 			List<TableCell> tableCells = record.getTableCells();
 			

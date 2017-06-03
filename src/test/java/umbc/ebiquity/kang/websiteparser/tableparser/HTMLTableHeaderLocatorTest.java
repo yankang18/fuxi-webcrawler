@@ -10,11 +10,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.spliter.ITableHeaderResolver.TableStatus;
-import umbc.ebiquity.kang.webtable.spliter.impl.HTMLHeaderTagBasedTableHeaderLocator;
-import umbc.ebiquity.kang.webtable.spliter.impl.HeaderPosition;
-import umbc.ebiquity.kang.webtable.spliter.impl.TableHeaderLocatingResult;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
+import umbc.ebiquity.kang.webtable.delimiter.impl.HTMLHeaderTagBasedTableHeaderLocator;
+import umbc.ebiquity.kang.webtable.delimiter.impl.HeaderPosition;
+import umbc.ebiquity.kang.webtable.delimiter.impl.TableHeaderLocatingResult;
 
 public class HTMLTableHeaderLocatorTest {
 
