@@ -20,6 +20,8 @@ public interface IHtmlNode {
 
 	String getPrefixPathID();
 
-	Element getWrappedElement();  
+	Element getWrappedElement();
+
+	boolean isLeafNode();
  
 }

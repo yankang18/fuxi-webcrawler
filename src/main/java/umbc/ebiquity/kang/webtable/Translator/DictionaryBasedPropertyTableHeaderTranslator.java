@@ -43,6 +43,8 @@ public class DictionaryBasedPropertyTableHeaderTranslator implements PropertyTab
 		DICTIONARY.add("Type");
 		DICTIONARY.add("Price");
 		DICTIONARY.add("Ratio");
+		DICTIONARY.add("Brand");
+		DICTIONARY.add("Logo");
 		
 		//
 		DICTIONARY.add("Rating");
@@ -71,7 +73,7 @@ public class DictionaryBasedPropertyTableHeaderTranslator implements PropertyTab
 
 	private EqualStemBoostingLabelSimilarity labelSimilarity = new EqualStemBoostingLabelSimilarity(
 			new OrderedTokenListSimilarity());
-	private double threshold = 0.40;
+	private double threshold = 0.30;
 
 	@Override
 	public List<HTMLTreeEntityNode> translate(List<TableRecord> headerRecords, int skipCellNumber) {
@@ -109,7 +111,7 @@ public class DictionaryBasedPropertyTableHeaderTranslator implements PropertyTab
 	
 	
 	private HTMLTreeEntityNode createEntityNode(TableCell tableCell) {
-		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(extractContent(tableCell), tableCell.getWrappedElement());
+		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(tableCell.getWrappedElement(), extractContent(tableCell));
 		return entityNode;
 	}
 

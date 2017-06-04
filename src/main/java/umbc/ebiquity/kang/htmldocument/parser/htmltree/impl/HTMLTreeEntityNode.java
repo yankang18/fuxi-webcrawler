@@ -14,8 +14,19 @@ public class HTMLTreeEntityNode extends AbstractHTMLTreeNode {
 	 * @param content
 	 * @param element
 	 */
-	public HTMLTreeEntityNode(String content, Element element){
+	public HTMLTreeEntityNode(Element element, String content){
 		super(element);
+		this.content = content;
+		this.normalizedName = createNormalizedContent(content);
+	}
+	
+	/**
+	 * 
+	 * @param tagName
+	 * @param content
+	 */
+	public HTMLTreeEntityNode(String tagName, String content){
+		super(tagName);
 		this.content = content;
 		this.normalizedName = createNormalizedContent(content);
 	}

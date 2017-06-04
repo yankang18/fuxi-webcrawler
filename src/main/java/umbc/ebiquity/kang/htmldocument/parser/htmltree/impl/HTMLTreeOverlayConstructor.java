@@ -99,6 +99,7 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 
 		// Get current path we are traversing
 		IHtmlPath currPath = paths.get(currPathIndex);
+		System.out.println(currPath.getPathIdent());
 
 		if (toBeSkipped(currPath)) {
 			doConstruct(contextNode, paths, ++currPathIndex);
@@ -310,7 +311,6 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 		return (!currentPath.getPathIdent().startsWith(previousPath.getPathIdent())
 				&& !currentPath.getLastNode().getPrefixPathID().equals(previousPath.getLastNode().getPrefixPathID()));
 	}
-	
 
 	private IHTMLTreeNode createValueNode(IHtmlNode currentNode, IHtmlPath currentPath) {
 
@@ -374,7 +374,6 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 	}
 	
 	private HTMLTreeNodeValue resolveValueTypeByTagName(Element element) {
-
 		if(element == null)
 			return null;
 
@@ -387,7 +386,8 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 	}
 
 	private IHTMLTreeNode createEntityNode(IHtmlNode currentNode, IHtmlPath currentPath) {
-		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(currentNode.getFullContent(), currentNode.getWrappedElement());
+		String content = currentNode.isLeafNode() ? currentNode.getFullContent() : "";
+		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(currentNode.getWrappedElement(), content);
 		populatePathIdInformation(entityNode, currentPath);
 		return entityNode;
 	}
@@ -496,25 +496,4 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 	private void setConstructed(boolean constructed) {
 		this.constructed = constructed;
 	}
-	
-	/**** For Manual Test Purpose *****/
-	
-	public static void pettyPrint(IHTMLTreeNode node) {
-		pettyPrint(node, "");
-	}
-	
-	private static void pettyPrint(IHTMLTreeNode node, String intent) {
-		for (IHTMLTreeNode c : node.getChildren()) {
-			String value = null;
-			if (c instanceof HTMLTreeValueNode) {
-				value = ((HTMLTreeValueNode) c).getMainValue().getValue();
-			} else if (c instanceof HTMLTreeEntityNode) {
-				value = ((HTMLTreeEntityNode) c).getContent();
-			}
-			value = value == null ? "" : "(" + value + ")";
-			System.out.println(intent + c.getTagName() + " " + value);
-			pettyPrint(c, intent + "---");
-		}
-	}
-
 }

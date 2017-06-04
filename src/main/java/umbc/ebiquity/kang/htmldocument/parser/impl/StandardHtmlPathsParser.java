@@ -65,7 +65,7 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 	private void appendWebPagePathNode(HtmlPath path, Element elem) {
 
 		if (isLeafElement(elem)) {
-			
+			System.out.println("LeafElement: " + elem.tagName());
 			HtmlNode webPageNode = path.getLastNode();
 			webPageNode.toValueNode();
 //			WebPageNode newWebPageNode = this.createWebPageNode(webPageNode.getFullContent());
@@ -73,7 +73,7 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 //			path.addNode(newWebPageNode); 
 			
 		} else {
-			
+			System.out.println("not LeafElement: " + elem.tagName());
 			List<Node> childNodeList = elem.childNodes();
 			int numOfChildrenNode = childNodeList.size();
 
@@ -124,10 +124,11 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 					Element elementNode = (Element) childNode;
 					String elemText = elementNode.text();
 					String tagName = elementNode.tagName().toLowerCase();
-
+					System.out.println("tagName: " + tagName);
 					if (HTMLTags.getIgnoredTags().contains(tagName)) {
 
 						// String text = elementNode.text();
+						System.out.println("ignore: " + tagName);
 						if (!TextProcessingUtils.isStringEmpty(elemText)) {
 							textContent += elemText;
 						}
@@ -137,7 +138,7 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 						// System.out.println("#### Topic Tag: " +
 						// elementNodeTagName);
 						if (textContent != null && !TextProcessingUtils.isStringEmpty(textContent)) {
-							HtmlNode newWebPageNode = this.createWebPageNode(textContent);
+							HtmlNode newWebPageNode = createWebPageNode(textContent);
 							newWebPageNode.setLeafNode(true);
 							HtmlPath webPagePath = webPagePaths[indexOfPath];
 							webPagePath.addNode(newWebPageNode);
@@ -158,7 +159,7 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 						if (!TextProcessingUtils.isStringEmpty(elemText)) {
 							// System.out.println("#### content: " +
 							// combinedText);
-							HtmlNode newWebPageNode = this.createWebPageNode(elementNode);
+							HtmlNode newWebPageNode = createWebPageNode(elementNode);
 							newWebPageNode.setLeafNode(true);
 							HtmlPath webPagePath = webPagePaths[indexOfPath];
 							webPagePath.addNode(newWebPageNode);
@@ -172,7 +173,7 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 
 						// TODO: refactor following if statement
 						if (textContent != null && !TextProcessingUtils.isStringEmpty(textContent)) {
-							HtmlNode newWebPageNode = this.createWebPageNode(textContent);
+							HtmlNode newWebPageNode = createWebPageNode(textContent);
 							newWebPageNode.setLeafNode(true);
 							HtmlPath webPagePath = webPagePaths[indexOfPath];
 							webPagePath.addNode(newWebPageNode);
@@ -186,7 +187,7 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 					} else {
 
 						if (textContent != null && !TextProcessingUtils.isStringEmpty(textContent)) {
-							HtmlNode newWebPageNode = this.createWebPageNode(textContent);
+							HtmlNode newWebPageNode = createWebPageNode(textContent);
 							newWebPageNode.setLeafNode(true);
 							HtmlPath webPagePath = webPagePaths[indexOfPath];
 							webPagePath.addNode(newWebPageNode);
@@ -199,7 +200,7 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 
 						if (!TextProcessingUtils.isStringEmpty(elemText)) {
 
-							HtmlNode newWebPageNode = this.createWebPageNode(elementNode);
+							HtmlNode newWebPageNode = createWebPageNode(elementNode);
 							HtmlPath webPagePath = webPagePaths[indexOfPath];
 							webPagePath.addNode(newWebPageNode);
 //							if (indexOfPath != 0) {
@@ -236,30 +237,32 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 	// in what situation an element contains one text node. show an example.
 	// in what situation an element contains multiple test nodes. show an
 	// example.
-	/**
-	 * To check if a element contains only one text node that is not empty. One
-	 * special case is that if this element contains multiple br tag, but only
-	 * one non-empty text node, we still treat this element as the one contains
-	 * only one text node that is not empty.
-	 */
-//	private boolean containsOnlyOneTextNode(Element element) {
-//		int numberOfTextNode = 0;
-//		for (Node child : element.childNodes()) {
-//			if (child instanceof TextNode) {
-//				if (!TextProcessingUtils.isStringEmpty(((TextNode) child).text())) {
-//					numberOfTextNode++;
-//				}
-//			} else if (child instanceof Element) {
-//				if (!"br".equals(((Element) child).tagName().toLowerCase())) {
-//					return false;
-//				}
-//			}
-//		}
-//		if (numberOfTextNode > 1) {
-//			return false;
-//		}
-//		return true;
-//	}
+	// /**
+	// * To check if a element contains only one text node that is not empty.
+	// One
+	// * special case is that if this element contains multiple br tag, but only
+	// * one non-empty text node, we still treat this element as the one
+	// contains
+	// * only one text node that is not empty.
+	// */
+	// private boolean containsOnlyOneTextNode(Element element) {
+	// int numberOfTextNode = 0;
+	// for (Node child : element.childNodes()) {
+	// if (child instanceof TextNode) {
+	// if (!TextProcessingUtils.isStringEmpty(((TextNode) child).text())) {
+	// numberOfTextNode++;
+	// }
+	// } else if (child instanceof Element) {
+	// if (!"br".equals(((Element) child).tagName().toLowerCase())) {
+	// return false;
+	// }
+	// }
+	// }
+	// if (numberOfTextNode > 1) {
+	// return false;
+	// }
+	// return true;
+	// }
 
 	private HtmlNode createWebPageNode(Element child) {
 		String stdTagName = child.tagName().toLowerCase();

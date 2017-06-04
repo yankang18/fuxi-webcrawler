@@ -145,7 +145,7 @@ public class HTMLTags {
 		ignoredTags.add("sub");
 		ignoredTags.add("sup");
 		ignoredTags.add("small");
-		ignoredTags.add("i");
+//		ignoredTags.add("i");
 		ignoredTags.add("cite");
 		ignoredTags.add("ins");
 		ignoredTags.add("kdb");
@@ -157,7 +157,7 @@ public class HTMLTags {
 		ignoredTags.add("SUB");
 		ignoredTags.add("SUP");
 		ignoredTags.add("SMALL");
-		ignoredTags.add("I");
+//		ignoredTags.add("I");
 		ignoredTags.add("CITE");
 		ignoredTags.add("INS");
 		ignoredTags.add("KDB");
@@ -184,7 +184,7 @@ public class HTMLTags {
 		topicTags.add("h4");
 		topicTags.add("h5");
 		topicTags.add("h6");
-//		topicTags.add("a");
+		topicTags.add("i");
 		
 		topicTags.add("CAPTION");
 		topicTags.add("STRONG");
@@ -196,7 +196,7 @@ public class HTMLTags {
 		topicTags.add("H4");
 		topicTags.add("H5");
 		topicTags.add("H6");
-//		topicTags.add("A");
+		topicTags.add("I");
 		
 		//
 		headingTags.add("h1");

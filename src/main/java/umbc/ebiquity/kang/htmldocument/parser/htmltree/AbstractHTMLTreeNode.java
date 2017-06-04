@@ -15,11 +15,19 @@ public class AbstractHTMLTreeNode implements IHTMLTreeNode {
 	private String parentPathID;
 	private String tagName;
 
+	/**
+	 * 
+	 * @param element
+	 */
 	protected AbstractHTMLTreeNode(Element element) {
 		children = new ArrayList<IHTMLTreeNode>();
 		elem = element;
 	}
 
+	/**
+	 * 
+	 * @param tagName
+	 */
 	protected AbstractHTMLTreeNode(String tagName) {
 		children = new ArrayList<IHTMLTreeNode>();
 		this.tagName = tagName;
@@ -39,7 +47,12 @@ public class AbstractHTMLTreeNode implements IHTMLTreeNode {
 	public String getTagName() {
 		return elem == null ? tagName : elem.tagName();
 	}
-	
+
+	/**
+	 * Get the Element object that is encapsulated by this HTMLTreeNode object.
+	 * 
+	 * @return Element object
+	 */
 	public Element getWrappedElement() {
 		return elem;
 	}

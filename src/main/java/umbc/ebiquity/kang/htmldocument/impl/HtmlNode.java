@@ -193,6 +193,7 @@ public class HtmlNode implements IHtmlNode{
 		}
 	}
 
+	@Override
 	public boolean isLeafNode(){
 		return this.isLeafNode;
 	}

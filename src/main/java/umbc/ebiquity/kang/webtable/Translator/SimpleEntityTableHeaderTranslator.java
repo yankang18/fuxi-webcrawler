@@ -71,17 +71,15 @@ public class SimpleEntityTableHeaderTranslator implements EntityTableHeaderTrans
 		// TODO: may use reliable third party library to do this task
 		return text != null && text.trim().equals("");
 	}
-	
+
 	private HTMLTreeEntityNode createEntityNode(Element element) {
-		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(extractContent(element),
-				element);
+		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(element, extractContent(element));
 		return entityNode;
 	}
 
 	private HTMLTreeEntityNode createImageEntityNode(Element element) {
-		element = getFirstImageElement(element); 
-		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(HtmlImageUtil.getText(element),
-				element);
+		element = getFirstImageElement(element);
+		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(element, HtmlImageUtil.getText(element));
 		return entityNode;
 	}
 

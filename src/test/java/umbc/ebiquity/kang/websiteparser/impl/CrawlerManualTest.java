@@ -18,6 +18,7 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayRefiner;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.StandardHTMLTreeBlankNodeConsolidator;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeOverlayConstructor;
 import umbc.ebiquity.kang.htmldocument.parser.impl.StandardHtmlPathsParser;
+import umbc.ebiquity.kang.htmldocument.util.HTMLTreeUtil;
 import umbc.ebiquity.kang.websiteparser.support.ITemplateNodeMatcher;
 import umbc.ebiquity.kang.websiteparser.support.ITemplateNodeMatcherRegistry;
 import umbc.ebiquity.kang.websiteparser.support.IWebSiteParsedPathsHolder;
@@ -54,7 +55,7 @@ public class CrawlerManualTest {
 		HTMLTreeOverlayConstructor constructor = new HTMLTreeOverlayConstructor();
 		IHTMLTreeOverlay overLay = constructor.build(pathHolder);
 		
-		HTMLTreeOverlayConstructor.pettyPrint(overLay.getTreeRoot());
+		HTMLTreeUtil.prettyPrint(overLay.getTreeRoot());
 		
 		System.out.println("@4: Refine the tree overlay by pruning template nodes");
 		ITemplateNodeMatcherRegistry templateElementMatcherRegistry = new TemplateNodeMatcherRegistry();
@@ -68,13 +69,13 @@ public class CrawlerManualTest {
 		IHTMLTreeOverlayRefiner templateNodePruner = new TemplateNodePruner(templateElementMatcherRegistry);
 		overLay = templateNodePruner.refine(overLay);
 		
-		HTMLTreeOverlayConstructor.pettyPrint(overLay.getTreeRoot());
+		HTMLTreeUtil.prettyPrint(overLay.getTreeRoot());
 		
 		System.out.println("@5: Refine the tree overlay by consolidating blank nodes");
 		IHTMLTreeOverlayRefiner cc = new StandardHTMLTreeBlankNodeConsolidator();
 		overLay = cc.refine(overLay);
 		
-		HTMLTreeOverlayConstructor.pettyPrint(overLay.getTreeRoot());
+		HTMLTreeUtil.prettyPrint(overLay.getTreeRoot());
 	}
 	
 	@Ignore
@@ -104,13 +105,13 @@ public class CrawlerManualTest {
 		HTMLTreeOverlayConstructor constructor = new HTMLTreeOverlayConstructor();
 		IHTMLTreeOverlay overLay = constructor.build(webPagePathHolder);
 		
-		HTMLTreeOverlayConstructor.pettyPrint(overLay.getTreeRoot());
+		HTMLTreeUtil.prettyPrint(overLay.getTreeRoot());
 		
 		System.out.println("@4: Refine the tree overlay by consolidating blank nodes");
 		StandardHTMLTreeBlankNodeConsolidator cc = new StandardHTMLTreeBlankNodeConsolidator();
 		overLay = cc.refine(overLay);
 		
-		HTMLTreeOverlayConstructor.pettyPrint(overLay.getTreeRoot());
+		HTMLTreeUtil.prettyPrint(overLay.getTreeRoot());
 		
 //		WebSiteEntityTreesBuilder builder = new WebSiteEntityTreesBuilder();
 //		builder.build(null);

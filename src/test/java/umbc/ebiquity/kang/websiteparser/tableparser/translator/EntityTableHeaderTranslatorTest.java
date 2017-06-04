@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.websiteparser.tableparser.resolver;
+package umbc.ebiquity.kang.websiteparser.tableparser.translator;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,7 +22,7 @@ import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
 import umbc.ebiquity.kang.webtable.delimiter.impl.ClusteringBasedHorizontalTableHeaderDelimiter;
 import umbc.ebiquity.kang.webtable.delimiter.impl.HeaderDelimitedTable;
 
-public class EntityTableHeaderDelimiterTest {
+public class EntityTableHeaderTranslatorTest extends BaseTableHeaderTranslatorTest {
 
 	private static final String TEST_FILE_FOLDER = "TableHeaderLocatorTest/";
 
@@ -53,12 +53,5 @@ public class EntityTableHeaderDelimiterTest {
 		for(HTMLTreeEntityNode node : entityHeader){
 			System.out.println(node.getContent());
 		}
-	}
-
-	private File loadFileOrDirectory(String fileName) {
-		// Get file from resources folder
-		ClassLoader classLoader = getClass().getClassLoader();
-		File input = new File(classLoader.getResource(fileName).getFile());
-		return input;
 	}
 }

@@ -9,7 +9,6 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import umbc.ebiquity.kang.webtable.core.DataCell;
@@ -18,7 +17,6 @@ import umbc.ebiquity.kang.webtable.core.TableRecord;
 import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
 import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
 import umbc.ebiquity.kang.webtable.delimiter.impl.ClusteringBasedVerticalTableHeaderDelimiter;
-import umbc.ebiquity.kang.webtable.delimiter.impl.HTMLHeaderTagBasedTableHeaderDelimiter;
 import umbc.ebiquity.kang.webtable.delimiter.impl.HeaderDelimitedTable;
 
 public class ClusteringBasedVerticalTableResolverTest {

@@ -24,7 +24,7 @@ public class ClusteringBasedHorizontalTableResolverTest {
 	
 	private static final String TEST_FILE_FOLDER = "TableHeaderLocatorTest/";
 
-	@Ignore
+//	@Ignore
 	@Test
 	public void testResolveHorizontalTableWithHeaderTagInTableBody() throws IOException {
 

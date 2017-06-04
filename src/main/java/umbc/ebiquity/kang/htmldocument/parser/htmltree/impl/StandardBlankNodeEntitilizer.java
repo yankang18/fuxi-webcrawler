@@ -52,7 +52,7 @@ public class StandardBlankNodeEntitilizer implements IHTMLTreeNodeEntitilizer {
 			return result;
 		}
 
-		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(mainValue.getValue(), blankNode.getWrappedElement());
+		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(blankNode.getWrappedElement(), mainValue.getValue());
 
 		for (int i = 1; i < numOfChildren; i++) {
 			entityNode.addChild(children.get(i));
