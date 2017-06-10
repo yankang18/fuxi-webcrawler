@@ -12,13 +12,13 @@ import org.jsoup.nodes.Element;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import umbc.ebiquity.kang.webtable.core.DataCell;
-import umbc.ebiquity.kang.webtable.core.TableCell;
-import umbc.ebiquity.kang.webtable.core.TableRecord;
-import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.DataTableHeaderType;
-import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
-import umbc.ebiquity.kang.webtable.delimiter.impl.ClusteringBasedHorizontalTableHeaderDelimiter;
-import umbc.ebiquity.kang.webtable.delimiter.impl.HeaderDelimitedTable;
+import umbc.ebiquity.kang.htmltable.core.DataCell;
+import umbc.ebiquity.kang.htmltable.core.TableCell;
+import umbc.ebiquity.kang.htmltable.core.TableRecord;
+import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.DataTableHeaderType;
+import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.TableStatus;
+import umbc.ebiquity.kang.htmltable.delimiter.impl.ClusteringBasedHorizontalTableHeaderDelimiter;
+import umbc.ebiquity.kang.htmltable.delimiter.impl.HeaderDelimitedTable;
 
 public class ClusteringBasedHorizontalTableResolverTest {
 	

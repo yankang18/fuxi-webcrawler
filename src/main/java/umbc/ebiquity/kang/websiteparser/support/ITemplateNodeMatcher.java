@@ -1,6 +1,6 @@
 package umbc.ebiquity.kang.websiteparser.support;
 
-import umbc.ebiquity.kang.webtable.ITagAttributeHolder;
+import umbc.ebiquity.kang.htmltable.ITagAttributeHolder;
 
 public interface ITemplateNodeMatcher {
 

@@ -26,7 +26,6 @@ public class StandardHTMLTreeBlankNodeConsolidator implements IHTMLTreeOverlayRe
 	public IHTMLTreeOverlay refine(IHTMLTreeOverlay overlay) {
 		IHTMLTreeNode root = overlay.getTreeRoot();
 		doResolve(root);
-//		overlay.setRootNote(root);
 		return overlay;
 	}
 
@@ -65,39 +64,84 @@ public class StandardHTMLTreeBlankNodeConsolidator implements IHTMLTreeOverlayRe
 		}
 	}
 	
-	private void replace(List<IHTMLTreeNode> replacedToBeNodes, List<HTMLTreeEntityNode> replacingNodes, List<IHTMLTreeNode> targetNodeList) { 
-		for (int i = 0; i < replacedToBeNodes.size(); i++) {
-			int index = targetNodeList.indexOf(replacedToBeNodes.get(i));
+	/**
+	 * 
+	 * @param toBeReplacedNodes
+	 * @param replacingNodes
+	 * @param targetNodeList
+	 */
+	private void replace(List<IHTMLTreeNode> toBeReplacedNodes, List<HTMLTreeEntityNode> replacingNodes, List<IHTMLTreeNode> targetNodeList) { 
+		for (int i = 0; i < toBeReplacedNodes.size(); i++) {
+			int index = targetNodeList.indexOf(toBeReplacedNodes.get(i));
 			targetNodeList.add(index + 1, replacingNodes.get(i));
 			targetNodeList.remove(index);
 		}
 	}
 
-	private void skip(List<IHTMLTreeNode> children) {
-		List<HTMLTreeBlankNode> nodesToBeSkipped = new ArrayList<HTMLTreeBlankNode>();
-		for (IHTMLTreeNode child : children) {
-			if (child instanceof HTMLTreeBlankNode) {
-				HTMLTreeBlankNode bnode = (HTMLTreeBlankNode) child;
+	/**
+	 * Skips nodes that are skippable.
+	 * 
+	 * @param nodes
+	 *            the list of <code>IHTMLTreeNode</code>s some of which will be
+	 *            skipped
+	 */
+	private void skip(List<IHTMLTreeNode> nodes) {
+		List<IHTMLTreeNode> nodesToBeSkipped = new ArrayList<IHTMLTreeNode>();
+		for (IHTMLTreeNode node : nodes) {
+			if (node instanceof HTMLTreeBlankNode) {
+				HTMLTreeBlankNode bnode = (HTMLTreeBlankNode) node;
 				if (bnode.isSkippable()) {
 					nodesToBeSkipped.add(bnode);
 				}
+			} else if (node instanceof HTMLTreeEntityNode) {
+				HTMLTreeEntityNode enode = (HTMLTreeEntityNode) node;
+				if (isEmpty(enode)) {
+					nodesToBeSkipped.add(enode);
+				}
 			}
 		}
-		doSkip(nodesToBeSkipped, children);
+		doSkip(nodesToBeSkipped, nodes);
 	}
- 
-	private void doSkip(List<HTMLTreeBlankNode> nodesToBeSkipped, List<IHTMLTreeNode> targetNodeList) {
-		for (HTMLTreeBlankNode nodeToBeSkipped : nodesToBeSkipped) {
-			reconcileChildrenOfNodeToBeSkipped(nodeToBeSkipped, targetNodeList);
+
+	/**
+	 * Does the actual work of skipping nodes.
+	 * 
+	 * @param nodesToBeSkipped
+	 *            the list of nodes to be skipped
+	 * @param originalNodes
+	 *            the list of nodes including nodes in the nodesToBeSkipped.
+	 */
+	private void doSkip(List<IHTMLTreeNode> nodesToBeSkipped, List<IHTMLTreeNode> originalNodes) {
+		for (IHTMLTreeNode nodeToBeSkipped : nodesToBeSkipped) {
+			reconcileChildrenOfNodeToBeSkipped(nodeToBeSkipped, originalNodes);
 		}
 	}
 
-	private void reconcileChildrenOfNodeToBeSkipped(HTMLTreeBlankNode bnodeToBeSkipped, List<IHTMLTreeNode> targetNodeList) {
-		int index = targetNodeList.indexOf(bnodeToBeSkipped);
-		for (IHTMLTreeNode c : bnodeToBeSkipped.getChildren()) {
-			targetNodeList.add(index + 1, c);
+	/**
+	 * Skips <code>nodeToBeSkipped</code> from <code>originalNodes</code>.
+	 * Specifically, the <code>nodeToBeSkipped</code> will be removed from
+	 * <code>originalNodes</code> while the children of
+	 * <code>nodeToBeSkipped</code> will be appended to the position of
+	 * <code>nodeToBeSkipped</code> in <code>originalNodes</code>.
+	 * 
+	 * @param nodeToBeSkipped
+	 *            the list of nodes to be skipped
+	 * @param originalNodes
+	 *            the list of nodes including nodes in the nodesToBeSkipped.
+	 */
+	private void reconcileChildrenOfNodeToBeSkipped(IHTMLTreeNode nodeToBeSkipped, List<IHTMLTreeNode> originalNodes) {
+		int index = originalNodes.indexOf(nodeToBeSkipped);
+		/*
+		 * Appends children of nodeToBeSkipped to the position of
+		 * nodeToBeSkipped in originalNodes.
+		 */
+		for (IHTMLTreeNode c : nodeToBeSkipped.getChildren()) {
+			originalNodes.add(index + 1, c);
 		}
-		targetNodeList.remove(index);
+		originalNodes.remove(index);
 	}
-	
+
+	private boolean isEmpty(HTMLTreeEntityNode enode) {
+		return enode.getContent() == null || enode.getContent().trim().isEmpty();
+	}
 }

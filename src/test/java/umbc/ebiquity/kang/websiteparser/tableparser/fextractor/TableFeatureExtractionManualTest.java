@@ -27,6 +27,9 @@ import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcess
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
+import umbc.ebiquity.kang.htmltable.feature.ITableFeaturesExtractor;
+import umbc.ebiquity.kang.htmltable.feature.impl.StandardTableFeaturesExtractorFactory;
+import umbc.ebiquity.kang.htmltable.feature.impl.TrainingDataSetCreator;
 import umbc.ebiquity.kang.machinelearning.classification.FileDataSetCreator;
 import umbc.ebiquity.kang.machinelearning.classification.IFeatureData;
 import umbc.ebiquity.kang.machinelearning.classification.evaluation.ICrossValidationDetail;
@@ -34,9 +37,6 @@ import umbc.ebiquity.kang.machinelearning.classification.evaluation.ICrossValida
 import umbc.ebiquity.kang.machinelearning.classification.evaluation.impl.WekaClassifierEvaluationLab;
 import umbc.ebiquity.kang.machinelearning.classification.impl.DataSet;
 import umbc.ebiquity.kang.machinelearning.classification.impl.WekaClassifierUtil;
-import umbc.ebiquity.kang.webtable.feature.ITableFeaturesExtractor;
-import umbc.ebiquity.kang.webtable.feature.impl.StandardTableFeaturesExtractorFactory;
-import umbc.ebiquity.kang.webtable.feature.impl.TrainingDataSetCreator;
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.functions.supportVector.PolyKernel;

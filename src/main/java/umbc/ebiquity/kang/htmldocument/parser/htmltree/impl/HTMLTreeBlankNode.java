@@ -7,9 +7,14 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.AbstractHTMLTreeNode;
 public class HTMLTreeBlankNode extends AbstractHTMLTreeNode {
 	
 	private boolean skippable;
-	
-	public HTMLTreeBlankNode(Element element){
+
+	public HTMLTreeBlankNode(Element element) {
 		super(element);
+		skippable = true;
+	}
+
+	public HTMLTreeBlankNode(String tagName) {
+		super(tagName);
 		skippable = true;
 	}
 

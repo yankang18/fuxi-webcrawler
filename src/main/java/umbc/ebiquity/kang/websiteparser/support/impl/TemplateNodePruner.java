@@ -9,10 +9,10 @@ import org.jsoup.nodes.Element;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.AbstractHTMLTreeNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayRefiner;
+import umbc.ebiquity.kang.htmltable.ITagAttributeHolder;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
 import umbc.ebiquity.kang.websiteparser.support.ITemplateNodeMatcher;
 import umbc.ebiquity.kang.websiteparser.support.ITemplateNodeMatcherRegistry;
-import umbc.ebiquity.kang.webtable.ITagAttributeHolder;
 
 public class TemplateNodePruner implements IHTMLTreeOverlayRefiner {
 

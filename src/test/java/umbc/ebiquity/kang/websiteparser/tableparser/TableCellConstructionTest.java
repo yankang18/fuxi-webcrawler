@@ -10,9 +10,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
-import umbc.ebiquity.kang.webtable.core.DataCell;
-import umbc.ebiquity.kang.webtable.core.TableCell;
-import umbc.ebiquity.kang.webtable.core.DataCell.DataCellType;
+import umbc.ebiquity.kang.htmltable.core.DataCell;
+import umbc.ebiquity.kang.htmltable.core.TableCell;
+import umbc.ebiquity.kang.htmltable.core.DataCell.DataCellType;
 
 public class TableCellConstructionTest {
 

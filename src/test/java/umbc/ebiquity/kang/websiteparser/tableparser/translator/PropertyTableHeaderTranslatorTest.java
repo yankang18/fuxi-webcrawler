@@ -12,8 +12,9 @@ import org.jsoup.nodes.Element;
 import org.junit.Test;
 
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeEntityNode;
-import umbc.ebiquity.kang.webtable.delimiter.impl.ClusteringBasedHorizontalTableHeaderDelimiter;
-import umbc.ebiquity.kang.webtable.delimiter.impl.ClusteringBasedVerticalTableHeaderDelimiter;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreePropertyNode;
+import umbc.ebiquity.kang.htmltable.delimiter.impl.ClusteringBasedHorizontalTableHeaderDelimiter;
+import umbc.ebiquity.kang.htmltable.delimiter.impl.ClusteringBasedVerticalTableHeaderDelimiter;
 
 public class PropertyTableHeaderTranslatorTest extends BaseTableHeaderTranslatorTest {
 
@@ -28,10 +29,10 @@ public class PropertyTableHeaderTranslatorTest extends BaseTableHeaderTranslator
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 
-		List<HTMLTreeEntityNode> entityNodes = delimitTableHeader(delimiter, element);
-		assertEquals(11, entityNodes.size());
+		List<HTMLTreePropertyNode> propertyNodes = getPropertyNodes(delimiter, element);
+		assertEquals(11, propertyNodes.size());
 
-		for (HTMLTreeEntityNode node : entityNodes) {
+		for (HTMLTreePropertyNode node : propertyNodes) {
 			System.out.println(node.getContent());
 		}
 	}
@@ -44,10 +45,10 @@ public class PropertyTableHeaderTranslatorTest extends BaseTableHeaderTranslator
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
 
-		List<HTMLTreeEntityNode> entityNodes = delimitTableHeader(delimiter, element);
-		assertEquals(4, entityNodes.size());
+		List<HTMLTreePropertyNode> propertyNodes = getPropertyNodes(delimiter, element);
+		assertEquals(4, propertyNodes.size());
 
-		for (HTMLTreeEntityNode node : entityNodes) {
+		for (HTMLTreePropertyNode node : propertyNodes) {
 			System.out.println(node.getContent());
 		}
 	}

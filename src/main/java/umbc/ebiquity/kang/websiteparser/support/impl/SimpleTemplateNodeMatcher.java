@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import umbc.ebiquity.kang.htmltable.ITagAttributeHolder;
 import umbc.ebiquity.kang.websiteparser.support.ITemplateNodeMatcher;
-import umbc.ebiquity.kang.webtable.ITagAttributeHolder;
 
 public class SimpleTemplateNodeMatcher implements ITemplateNodeMatcher {
 

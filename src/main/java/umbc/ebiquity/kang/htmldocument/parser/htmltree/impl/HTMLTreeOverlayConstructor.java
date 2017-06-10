@@ -17,14 +17,12 @@ import umbc.ebiquity.kang.htmldocument.impl.StandardHtmlElement;
 import umbc.ebiquity.kang.htmldocument.parser.IHtmlDocumentParsedPathsHolder;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.AbstractHTMLTreeNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.ICustomizedHTMLNodeProcessor;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayBuilder;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IValueTypeResolver;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
-import umbc.ebiquity.kang.htmldocument.parser.impl.DefaultHtmlParsedPathsHolder;
 import umbc.ebiquity.kang.websiteparser.impl.HTMLTags;
-import umbc.ebiquity.kang.webtable.ITagAttributeHolder;
 
 public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 
@@ -77,8 +75,8 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 		pathsToSkip = new HashSet<String>();
 	}
 	
-	private HTMLTreeRootNode createRoot() {
-		HTMLTreeRootNode rootNode = new HTMLTreeRootNode();
+	private IHTMLTreeNode createRoot() {
+		HTMLTreeBlankNode rootNode = new HTMLTreeBlankNode("Root");
 		rootNode.setPathID("Root/");
 		rootNode.setParentPathID("/");
 		return rootNode;

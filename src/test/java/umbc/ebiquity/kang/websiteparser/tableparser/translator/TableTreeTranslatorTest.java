@@ -12,18 +12,23 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayRefiner;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeOverlay;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.StandardHTMLTreeBlankNodeConsolidator;
 import umbc.ebiquity.kang.htmldocument.util.HTMLTreeUtil;
-import umbc.ebiquity.kang.webtable.Translator.TableTreeTranslator;
-import umbc.ebiquity.kang.webtable.delimiter.IDelimitedTable.TableStatus;
-import umbc.ebiquity.kang.webtable.delimiter.impl.ClusteringBasedHorizontalTableHeaderDelimiter;
-import umbc.ebiquity.kang.webtable.delimiter.impl.ClusteringBasedVerticalTableHeaderDelimiter;
-import umbc.ebiquity.kang.webtable.delimiter.impl.HeaderDelimitedTable;
+import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.TableStatus;
+import umbc.ebiquity.kang.htmltable.delimiter.impl.ClusteringBasedHorizontalTableHeaderDelimiter;
+import umbc.ebiquity.kang.htmltable.delimiter.impl.ClusteringBasedTableHeaderDelimiter;
+import umbc.ebiquity.kang.htmltable.delimiter.impl.ClusteringBasedVerticalTableHeaderDelimiter;
+import umbc.ebiquity.kang.htmltable.delimiter.impl.HeaderDelimitedTable;
+import umbc.ebiquity.kang.htmltable.translator.impl.TableTreeTranslator;
 
 public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 
 	private static final String TEST_FILE_FOLDER = "TableHeaderDelimiterTest/";
 
-	// @Ignore
+	@Ignore
 	@Test
 	public void testHorizontalHeaderTable() throws IOException {
 
@@ -56,9 +61,26 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 		HTMLTreeUtil.prettyPrint(tree);
 	}
 
-	// @Test
-	// public void testTwoDirectionalHeaderTableHeaderTable() throws IOException
-	// {
-	// }
+	@Test
+	public void testTwoDirectionalHeaderTableHeaderTable() throws IOException {
+		ClusteringBasedTableHeaderDelimiter delimiter = new ClusteringBasedTableHeaderDelimiter();
+		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "TwoDirectionalHeaderTable.html");
+		Document doc = Jsoup.parse(input, "UTF-8");
+		Element element = doc.getElementsByTag("table").get(0);
+		HeaderDelimitedTable delimitedTable = delimiter.delimit(element);
+		assertEquals(TableStatus.RegularTable, delimitedTable.getTableStatus());
+
+		TableTreeTranslator tableTranslator = new TableTreeTranslator();
+		IHTMLTreeNode tree = tableTranslator.translate(delimitedTable);
+
+		HTMLTreeUtil.prettyPrint(tree);
+		
+		
+		System.out.println("----------------------------------------");
+		IHTMLTreeOverlay overlay = new HTMLTreeOverlay(tree, "", "");
+		StandardHTMLTreeBlankNodeConsolidator cc = new StandardHTMLTreeBlankNodeConsolidator();
+		overlay = cc.refine(overlay);
+		HTMLTreeUtil.prettyPrint(overlay.getTreeRoot());
+	}
 
 }

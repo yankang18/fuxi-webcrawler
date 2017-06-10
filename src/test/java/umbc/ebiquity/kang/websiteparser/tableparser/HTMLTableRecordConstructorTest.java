@@ -11,10 +11,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
-import umbc.ebiquity.kang.webtable.core.DataCell;
-import umbc.ebiquity.kang.webtable.core.HTMLTableRecordsParser;
-import umbc.ebiquity.kang.webtable.core.TableCell;
-import umbc.ebiquity.kang.webtable.core.TableRecord;
+import umbc.ebiquity.kang.htmltable.core.DataCell;
+import umbc.ebiquity.kang.htmltable.core.HTMLTableRecordsParser;
+import umbc.ebiquity.kang.htmltable.core.TableCell;
+import umbc.ebiquity.kang.htmltable.core.TableRecord;
 
 public class HTMLTableRecordConstructorTest {
 
