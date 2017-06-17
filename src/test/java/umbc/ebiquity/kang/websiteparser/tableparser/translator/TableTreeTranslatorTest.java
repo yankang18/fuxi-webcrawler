@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,6 +17,7 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayRefiner;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeOverlay;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.StandardHTMLTreeBlankNodeConsolidator;
+import umbc.ebiquity.kang.htmldocument.util.HTMLTree2JSONTranslator;
 import umbc.ebiquity.kang.htmldocument.util.HTMLTreeUtil;
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.TableStatus;
 import umbc.ebiquity.kang.htmltable.delimiter.impl.ClusteringBasedHorizontalTableHeaderDelimiter;
@@ -74,13 +76,15 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 		IHTMLTreeNode tree = tableTranslator.translate(delimitedTable);
 
 		HTMLTreeUtil.prettyPrint(tree);
-		
-		
+
 		System.out.println("----------------------------------------");
 		IHTMLTreeOverlay overlay = new HTMLTreeOverlay(tree, "", "");
 		StandardHTMLTreeBlankNodeConsolidator cc = new StandardHTMLTreeBlankNodeConsolidator();
 		overlay = cc.refine(overlay);
-		HTMLTreeUtil.prettyPrint(overlay.getTreeRoot());
+		// HTMLTreeUtil.prettyPrint(overlay.getTreeRoot());
+		System.out.println("--------");
+		JSONObject object = HTMLTree2JSONTranslator.translate(overlay.getTreeRoot());
+		System.out.println(HTMLTree2JSONTranslator.prettyPrint(object));
 	}
 
 }
