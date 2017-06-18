@@ -23,6 +23,15 @@ public class ClusteringBasedHorizontalTableHeaderDelimiter extends AbstractClust
 	
 	@Override
 	protected HeaderDelimitedTable doResolveTable(List<TableRecord> cluster1, List<TableRecord> cluster2) {
+		
+		for(TableRecord rec : cluster1) {
+			System.out.println("clu1 sequence number: " + rec.getSequenceNumber());
+		}
+		
+		for(TableRecord rec : cluster2) {
+			System.out.println("clu2 sequence number: " + rec.getSequenceNumber());
+		}
+		
 		if (cluster1.get(0).getSequenceNumber() < cluster2.get(0).getSequenceNumber()) {
 			if (validateClusterSequence(cluster1, cluster2)) {
 				HeaderDelimitedTable result = new HeaderDelimitedTable(TableStatus.RegularTable, DataTableHeaderType.HorizontalHeaderTable);

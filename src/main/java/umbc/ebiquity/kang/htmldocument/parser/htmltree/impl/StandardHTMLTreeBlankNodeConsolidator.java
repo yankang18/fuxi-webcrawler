@@ -3,12 +3,11 @@ package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayRefiner;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNodeEntitizer;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNodeEntitizer.EntitizingBlankNodeResult;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayRefiner;
 
 public class StandardHTMLTreeBlankNodeConsolidator implements IHTMLTreeOverlayRefiner {
 

@@ -24,7 +24,17 @@ public class ClusteringBasedTableHeaderDelimiter implements ITableHeaderDelimite
 		
 		HeaderDelimitedTable vResult = verticalTableResolver.delimit(element);
 		HeaderDelimitedTable hResult = horizontalTableResolver.delimit(element);
-
+		
+		
+		System.out.println("vertical header type: " + vResult.getDataTableHeaderType().name());
+		System.out.println("hierarchical header type: " + hResult.getDataTableHeaderType().name());
+		
+		System.out.println("vertical header record size: " + vResult.getVerticalHeaderRecords().size());
+		System.out.println("vertical data record size:: " + vResult.getVerticalDataRecords().size());
+		
+		System.out.println("hierarchical header record size: " + hResult.getHorizontalHeaderRecords().size());
+		System.out.println("hierarchical data record size: " + hResult.getHorizontalDataRecords().size());
+		
 		if (DataTableHeaderType.NonHeaderTable == vResult.getDataTableHeaderType()
 				&& DataTableHeaderType.NonHeaderTable == hResult.getDataTableHeaderType()) {
 			HeaderDelimitedTable result = new HeaderDelimitedTable(TableStatus.RegularTable, DataTableHeaderType.NonHeaderTable);
