@@ -3,16 +3,16 @@ package umbc.ebiquity.kang.htmldocument.parser.htmltree;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeBlankNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeEntityNode;
 
-public interface IHTMLTreeNodeEntitilizer {
+public interface IHTMLTreeNodeEntitizer {
 
-	EntitilizingBlankNodeResult entitilize(HTMLTreeBlankNode currentBNode);
+	EntitizingBlankNodeResult entitize(HTMLTreeBlankNode currentBNode);
 	
-	public static class EntitilizingBlankNodeResult {
+	public static class EntitizingBlankNodeResult {
 
 		private boolean entitilizable = false;
 		private HTMLTreeEntityNode node;
 
-		public boolean isEntitilizable() {
+		public boolean isEntitizable() {
 			return entitilizable;
 		}
 

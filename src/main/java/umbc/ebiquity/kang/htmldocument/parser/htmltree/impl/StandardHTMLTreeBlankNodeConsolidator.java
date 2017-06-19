@@ -3,23 +3,22 @@ package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNodeEntitizer;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNodeEntitizer.EntitizingBlankNodeResult;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayRefiner;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNodeEntitilizer;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNodeEntitilizer.EntitilizingBlankNodeResult;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
 
 public class StandardHTMLTreeBlankNodeConsolidator implements IHTMLTreeOverlayRefiner {
 
-	private IHTMLTreeNodeEntitilizer entitilizer;
+	private IHTMLTreeNodeEntitizer entitizer;
 
 	public StandardHTMLTreeBlankNodeConsolidator() {
-		this.entitilizer = new StandardBlankNodeEntitilizer();
+		this.entitizer = new StandardBlankNodeEntitizer();
 	}
 
-	public void setNodeEntitilizer(IHTMLTreeNodeEntitilizer entitilizer) {
-		this.entitilizer = entitilizer;
+	public void setNodeEntitizer(IHTMLTreeNodeEntitizer entitizer) {
+		this.entitizer = entitizer;
 	}
 
 	@Override
@@ -48,11 +47,11 @@ public class StandardHTMLTreeBlankNodeConsolidator implements IHTMLTreeOverlayRe
 			replace(replacedToBeNodes, replacingNodes, children);
 
 			if (currentNode instanceof HTMLTreeBlankNode) {
-				// determine whether the blank node is entitilizable. If yes,
+				// determine whether the blank node is entitizable. If yes,
 				// convert this node to Entity Node
 				HTMLTreeBlankNode currentBNode = (HTMLTreeBlankNode) currentNode;
-				EntitilizingBlankNodeResult result = entitilizer.entitilize(currentBNode);
-				if (result.isEntitilizable()) {
+				EntitizingBlankNodeResult result = entitizer.entitize(currentBNode);
+				if (result.isEntitizable()) {
 					HTMLTreeEntityNode currentENode = result.getEntityNode();
 					skip(currentENode.getChildren());
 					return currentENode;

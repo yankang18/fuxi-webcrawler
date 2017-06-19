@@ -102,6 +102,9 @@ public class TableTreeTranslator {
 			List<TableRecord> horizontalHeaderRecords = headerDelimitedTable.getHorizontalHeaderRecords();
 			List<TableRecord> verticalHeaderRecords = headerDelimitedTable.getVerticalHeaderRecords();
 
+			System.out.println("entityHeaderRecords size: " + verticalHeaderRecords.size());
+			System.out.println("propertyHeaderRecord size: " + horizontalHeaderRecords.size());
+			
 			// First assuming that vertical header records hold property headers
 			// and horizontal header records hold entity headers.
 			int skipRowNum = verticalHeaderRecords.size();
@@ -139,6 +142,7 @@ public class TableTreeTranslator {
 			indexEntityHeaderRecords(idx2EntityHeader, entityHeaderRecords, skipRowNum);
 			indexPropertyHeaderRecord(idx2PropertyHeader, propertyHeaderRecord, skipColNum);
 
+			System.out.println("dataRecords size: " + dataRecords.size());
 			translateDataRecords(tableNode, idx2EntityHeader, idx2PropertyHeader, dataRecords, skipColNum);
 			return tableNode;
 		} else {

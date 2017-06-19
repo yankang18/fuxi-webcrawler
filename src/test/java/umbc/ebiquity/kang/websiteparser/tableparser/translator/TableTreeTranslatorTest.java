@@ -65,8 +65,10 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 		prettyPrintJSON(tree);
 	}
 
+	@Ignore
 	@Test
 	public void testTwoDirectionalHeaderTableHeaderTable() throws IOException {
+		
 		ClusteringBasedTableHeaderDelimiter delimiter = new ClusteringBasedTableHeaderDelimiter();
 		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "TwoDirectionalHeaderTable.html");
 		Document doc = Jsoup.parse(input, "UTF-8");

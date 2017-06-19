@@ -3,14 +3,14 @@ package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl;
 import java.util.List;
 
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNodeEntitilizer;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNodeEntitizer;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
 
-public class StandardBlankNodeEntitilizer implements IHTMLTreeNodeEntitilizer {
+public class StandardBlankNodeEntitizer implements IHTMLTreeNodeEntitizer {
 
-	public EntitilizingBlankNodeResult entitilize(HTMLTreeBlankNode blankNode) {
+	public EntitizingBlankNodeResult entitize(HTMLTreeBlankNode blankNode) {
 
-		EntitilizingBlankNodeResult result = new EntitilizingBlankNodeResult();
+		EntitizingBlankNodeResult result = new EntitizingBlankNodeResult();
 		result.setEntitilizable(false);
 		List<IHTMLTreeNode> children = blankNode.getChildren();
 		int numOfChildren = children.size();
