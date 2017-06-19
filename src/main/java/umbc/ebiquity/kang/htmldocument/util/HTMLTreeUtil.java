@@ -40,5 +40,4 @@ public class HTMLTreeUtil {
 			prettyPrint(c, intent + "---");
 		}
 	}
-
 }

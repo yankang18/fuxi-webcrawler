@@ -61,6 +61,8 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 		IHTMLTreeNode tree = tableTranslator.translate(delimitedTable);
 
 		HTMLTreeUtil.prettyPrint(tree);
+		
+		prettyPrintJSON(tree);
 	}
 
 	@Test
@@ -77,8 +79,12 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 
 		HTMLTreeUtil.prettyPrint(tree);
 
+		prettyPrintJSON(tree);
+	}
+
+	private void prettyPrintJSON(IHTMLTreeNode tree) {
 		System.out.println("----------------------------------------");
-		IHTMLTreeOverlay overlay = new HTMLTreeOverlay(tree, "", "");
+		IHTMLTreeOverlay overlay = HTMLTreeOverlay.createDefaultHTMLTreeOverlay(tree);
 		StandardHTMLTreeBlankNodeConsolidator cc = new StandardHTMLTreeBlankNodeConsolidator();
 		overlay = cc.refine(overlay);
 		// HTMLTreeUtil.prettyPrint(overlay.getTreeRoot());
