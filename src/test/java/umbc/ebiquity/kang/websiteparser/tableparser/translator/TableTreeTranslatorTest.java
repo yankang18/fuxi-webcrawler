@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayRefiner;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeOverlay;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.StandardHTMLTreeBlankNodeConsolidator;
 import umbc.ebiquity.kang.htmldocument.util.HTMLTree2JSONTranslator;
