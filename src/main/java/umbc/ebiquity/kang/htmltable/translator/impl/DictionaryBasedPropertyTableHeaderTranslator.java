@@ -111,7 +111,6 @@ public class DictionaryBasedPropertyTableHeaderTranslator implements IPropertyTa
 		return max;
 	}
 	
-	
 	private HTMLTreePropertyNode createPropertyNode(TableCell tableCell) {
 		HTMLTreePropertyNode entityNode = new HTMLTreePropertyNode(tableCell.getWrappedElement(), extractContent(tableCell));
 		return entityNode;

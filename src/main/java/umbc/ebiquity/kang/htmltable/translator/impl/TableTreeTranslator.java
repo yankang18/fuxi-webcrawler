@@ -1,5 +1,6 @@
 package umbc.ebiquity.kang.htmltable.translator.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,14 +33,20 @@ import umbc.ebiquity.kang.htmltable.translator.TableHeaderTranslationResult;
 public class TableTreeTranslator {
 
 	private HTMLTreeOverlayConstructor treeOverlayConstructor;
-	private IPropertyTableHeaderTranslator propertyTableHeaderIdentifier;
-	private IEntityTableHeaderTranslator entityTableHeaderIdentifier;
+	private IPropertyTableHeaderTranslator mainPropertyTableHeaderTranslator;
+	private IEntityTableHeaderTranslator entityTableHeaderTranslator;
+	private List<IPropertyTableHeaderTranslator> propertyTableHeaderTranslatorList;
 
 	public TableTreeTranslator() {
 		treeOverlayConstructor = new HTMLTreeOverlayConstructor();
 		treeOverlayConstructor.registerCustomizedHtmlNodeProcessors(new IgnoringHTMLTableNodeProcessor());
-		propertyTableHeaderIdentifier = new DictionaryBasedPropertyTableHeaderTranslator();
-		entityTableHeaderIdentifier = new SimpleEntityTableHeaderTranslator();
+		mainPropertyTableHeaderTranslator = new DictionaryBasedPropertyTableHeaderTranslator();
+		entityTableHeaderTranslator = new SimpleEntityTableHeaderTranslator();
+		
+		// Note, the order of the translators in the list matters
+		propertyTableHeaderTranslatorList = new ArrayList<>(2);
+		propertyTableHeaderTranslatorList.add(mainPropertyTableHeaderTranslator);
+		propertyTableHeaderTranslatorList.add(new SimplePropertyTableHeaderTranslator());
 	}
 
 	public IHTMLTreeNode translate(HeaderDelimitedTable headerDelimitedTable) {
@@ -62,8 +69,8 @@ public class TableTreeTranslator {
 		} else if (DataTableHeaderType.HorizontalHeaderTable == headerType) {
 
 			Map<Integer, HTMLTreePropertyNode> idx2propertyHeader = new HashMap<>();
-			List<HTMLTreePropertyNode> propertyHeaderRecord = propertyTableHeaderIdentifier
-					.translate(headerDelimitedTable.getHorizontalHeaderRecords(), 0);
+			List<HTMLTreePropertyNode> propertyHeaderRecord = translatePropertyHeaderRecords(
+					headerDelimitedTable.getHorizontalHeaderRecords());
 
 			if (propertyHeaderRecord == null) {
 				return tableNode;
@@ -79,8 +86,8 @@ public class TableTreeTranslator {
 		} else if (DataTableHeaderType.VerticalHeaderTable == headerType) {
 
 			Map<Integer, HTMLTreePropertyNode> idx2PropertyHeader = new HashMap<>();
-			List<HTMLTreePropertyNode> propertyHeaderRecord = propertyTableHeaderIdentifier
-					.translate(headerDelimitedTable.getVerticalHeaderRecords(), 0);
+			List<HTMLTreePropertyNode> propertyHeaderRecord = translatePropertyHeaderRecords(
+					headerDelimitedTable.getVerticalHeaderRecords());
 
 			if (propertyHeaderRecord == null) {
 				return tableNode;
@@ -110,12 +117,12 @@ public class TableTreeTranslator {
 			int skipRowNum = verticalHeaderRecords.size();
 			int skipColNum = horizontalHeaderRecords.size();
 			List<TableRecord> dataRecords = headerDelimitedTable.getVerticalDataRecords();
-			List<HTMLTreePropertyNode> propertyHeaderRecord = propertyTableHeaderIdentifier
+			List<HTMLTreePropertyNode> propertyHeaderRecord = mainPropertyTableHeaderTranslator
 					.translate(verticalHeaderRecords, skipColNum);
 
 			TableHeaderTranslationResult entityHeaderRecords = null;
 			if (propertyHeaderRecord != null) {
-				entityHeaderRecords = entityTableHeaderIdentifier.translator(horizontalHeaderRecords, skipRowNum);
+				entityHeaderRecords = entityTableHeaderTranslator.translator(horizontalHeaderRecords, skipRowNum);
 			} else {
 
 				// If vertical header records do not hold property headers, we
@@ -125,11 +132,11 @@ public class TableTreeTranslator {
 				skipRowNum = horizontalHeaderRecords.size();
 				skipColNum = verticalHeaderRecords.size();
 				dataRecords = headerDelimitedTable.getHorizontalDataRecords();
-				propertyHeaderRecord = propertyTableHeaderIdentifier.translate(horizontalHeaderRecords, skipColNum);
+				propertyHeaderRecord = mainPropertyTableHeaderTranslator.translate(horizontalHeaderRecords, skipColNum);
 				if (propertyHeaderRecord == null) {
 					return tableNode;
 				}
-				entityHeaderRecords = entityTableHeaderIdentifier.translator(verticalHeaderRecords, skipRowNum);
+				entityHeaderRecords = entityTableHeaderTranslator.translator(verticalHeaderRecords, skipRowNum);
 			}
 
 			if (!entityHeaderRecords.hasPrimaryHeaderRecord()) {
@@ -246,7 +253,27 @@ public class TableTreeTranslator {
 	}
 
 	/**
-	 * Creates a table node as a place holder
+	 * Identifies one property header table records from the specified list that
+	 * best represents the property header, and translate it into a list of
+	 * HTMLTreePropertyNode.
+	 * 
+	 * @param headerRecords
+	 *            the list of property header table records
+	 * @return a List of HTMLTreePropertyNode; can be null if no appropriate
+	 *         property header can be found
+	 */
+	private List<HTMLTreePropertyNode> translatePropertyHeaderRecords(List<TableRecord> headerRecords) {
+		List<HTMLTreePropertyNode> propertyHeaderRecord = null;
+		for (IPropertyTableHeaderTranslator translator : propertyTableHeaderTranslatorList) {
+			propertyHeaderRecord = translator.translate(headerRecords, 0);
+			if (propertyHeaderRecord != null)
+				return propertyHeaderRecord;
+		}
+		return null;
+	}
+
+	/**
+	 * Creates a table node as a place holder.
 	 * 
 	 * @param IHtmlElement
 	 * @return an IHtmlElement
