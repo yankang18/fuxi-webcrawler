@@ -29,7 +29,7 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 
 	private static final String TEST_FILE_FOLDER = "TableHeaderDelimiterTest/";
 
-	@Ignore
+//	@Ignore
 	@Test
 	public void testHorizontalHeaderTable() throws IOException {
 
@@ -44,6 +44,8 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 		IHTMLTreeNode tree = tableTranslator.translate(delimitedTable);
 
 		HTMLTreeUtil.prettyPrint(tree);
+		
+		prettyPrintJSON(tree);
 	}
 
 	@Ignore

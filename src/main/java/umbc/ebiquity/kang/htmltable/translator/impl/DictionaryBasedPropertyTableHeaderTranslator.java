@@ -33,7 +33,6 @@ public class DictionaryBasedPropertyTableHeaderTranslator implements IPropertyTa
 	
 	private static Set<String> DICTIONARY;
 	static {
-		// TODO: initialize the dictionary from a predefined file
 		
 		DICTIONARY = new HashSet<>();
 		

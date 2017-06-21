@@ -1,7 +1,7 @@
 package umbc.ebiquity.kang.htmltable.translator.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +68,7 @@ public class TableTreeTranslator {
 
 		} else if (DataTableHeaderType.HorizontalHeaderTable == headerType) {
 
-			Map<Integer, HTMLTreePropertyNode> idx2propertyHeader = new HashMap<>();
+			Map<Integer, HTMLTreePropertyNode> idx2propertyHeader = new LinkedHashMap<>();
 			List<HTMLTreePropertyNode> propertyHeaderRecord = translatePropertyHeaderRecords(
 					headerDelimitedTable.getHorizontalHeaderRecords());
 
@@ -85,7 +85,7 @@ public class TableTreeTranslator {
 
 		} else if (DataTableHeaderType.VerticalHeaderTable == headerType) {
 
-			Map<Integer, HTMLTreePropertyNode> idx2PropertyHeader = new HashMap<>();
+			Map<Integer, HTMLTreePropertyNode> idx2PropertyHeader = new LinkedHashMap<>();
 			List<HTMLTreePropertyNode> propertyHeaderRecord = translatePropertyHeaderRecords(
 					headerDelimitedTable.getVerticalHeaderRecords());
 
@@ -143,8 +143,8 @@ public class TableTreeTranslator {
 				return tableNode;
 			}
 
-			Map<Integer, HTMLTreeEntityNode> idx2EntityHeader = new HashMap<>();
-			Map<Integer, HTMLTreePropertyNode> idx2PropertyHeader = new HashMap<>();
+			Map<Integer, HTMLTreeEntityNode> idx2EntityHeader = new LinkedHashMap<>();
+			Map<Integer, HTMLTreePropertyNode> idx2PropertyHeader = new LinkedHashMap<>();
 
 			indexEntityHeaderRecords(idx2EntityHeader, entityHeaderRecords, skipRowNum);
 			indexPropertyHeaderRecord(idx2PropertyHeader, propertyHeaderRecord, skipColNum);
@@ -290,20 +290,35 @@ public class TableTreeTranslator {
 		return clonedPropertyNode;
 	}
 
-	private Map<Integer, HTMLTreeEntityNode> createDefaultEntityHeaderIndex(int size) {
-		Map<Integer, HTMLTreeEntityNode> idx2EntityHeader = new HashMap<>();
-		for (int i = 0; i < size; i++) {
-			HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode("th", "Item");
+	/**
+	 * Create default entity headers and index them by using a Map keyed by
+	 * unique integer.
+	 * 
+	 * @param numberOfHeaders
+	 *            the number of headers to be created
+	 * @return the Map that maps unique integers to its corresponding entity headers
+	 *         of type HTMLTreeEntityNode
+	 */
+	private Map<Integer, HTMLTreeEntityNode> createDefaultEntityHeaderIndex(int numberOfHeaders) {
+		Map<Integer, HTMLTreeEntityNode> idx2EntityHeader = new LinkedHashMap<>();
+		for (int i = 0; i < numberOfHeaders; i++) {
+			HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode("th", "Item_" + (i + 1));
 			idx2EntityHeader.put(i, entityNode);
 		}
 		return idx2EntityHeader;
 	}
 
+	/**
+	 * Checks if the content node of AbstractHTMLTreeContentNode is valid.
+	 * 
+	 * @param contentNode
+	 *            the content node of type AbstractHTMLTreeContentNode
+	 * @return true if the content node is valid; false, otherwise
+	 */
 	private boolean isValid(AbstractHTMLTreeContentNode contentNode) {
 		if (contentNode == null)
 			return false;
 		String content = contentNode.getContent();
 		return content != null && !content.trim().isEmpty();
 	}
-
 }
