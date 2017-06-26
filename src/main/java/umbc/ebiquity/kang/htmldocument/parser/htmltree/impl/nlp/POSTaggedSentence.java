@@ -1,14 +1,13 @@
-package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl;
+package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class POSTaggedTokens implements ITaggedText { 
+public class POSTaggedSentence implements ITaggedSentence { 
 
 	private List<POSTaggedToken> taggedTokens;
-	private boolean hasSentences;
 
-	public POSTaggedTokens() {
+	public POSTaggedSentence() {
 		taggedTokens = new ArrayList<POSTaggedToken>();
 	}
 
@@ -21,18 +20,9 @@ public class POSTaggedTokens implements ITaggedText {
 		taggedTokens.add(taggedToken);
 	}
 	
-	public void setHasSentence(boolean sentences){
-		hasSentences = sentences;
-	}
-
 	@Override
 	public List<POSTaggedToken> getTaggedToken() {
 		return taggedTokens;
-	}
-
-	@Override
-	public boolean hasSentences() {
-		return hasSentences;
 	}
 
 }

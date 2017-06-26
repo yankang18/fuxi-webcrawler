@@ -3,20 +3,37 @@ package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl;
 public class HTMLTreeNodeValue {
 
 	public enum ValueType {
-		Number, Image, Term, Paragraph /* one or more sentences */
+		Number, NumberPhrase, Image, Term, Paragraph; /* one or more sentences */
+
+		private String unit;
+
+		/**
+		 * @return the unit
+		 */
+		public String getUnit() {
+			return unit;
+		}
+
+		/**
+		 * @param unit
+		 *            the unit to set
+		 */
+		public void setUnit(String unit) {
+			this.unit = unit.trim();
+		}
 	}
 
-	private String value;
+	private String content;
 	private ValueType type;
 	private String description;
 
-	public HTMLTreeNodeValue(String value, ValueType type) {
-		this.value = value;
+	public HTMLTreeNodeValue(String content, ValueType type) {
+		this.content = content;
 		this.type = type;
 	}
 
 	public String getValue() {
-		return value;
+		return content;
 	}
 
 	public ValueType getValueType() {

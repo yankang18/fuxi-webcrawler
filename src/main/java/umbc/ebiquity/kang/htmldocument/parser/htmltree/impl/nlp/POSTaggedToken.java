@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl;
+package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp;
 
 public class POSTaggedToken {
 

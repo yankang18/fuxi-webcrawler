@@ -1,13 +1,15 @@
-package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl;
+package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IValueTypeResolver;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
 
-public class StandardValueTypeResolver implements IValueTypeResolver {
-
+public class SimpleValueTypeResolver implements IValueTypeResolver {
+	
+	private StanfordNLPAnnotator tagger = new StanfordNLPAnnotator();
 	private static Set<String> copula;
 
 	static {
@@ -32,19 +34,23 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 
 		if (containsCopula(tokens))
 			return ValueType.Paragraph;
-
-		StanfordPOStagger tagger = new StanfordPOStagger();
-		ITaggedText taggedText = tagger.annotate(text);
+		
+		ITaggedText taggedText = annotate(text);
 
 		// not necessary true
-		if (hasSentences(taggedText)) {
+		if (hasMultiSentences(taggedText)) {
 			return ValueType.Paragraph;
 		}
+		
 		return ValueType.Term;
 	}
 
-	private boolean hasSentences(ITaggedText taggedText) { 
-		return taggedText.hasSentences();
+	private ITaggedText annotate(String text) {
+		return tagger.annotate(text);
+	}
+
+	private boolean hasMultiSentences(ITaggedText taggedText) {
+		return taggedText.getTaggedSentences().size() > 1;
 	}
 
 	private boolean containsCopula(String[] tokens) {

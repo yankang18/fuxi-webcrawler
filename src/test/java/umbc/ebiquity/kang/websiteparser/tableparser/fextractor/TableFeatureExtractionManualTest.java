@@ -118,9 +118,12 @@ public class TableFeatureExtractionManualTest {
 		return classifier;
 	}
 
-	@Ignore
+//	@Ignore
 	@Test
 	public void StanforNLPParseTest() throws IOException {
+		
+//		String text = "Up to 310 in (25 ft)";
+//		System.out.println(text.replaceAll("\\(.*\\)", ""));
 		
 		// creates a StanfordCoreNLP object, with 
 		// POS tagging, 
@@ -141,6 +144,7 @@ public class TableFeatureExtractionManualTest {
 				+ "for you (the ssplit annotator) if you just feed it in a body of text (the text variable). "
 				+ "Have just one sentence? Well, that is ok, you can feed that in as the text variable.";
 
+//	    String text = "120'";
 	    // create an empty Annotation just with the given text
 	    Annotation document = new Annotation(text);
 
@@ -163,6 +167,7 @@ public class TableFeatureExtractionManualTest {
 	        // this is the POS tag of the token
 	        String pos = token.get(PartOfSpeechAnnotation.class);
 	        System.out.println(pos);
+	        System.out.println(pos.equals("''"));
 //	        // this is the NER label of the token
 //	        String ne = token.get(NamedEntityTagAnnotation.class);  
 //	        System.out.println(ne);

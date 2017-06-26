@@ -1,9 +1,10 @@
-package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl;
+package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IValueTypeResolver;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
 
 public class NaiveValueTypeResolver implements IValueTypeResolver {

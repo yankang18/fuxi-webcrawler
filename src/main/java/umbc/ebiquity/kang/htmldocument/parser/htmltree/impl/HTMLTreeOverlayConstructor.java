@@ -22,6 +22,7 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayBuilder;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IValueTypeResolver;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.NaiveValueTypeResolver;
 import umbc.ebiquity.kang.websiteparser.impl.HTMLTags;
 
 public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
