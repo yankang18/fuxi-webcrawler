@@ -125,14 +125,11 @@ public class TableFeatureExtractionManualTest {
 //		String text = "Up to 310 in (25 ft)";
 //		System.out.println(text.replaceAll("\\(.*\\)", ""));
 		
-		// creates a StanfordCoreNLP object, with 
-		// POS tagging, 
-		// lemmatization, 
-		// NER, parsing, and 
-		// coreference resolution 
-	    Properties props = new Properties();
-	    props.put("annotators", "tokenize, ssplit, pos");
-	    StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+		// creates a StanfordCoreNLP object, with POS tagging, lemmatization,
+		// NER, parsing, and coreference resolution
+		Properties props = new Properties();
+		props.put("annotators", "tokenize, ssplit, pos");
+		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 
 		// read some text in the text variable
 		String text = "Although one can dig into the documentation, I am going to provide code here on SO, "
@@ -144,7 +141,6 @@ public class TableFeatureExtractionManualTest {
 				+ "for you (the ssplit annotator) if you just feed it in a body of text (the text variable). "
 				+ "Have just one sentence? Well, that is ok, you can feed that in as the text variable.";
 
-//	    String text = "120'";
 	    // create an empty Annotation just with the given text
 	    Annotation document = new Annotation(text);
 

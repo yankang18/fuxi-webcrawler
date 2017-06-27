@@ -21,7 +21,7 @@ public class POSTaggedSentence implements ITaggedSentence {
 	}
 	
 	@Override
-	public List<POSTaggedToken> getTaggedToken() {
+	public List<POSTaggedToken> getTaggedTokens() {
 		return taggedTokens;
 	}
 

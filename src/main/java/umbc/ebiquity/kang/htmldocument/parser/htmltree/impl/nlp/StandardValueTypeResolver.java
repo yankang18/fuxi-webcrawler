@@ -30,7 +30,7 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 		toKeepTags.addAll(POSTagUtil.getVerbTags());
 		toKeepTags.addAll(POSTagUtil.getToTags());
 		toKeepTags.addAll(POSTagUtil.getNumberTags());
-		
+
 		splittingTags = new HashSet<>();
 		splittingTags.addAll(POSTagUtil.getConjuncTags());
 		splittingTags.addAll(POSTagUtil.getToTags());
@@ -38,13 +38,18 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 
 	@Override
 	public ValueType resolve(String text) {
-		String[] tokens = text.split(" ");
 
-		if (tokens.length == 0)
-			throw new IllegalArgumentException("The input should have at least one token");
+		if (text == null || text.trim().isEmpty())
+			throw new IllegalArgumentException("The input text should not be empty");
 
+		text = text.trim();
+
+		/*
+		 * Step (1): pre-annotation Step (2): annotation Step (3):
+		 * post-annotation Step (4): pre-analyzing Step (5): analyzing
+		 */
 		text = preAnnotationProcess(text);
-		
+
 		ITaggedText taggedText = annotate(text);
 
 		if (hasMultiSentences(taggedText)) {
@@ -52,7 +57,7 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 		}
 
 		List<POSTaggedToken> taggedTokens = preAnalyzingProcess(
-				taggedText.getTaggedSentences().get(0).getTaggedToken());
+				taggedText.getTaggedSentences().get(0).getTaggedTokens());
 
 		return analyze(taggedTokens);
 	}
@@ -60,31 +65,33 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 	private String preAnnotationProcess(String text) {
 		return text.replaceAll("\\(.*\\)", "");
 	}
-	
+
 	private ITaggedText annotate(String text) {
 		return tagger.annotate(text);
 	}
 
 	private List<POSTaggedToken> preAnalyzingProcess(List<POSTaggedToken> taggedTokens) {
 
+		// This an ad-hoc process
 		List<POSTaggedToken> tokens = new ArrayList<>();
 		if (taggedTokens.size() == 1) {
 			POSTaggedToken token = taggedTokens.get(0);
 			if (token.getPOSTag().equalsIgnoreCase("JJ")) {
 				String[] newTokens = token.getValue().split("-");
 				if (newTokens.length == 2) {
-					return annotate(newTokens[0] + " " + newTokens[1]).getTaggedSentences().get(0).getTaggedToken();
+					taggedTokens = annotate(newTokens[0] + " " + newTokens[1]).getTaggedSentences().get(0)
+							.getTaggedTokens();
 				}
 			}
-		} else {
+		}
 
-			POSTaggedToken preToken = null;
-			for (POSTaggedToken token : taggedTokens) {
-				if (toKeep(token) || isNumber(preToken)) {
-					tokens.add(token);
-				}
-				preToken = token;
+		// 
+		POSTaggedToken preToken = null;
+		for (POSTaggedToken token : taggedTokens) {
+			if (toKeep(token) || isNumber(preToken)) {
+				tokens.add(token);
 			}
+			preToken = token;
 		}
 		return tokens;
 	}
@@ -94,7 +101,7 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 		List<List<POSTaggedToken>> tokensList = new ArrayList<List<POSTaggedToken>>();
 		List<POSTaggedToken> tokens = new ArrayList<>();
 		tokensList.add(tokens);
-		
+
 		for (POSTaggedToken token : taggedTokens) {
 			if (isSplittingToken(token)) {
 				tokens = new ArrayList<>();
@@ -103,21 +110,26 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 				tokens.add(token);
 			}
 		}
-		
+
+		boolean hasToken = false;
 		boolean isNumberToken = true;
 		ValueType valueType = null;
 		for (List<POSTaggedToken> list : tokensList) {
-			ValueType type = numberTypeResolver.resolve(list);
-			if (type == null) {
-				isNumberToken = false;
-				break;
-			} else if (ValueType.NumberPhrase == type){
-				valueType = type;
+			if (list.size() != 0) {
+				hasToken = true;
+				ValueType type = numberTypeResolver.resolve(list);
+				if (type == null) {
+					isNumberToken = false;
+					break;
+				} else {
+					valueType = type;
+				}
 			}
-
 		}
-		
-		if(isNumberToken) {
+
+		if (!hasToken) {
+			return null;
+		} else if (isNumberToken) {
 			return valueType;
 		} else {
 			return ValueType.Term;

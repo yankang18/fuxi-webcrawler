@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface ITaggedSentence {
 
-	List<POSTaggedToken> getTaggedToken(); 
+	List<POSTaggedToken> getTaggedTokens(); 
 	
 }
