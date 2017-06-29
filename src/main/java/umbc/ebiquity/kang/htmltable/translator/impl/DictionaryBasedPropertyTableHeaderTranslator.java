@@ -31,47 +31,6 @@ import umbc.ebiquity.kang.textprocessing.similarity.impl.OrderedTokenListSimilar
  */
 public class DictionaryBasedPropertyTableHeaderTranslator implements IPropertyTableHeaderTranslator {
 	
-	private static Set<String> DICTIONARY;
-	static {
-		
-		DICTIONARY = new HashSet<>();
-		
-		// General properties
-		DICTIONARY.add("Length");
-		DICTIONARY.add("Width");
-		DICTIONARY.add("Height");
-		DICTIONARY.add("Size");
-		DICTIONARY.add("Type");
-		DICTIONARY.add("Price");
-		DICTIONARY.add("Ratio");
-		DICTIONARY.add("Brand");
-		DICTIONARY.add("Logo");
-		
-		//
-		DICTIONARY.add("Rating");
-		DICTIONARY.add("Rate");
-		DICTIONARY.add("Ratio");
-		DICTIONARY.add("Dimension");
-		DICTIONARY.add("Resolution");
-		
-		//
-		DICTIONARY.add("Thickness");
-		DICTIONARY.add("Diameter");
-		DICTIONARY.add("Capacity");
-		DICTIONARY.add("Tolerance");
-		DICTIONARY.add("Services");
-		DICTIONARY.add("Inspection");
-		DICTIONARY.add("Product");
-		DICTIONARY.add("Volume");
-		DICTIONARY.add("Time");
-		DICTIONARY.add("Process");
-		DICTIONARY.add("Axis");
-		DICTIONARY.add("Center");
-		DICTIONARY.add("Feeding");
-		DICTIONARY.add("Feed");
-		DICTIONARY.add("Material");
-	}
-
 	private EqualStemBoostingLabelSimilarity labelSimilarity = new EqualStemBoostingLabelSimilarity(
 			new OrderedTokenListSimilarity());
 	private double threshold = 0.30;
@@ -104,7 +63,7 @@ public class DictionaryBasedPropertyTableHeaderTranslator implements IPropertyTa
 
 	private double computeSimilarity(String text) {
 		double max = 0;
-		for (String entry : DICTIONARY) {
+		for (String entry : TablePropertyDictionary.getDictionary()) {
 			max = Math.max(max, labelSimilarity.computeLabelSimilarity(text, entry));
 		}
 		return max;
