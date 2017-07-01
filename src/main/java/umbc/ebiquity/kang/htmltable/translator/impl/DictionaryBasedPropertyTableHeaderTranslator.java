@@ -52,9 +52,8 @@ public class DictionaryBasedPropertyTableHeaderTranslator implements IPropertyTa
 				propertyHeaderNodes.add(createPropertyNode(tableCells.get(i)));
 				totalSim += computeSimilarity(extractContent(tableCells.get(i)));
 			}
+			
 			if (totalSim / tableCells.size() >= threshold) {
-				System.out.println(DictionaryBasedPropertyTableHeaderTranslator.class.getName()
-						+ "#identifyPropertyHeader:" + totalSim / tableCells.size());
 				return propertyHeaderNodes;
 			}
 		}

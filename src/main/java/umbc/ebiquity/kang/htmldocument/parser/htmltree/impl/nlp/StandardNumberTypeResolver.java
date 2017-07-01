@@ -16,6 +16,7 @@ public class StandardNumberTypeResolver {
 
 		if (tokens.size() == 1 && isNumber(tokens.get(0))) {
 			return ValueType.Number;
+			// TODO: May further resolve integer type and decimal type
 		}
 
 		for (int i = 0; i < tokens.size(); i++) {

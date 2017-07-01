@@ -12,8 +12,6 @@ import org.jsoup.nodes.Element;
 import org.junit.Test;
 
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeEntityNode;
-import umbc.ebiquity.kang.htmltable.core.DataCell;
-import umbc.ebiquity.kang.htmltable.core.TableCell;
 import umbc.ebiquity.kang.htmltable.core.TableRecord;
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.DataTableHeaderType;
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.TableStatus;
