@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
 
-public class Mathematics {
+public class BasicMath {
 	
 	/**
 	 * 

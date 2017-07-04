@@ -12,7 +12,7 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.StandardValueTyp
 import umbc.ebiquity.kang.htmltable.core.TableCell;
 import umbc.ebiquity.kang.htmltable.core.TableRecord;
 import umbc.ebiquity.kang.htmltable.translator.ITableRecordDataTypePurityCalculator;
-import umbc.ebiquity.kang.machinelearning.math.util.Mathematics;
+import umbc.ebiquity.kang.machinelearning.math.util.BasicMath;
 
 public class StandardTableRecordDataTypePurityCalculator implements ITableRecordDataTypePurityCalculator {
 
@@ -22,7 +22,7 @@ public class StandardTableRecordDataTypePurityCalculator implements ITableRecord
 	public double computeDataTypePurityScore(List<TableRecord> dataRecords, int offset, double beta) {
 
 		// Currently, we are not using beta parameter
-		beta = beta > 0 ? Mathematics.roundDown(beta, 2) : 0;
+		beta = beta > 0 ? BasicMath.roundDown(beta, 2) : 0;
 		double sum = 0.0;
 		for (TableRecord record : dataRecords) {
 			Map<String, Integer> map = new HashMap<>();
@@ -42,7 +42,7 @@ public class StandardTableRecordDataTypePurityCalculator implements ITableRecord
 					map.put(group, frequency + 1);
 				}
 			}
-			double normalizedEntropy = Mathematics.computeEntropy(map) / Mathematics.computeMaxEntropy(cellCount);
+			double normalizedEntropy = BasicMath.computeEntropy(map) / BasicMath.computeMaxEntropy(cellCount);
 			if(beta > 0) {
 				normalizedEntropy = Math.pow(normalizedEntropy, 1 / beta);
 			} 

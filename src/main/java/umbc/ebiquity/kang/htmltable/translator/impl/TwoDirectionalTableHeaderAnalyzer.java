@@ -15,7 +15,7 @@ import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable;
 import umbc.ebiquity.kang.htmltable.delimiter.impl.HeaderDelimitedTable;
 import umbc.ebiquity.kang.htmltable.translator.IPropertyTableHeaderLikelihoodCalculator;
 import umbc.ebiquity.kang.htmltable.translator.ITableRecordDataTypePurityCalculator;
-import umbc.ebiquity.kang.machinelearning.math.util.Mathematics;
+import umbc.ebiquity.kang.machinelearning.math.util.BasicMath;
 
 public class TwoDirectionalTableHeaderAnalyzer {
 
@@ -53,10 +53,10 @@ public class TwoDirectionalTableHeaderAnalyzer {
 
 			List<TableRecord> hDataRecords = table.getHorizontalDataRecords();
 			List<TableRecord> vDataRecords = table.getVerticalDataRecords();
-			int hCellNum = hDataRecords.get(0).getTableCells().size() - hRecordOffset;
-			int vCellNum = vDataRecords.get(0).getTableCells().size() - vRecordOffset;
-			double hBeta = hCellNum > vCellNum ? hCellNum / (double) vCellNum : 0;
-			double vBeta = vCellNum > hCellNum ? vCellNum / (double) hCellNum : 0;
+			double hCellNum = BasicMath.log(hDataRecords.get(0).getTableCells().size() - hRecordOffset, 2);
+			double vCellNum = BasicMath.log(vDataRecords.get(0).getTableCells().size() - vRecordOffset, 2);
+			double hBeta = hCellNum > vCellNum && vCellNum >= 1 ? hCellNum / vCellNum : 0;
+			double vBeta = vCellNum > hCellNum && hCellNum >= 1 ? vCellNum / hCellNum : 0;
 			System.out.println("hBeta: " + hBeta);
 			System.out.println("vBeta: " + vBeta);
 			double hDataPurityScore = tableRecordDataTypePurityCalculator.computeDataTypePurityScore(hDataRecords,
