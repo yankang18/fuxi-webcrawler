@@ -19,17 +19,10 @@ public class StandardTableRecordDataTypePurityCalculator implements ITableRecord
 	private IValueTypeResolver valueTypeResolver = new StandardValueTypeResolver();
 	
 	@Override
-	/**
-	 * The smaller the score is, the more purity the data type of entries in the
-	 * data records is.
-	 * 
-	 * @param dataRecords
-	 * @param offset
-	 * @return
-	 */
 	public double computeDataTypePurityScore(List<TableRecord> dataRecords, int offset, double beta) {
 
 		// Currently, we are not using beta parameter
+		beta = beta > 0 ? Mathematics.roundDown(beta, 2) : 0;
 		double sum = 0.0;
 		for (TableRecord record : dataRecords) {
 			Map<String, Integer> map = new HashMap<>();
@@ -50,6 +43,10 @@ public class StandardTableRecordDataTypePurityCalculator implements ITableRecord
 				}
 			}
 			double normalizedEntropy = Mathematics.computeEntropy(map) / Mathematics.computeMaxEntropy(cellCount);
+			if(beta > 0) {
+				normalizedEntropy = Math.pow(normalizedEntropy, 1 / beta);
+			} 
+			System.out.println("normalizedEntropy: " + normalizedEntropy);
 			sum += normalizedEntropy;
 		}
 		return 1 - sum / dataRecords.size();

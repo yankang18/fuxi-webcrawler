@@ -22,8 +22,28 @@ public class ValueTypeResolver {
 		ValueType type = valueTypeResolver.resolve(text);
 		assertEquals(ValueType.NumberPhrase, type);
 		assertEquals("inch", type.getUnit());
-	}
 
+		String text2 = "8.88 in";
+		ValueType type2 = valueTypeResolver.resolve(text2);
+		assertEquals(ValueType.NumberPhrase, type2);
+		assertEquals("in", type2.getUnit());
+		
+		String text3 = "$8.88";
+		ValueType type3 = valueTypeResolver.resolve(text3);
+		assertEquals(ValueType.NumberPhrase, type3);
+		assertEquals("$", type3.getUnit());
+		
+		String text4 = "8.88'";
+		ValueType type4 = valueTypeResolver.resolve(text4);
+		assertEquals(ValueType.NumberPhrase, type4);
+		assertEquals("inch", type4.getUnit());
+		
+		String text5 = "8.88\"";
+		ValueType type5 = valueTypeResolver.resolve(text5);
+		assertEquals(ValueType.NumberPhrase, type5);
+		assertEquals("inch", type4.getUnit());
+	}
+	
 	@Test
 	public void testNumberPhraseWithTwoNumbers() {
 		// TODO 1366x768 inch does not work for now, may fix this

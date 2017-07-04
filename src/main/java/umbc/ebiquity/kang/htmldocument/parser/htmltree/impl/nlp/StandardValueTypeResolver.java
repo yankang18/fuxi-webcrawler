@@ -29,7 +29,7 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 		toKeepTags.addAll(POSTagUtil.getNounTags());
 		toKeepTags.addAll(POSTagUtil.getVerbTags());
 		toKeepTags.addAll(POSTagUtil.getToTags());
-		toKeepTags.addAll(POSTagUtil.getNumberTags());
+		toKeepTags.addAll(POSTagUtil.getSymbolUnitTags());
 
 		splittingTags = new HashSet<>();
 		splittingTags.addAll(POSTagUtil.getConjuncTags());
@@ -43,13 +43,13 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 			throw new IllegalArgumentException("The input text should not be empty");
 
 		text = text.trim();
-
+		
 		/*
 		 * Step (1): pre-annotation Step (2): annotation Step (3):
 		 * post-annotation Step (4): pre-analyzing Step (5): analyzing
 		 */
 		text = preAnnotationProcess(text);
-
+		
 		ITaggedText taggedText = annotate(text);
 
 		if (hasMultiSentences(taggedText)) {
@@ -97,7 +97,7 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 	}
 
 	private ValueType analyze(List<POSTaggedToken> taggedTokens) {
-
+		
 		List<List<POSTaggedToken>> tokensList = new ArrayList<List<POSTaggedToken>>();
 		List<POSTaggedToken> tokens = new ArrayList<>();
 		tokensList.add(tokens);

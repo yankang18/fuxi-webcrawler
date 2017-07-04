@@ -16,7 +16,6 @@ public class StandardNumberTypeResolver {
 
 		if (tokens.size() == 1 && isNumber(tokens.get(0))) {
 			return ValueType.Number;
-			// TODO: May further resolve integer type and decimal type
 		}
 
 		for (int i = 0; i < tokens.size(); i++) {
@@ -93,11 +92,12 @@ public class StandardNumberTypeResolver {
 			if (i >= tokens.size()) {
 				return null;
 			}
-			POSTaggedToken token = tokens.get(i);
-			if (isNoun(token)) {
-				suffixUnitBuilder.append(token.getValue().trim() + " ");
+			String value = tokens.get(i).getValue().trim();
+			String stdUnit = UnitUtil.toStandard(value);
+			if (stdUnit == null) {
+				suffixUnitBuilder.append(value + " ");
 			} else {
-				return null;
+				suffixUnitBuilder.append(stdUnit + " ");
 			}
 		}
 		return suffixUnitBuilder.toString().trim();
@@ -108,7 +108,7 @@ public class StandardNumberTypeResolver {
 	}
 
 	private boolean isDefinedPrefixUnit(String prefixUnit) {
-		return UnitUtil.isCurrencyUnit(prefixUnit);
+		return UnitUtil.isCurrencyUnit(prefixUnit) || UnitUtil.isNumberUnit(prefixUnit);
 	}
 
 	private boolean isVerb(POSTaggedToken token) {

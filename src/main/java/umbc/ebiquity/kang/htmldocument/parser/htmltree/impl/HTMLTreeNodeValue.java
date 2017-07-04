@@ -3,7 +3,7 @@ package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl;
 public class HTMLTreeNodeValue {
 
 	public enum ValueType {
-		Number, NumberPhrase, Image, Term, Paragraph; /* one or more sentences */
+		Number, NumberPhrase, Image, Term, Paragraph, Integer, Decimal; /* one or more sentences */ 
 
 		private String unit;
 

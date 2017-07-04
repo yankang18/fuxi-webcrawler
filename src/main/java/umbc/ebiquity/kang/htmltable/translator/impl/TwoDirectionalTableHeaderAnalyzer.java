@@ -11,6 +11,7 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.Va
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.StandardValueTypeResolver;
 import umbc.ebiquity.kang.htmltable.core.TableCell;
 import umbc.ebiquity.kang.htmltable.core.TableRecord;
+import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable;
 import umbc.ebiquity.kang.htmltable.delimiter.impl.HeaderDelimitedTable;
 import umbc.ebiquity.kang.htmltable.translator.IPropertyTableHeaderLikelihoodCalculator;
 import umbc.ebiquity.kang.htmltable.translator.ITableRecordDataTypePurityCalculator;
@@ -26,6 +27,9 @@ public class TwoDirectionalTableHeaderAnalyzer {
 	private ITableRecordDataTypePurityCalculator tableRecordDataTypePurityCalculator = new StandardTableRecordDataTypePurityCalculator();
 
 	public TwoDirectionalHeaderType analyze(HeaderDelimitedTable table) {
+		if (IDelimitedTable.DataTableHeaderType.TwoDirectionalHeaderTable != table.getDataTableHeaderType()) {
+			throw new IllegalArgumentException("The input table must be two-directional-header data table");
+		}
 
 		List<TableRecord> hHeaderRecords = table.getHorizontalHeaderRecords();
 		List<TableRecord> vHeaderRecords = table.getVerticalHeaderRecords();
@@ -48,12 +52,19 @@ public class TwoDirectionalTableHeaderAnalyzer {
 		} else {
 
 			List<TableRecord> hDataRecords = table.getHorizontalDataRecords();
-			double hDataPurityScore = tableRecordDataTypePurityCalculator.computeDataTypePurityScore(hDataRecords,
-					hRecordOffset, 0);
-
 			List<TableRecord> vDataRecords = table.getVerticalDataRecords();
+			int hCellNum = hDataRecords.get(0).getTableCells().size() - hRecordOffset;
+			int vCellNum = vDataRecords.get(0).getTableCells().size() - vRecordOffset;
+			double hBeta = hCellNum > vCellNum ? hCellNum / (double) vCellNum : 0;
+			double vBeta = vCellNum > hCellNum ? vCellNum / (double) hCellNum : 0;
+			System.out.println("hBeta: " + hBeta);
+			System.out.println("vBeta: " + vBeta);
+			double hDataPurityScore = tableRecordDataTypePurityCalculator.computeDataTypePurityScore(hDataRecords,
+					hRecordOffset, hBeta);
+
+			System.out.println();
 			double vDataPurityScore = tableRecordDataTypePurityCalculator.computeDataTypePurityScore(vDataRecords,
-					vRecordOffset, 0);
+					vRecordOffset, vBeta);
 
 			System.out.println("hPurityScore: " + hDataPurityScore);
 			System.out.println("vPurityScore: " + vDataPurityScore);

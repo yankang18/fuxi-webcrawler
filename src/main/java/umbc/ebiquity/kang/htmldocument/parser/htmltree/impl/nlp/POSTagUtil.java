@@ -4,6 +4,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Only works for English
+ * 
+ * @author Yan Kang
+ *
+ */
 public class POSTagUtil {
 
 	private static Set<String> NounTags;
@@ -14,16 +20,22 @@ public class POSTagUtil {
 
 	private static Set<String> ToTags;
 	private static Set<String> SymbolTags;
+	private static Set<String> SymbolUnitTags;
 
 	static {
 
 		SymbolTags = new HashSet<>();
 		SymbolTags.add("$");
 		SymbolTags.add("#");
+		SymbolTags.add("''");
 		SymbolTags.add(".");
 		SymbolTags.add(",");
 		SymbolTags.add(":");
-		SymbolTags.add("''");
+		
+		SymbolUnitTags = new HashSet<>();
+		SymbolUnitTags.add("$");
+		SymbolUnitTags.add("#");
+		SymbolUnitTags.add("''");
 
 		ConjuncTags = new HashSet<>();
 		ConjuncTags.add("CC");
@@ -101,6 +113,13 @@ public class POSTagUtil {
 	 */
 	public static Set<String> getSymbolTags() {
 		return toUnmodifiableSet(SymbolTags);
+	}
+	
+	/**
+	 * @return the symbolTags
+	 */
+	public static Set<String> getSymbolUnitTags() {
+		return toUnmodifiableSet(SymbolUnitTags);
 	}
 	
 	private static Set<String> toUnmodifiableSet(Set<String> set){

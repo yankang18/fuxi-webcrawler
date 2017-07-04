@@ -1,6 +1,8 @@
 package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -15,6 +17,8 @@ public class UnitUtil {
 	private static Set<String> USA_UNITS;
 	private static Set<String> ELECTRONICS_UNITS;
 	private static Set<String> CURRENCY_UNITS;
+	private static Set<String> NUMBER_UNITS;
+	private static Map<String, String> TO_STANDARD;
 	
 	static {
 		USA_UNITS = new HashSet<>();
@@ -25,7 +29,7 @@ public class UnitUtil {
 		USA_UNITS.add("\"");
 		USA_UNITS.add("foot");
 		USA_UNITS.add("ft");
-		USA_UNITS.add("\'");
+		USA_UNITS.add("'");
 		USA_UNITS.add("yard");
 		USA_UNITS.add("yd");
 		USA_UNITS.add("mile");
@@ -162,16 +166,33 @@ public class UnitUtil {
 
 		CURRENCY_UNITS = new HashSet<>();
 		CURRENCY_UNITS.add("$");
+		
+		NUMBER_UNITS = new HashSet<>();
+		NUMBER_UNITS.add("#");
+		
+		TO_STANDARD = new HashMap<>();
+		TO_STANDARD.put("'", "inch");
+		TO_STANDARD.put("''", "inch");
+		TO_STANDARD.put("\"", "inch");
 	}
 
 	public static boolean isUnit(String input) {
 		input = normalize(input);
-		return USA_UNITS.contains(input) || ELECTRONICS_UNITS.contains(input) || CURRENCY_UNITS.contains(input);
+		return USA_UNITS.contains(input) || ELECTRONICS_UNITS.contains(input) || CURRENCY_UNITS.contains(input) || NUMBER_UNITS.contains(input);
 	}
 
 	public static boolean isCurrencyUnit(String input) {
 		input = normalize(input);
 		return CURRENCY_UNITS.contains(input);
+	}
+	
+	public static boolean isNumberUnit(String input) {
+		input = normalize(input);
+		return NUMBER_UNITS.contains(input);
+	}
+	
+	public static String toStandard(String input){
+		return TO_STANDARD.get(input);
 	}
 	
 	private static String normalize(String input) {
