@@ -4,7 +4,8 @@ import java.util.List;
 
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNodeEntitizer;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueType;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueTypeInfo;
 
 public class StandardBlankNodeEntitizer implements IHTMLTreeNodeEntitizer {
 
@@ -22,7 +23,7 @@ public class StandardBlankNodeEntitizer implements IHTMLTreeNodeEntitizer {
 		if (firstNode instanceof HTMLTreeValueNode) {
 			HTMLTreeValueNode firstValueNode = (HTMLTreeValueNode) firstNode;
 			HTMLTreeNodeValue value = firstValueNode.getMainValue();
-			if (ValueType.Term == value.getValueType()) {
+			if (ValueType.Term == value.getValueTypeInfo().getValueType()) {
 				mainValue = value;
 			} else {
 				return result;
@@ -38,7 +39,7 @@ public class StandardBlankNodeEntitizer implements IHTMLTreeNodeEntitizer {
 			if (node instanceof HTMLTreeValueNode) {
 				HTMLTreeValueNode valueNode = (HTMLTreeValueNode) node;
 				HTMLTreeNodeValue value = valueNode.getMainValue();
-				if (!isComparativeDependentToTermType(value.getValueType())) {
+				if (!isComparativeDependentToTermType(value.getValueTypeInfo())) {
 					allDependentValues = false;
 					break;
 				}
@@ -53,7 +54,7 @@ public class StandardBlankNodeEntitizer implements IHTMLTreeNodeEntitizer {
 		}
 
 		// 
-		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(blankNode.getWrappedElement(), mainValue.getValue());
+		HTMLTreeEntityNode entityNode = new HTMLTreeEntityNode(blankNode.getWrappedElement(), mainValue.getContent());
 
 		for (int i = 1; i < numOfChildren; i++) {
 			entityNode.addChild(children.get(i));
@@ -69,8 +70,8 @@ public class StandardBlankNodeEntitizer implements IHTMLTreeNodeEntitizer {
 		return result;
 	}
 
-	private boolean isComparativeDependentToTermType(ValueType valueType) {
-		return ValueType.Term == valueType ? false : true;
+	private boolean isComparativeDependentToTermType(ValueTypeInfo valueTypeInfo) {
+		return ValueType.Term == valueTypeInfo.getValueType() ? false : true;
 	}
 
 }

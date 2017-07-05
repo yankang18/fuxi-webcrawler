@@ -21,8 +21,9 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlayBuilder;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IValueTypeResolver;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.NaiveValueTypeResolver;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueType;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueTypeInfo;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.StandardValueTypeResolver;
 import umbc.ebiquity.kang.websiteparser.impl.HTMLTags;
 
 public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
@@ -38,7 +39,7 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 	private String domainName;
 
 	public HTMLTreeOverlayConstructor() {
-		valueTypeResolver = new NaiveValueTypeResolver();
+		valueTypeResolver = new StandardValueTypeResolver();
 		customerizedHtmlNodeProcessors = new HashSet<ICustomizedHTMLNodeProcessor>();
 		init();
 	}
@@ -98,6 +99,7 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 
 		// Get current path we are traversing
 		IHtmlPath currPath = paths.get(currPathIndex);
+		
 		System.out.println(currPath.getPathIdent());
 
 		if (toBeSkipped(currPath)) {
@@ -316,26 +318,30 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 		String content = currentNode.getFullContent();
 		Element element = currentNode.getWrappedElement();
 
-		// First, get value through the element tagName;
-		// Then, get value through the string content of the Html node;
-		// Finally, get value through the content of the element.
-		HTMLTreeNodeValue value = resolveValueTypeByTagName(element);
-		if (value != null) {
+		// First check whether we can determine value through the element
+		// tagName;
+		// Then check whether we can determine value through the string content
+		// of the HTML node;
+		// Finally, check Whether we can determine value through the content of
+		// the element.
+		HTMLTreeNodeValue treeNodeValue = resolveValueTypeByTagName(element);
+		if (treeNodeValue != null) {
 			// if the value is not null, the element must not be null;
-			HTMLTreeValueNode valueNode = new HTMLTreeValueNode(value, element);
+			HTMLTreeValueNode valueNode = new HTMLTreeValueNode(treeNodeValue, element);
 			valueNode.addValues(getValues(element));
 			populatePathIdInformation(valueNode, currentPath);
 			return valueNode;
 		} else if (isNotEmpty(content)) {
 
-			ValueType valueType = valueTypeResolver.resolve(content);
-			value = new HTMLTreeNodeValue(content, valueType);
+			ValueTypeInfo valueType = valueTypeResolver.resolve(content);
+			System.out.println(content + ", " + valueType.getUnit());
+			treeNodeValue = new HTMLTreeNodeValue(content, valueType);
 			HTMLTreeValueNode valueNode = null;
 			if (element != null) {
-				valueNode = new HTMLTreeValueNode(value, element);
+				valueNode = new HTMLTreeValueNode(treeNodeValue, element);
 				valueNode.addValues(getValues(element));
 			} else {
-				valueNode = new HTMLTreeValueNode(value, currentNode.getTag());
+				valueNode = new HTMLTreeValueNode(treeNodeValue, currentNode.getTag());
 			}
 			populatePathIdInformation(valueNode, currentPath);
 
@@ -363,7 +369,8 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 		String key = "src";
 		for (Element e : elements) {
 			if (e.hasAttr(key)) {
-				HTMLTreeNodeValue value = new HTMLTreeNodeValue(e.attr(key), ValueType.Image);
+				HTMLTreeNodeValue value = new HTMLTreeNodeValue(e.attr(key),
+						ValueTypeInfo.createValueTypeInfo(ValueType.Image));
 				// TODO: get description of image
 				// value.setDescription(getImgDescription(e));
 				values.add(value);
@@ -371,13 +378,14 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 		}
 		return values;
 	}
-	
+
 	private HTMLTreeNodeValue resolveValueTypeByTagName(Element element) {
-		if(element == null)
+		if (element == null)
 			return null;
 
 		if (element.tagName().equalsIgnoreCase("img")) {
-			HTMLTreeNodeValue value = new HTMLTreeNodeValue(element.attr("src"), ValueType.Image);
+			HTMLTreeNodeValue value = new HTMLTreeNodeValue(element.attr("src"),
+					ValueTypeInfo.createValueTypeInfo(ValueType.Image));
 			return value;
 		}
 

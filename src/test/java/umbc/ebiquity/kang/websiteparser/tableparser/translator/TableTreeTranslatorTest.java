@@ -83,11 +83,6 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 		HTMLTreeUtil.prettyPrint(tree);
 
 		prettyPrintJSON(tree);
-		
-//		int numOfTotalRec = 1000;
-//		int rec = 5;
-//		double score = (double) rec / numOfTotalRec;
-//		System.out.println(score);
 	}
 
 	private void prettyPrintJSON(IHTMLTreeNode tree) {

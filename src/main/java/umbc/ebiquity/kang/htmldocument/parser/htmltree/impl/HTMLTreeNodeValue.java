@@ -1,47 +1,27 @@
 package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl;
 
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueTypeInfo;
+
 public class HTMLTreeNodeValue {
 
-	public enum ValueType {
-		Number, NumberPhrase, Image, Term, Paragraph, Integer, Decimal; /* one or more sentences */ 
-
-		private String unit;
-
-		/**
-		 * @return the unit
-		 */
-		public String getUnit() {
-			return unit;
-		}
-
-		/**
-		 * @param unit
-		 *            the unit to set
-		 */
-		public void setUnit(String unit) {
-			this.unit = unit.trim();
-		}
-	}
-
 	private String content;
-	private ValueType type;
+	private ValueTypeInfo type;
 	private String description;
 
-	public HTMLTreeNodeValue(String content, ValueType type) {
+	public HTMLTreeNodeValue(String content, ValueTypeInfo valueTypeInfo) {
+		if (valueTypeInfo == null)
+			throw new IllegalArgumentException("The valueTypeInfo can not be null");
+
 		this.content = content;
-		this.type = type;
+		this.type = valueTypeInfo;
 	}
 
-	public String getValue() {
+	public String getContent() {
 		return content;
 	}
 
-	public ValueType getValueType() {
+	public ValueTypeInfo getValueTypeInfo() {
 		return type;
-	}
-
-	public void setValueType(ValueType valueType) {
-		this.type = valueType;
 	}
 
 	/**

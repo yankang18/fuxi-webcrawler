@@ -7,7 +7,8 @@ import java.util.Map;
 import org.jsoup.nodes.Element;
 
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IValueTypeResolver;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueType;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueTypeInfo;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.StandardValueTypeResolver;
 import umbc.ebiquity.kang.htmltable.core.TableCell;
 import umbc.ebiquity.kang.htmltable.core.TableRecord;
@@ -29,10 +30,11 @@ public class StandardTableRecordDataTypePurityCalculator implements ITableRecord
 			List<TableCell> tableCells = record.getTableCells();
 			int cellCount = tableCells.size() - offset;
 			for (int i = offset; i < tableCells.size(); i++) {
-				ValueType valueType = valueTypeResolver.resolve(extractContent(tableCells.get(i)));
+				ValueTypeInfo valueTypeInfo = valueTypeResolver.resolve(extractContent(tableCells.get(i)));
+				ValueType valueType = valueTypeInfo.getValueType();
 				String group = valueType.name();
 				if (ValueType.NumberPhrase == valueType) {
-					group = valueType.getUnit();
+					group = valueTypeInfo.getUnit();
 				}
 
 				Integer frequency = map.get(group);
@@ -46,7 +48,6 @@ public class StandardTableRecordDataTypePurityCalculator implements ITableRecord
 			if(beta > 0) {
 				normalizedEntropy = Math.pow(normalizedEntropy, 1 / beta);
 			} 
-			System.out.println("normalizedEntropy: " + normalizedEntropy);
 			sum += normalizedEntropy;
 		}
 		return 1 - sum / dataRecords.size();

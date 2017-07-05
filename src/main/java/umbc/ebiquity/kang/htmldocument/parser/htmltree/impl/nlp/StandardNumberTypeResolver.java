@@ -2,20 +2,20 @@ package umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp;
 
 import java.util.List;
 
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueType;
 
 public class StandardNumberTypeResolver {
 
 	/**
 	 * 
 	 * @param tokens
-	 * @return
+	 * @return ValueTypeInfo, can be null if the input tokens can not be
+	 *         resolved to a type
 	 */
-	public ValueType resolve(List<POSTaggedToken> tokens) {
+	public ValueTypeInfo resolve(List<POSTaggedToken> tokens) {
 
 		if (tokens.size() == 1 && isNumber(tokens.get(0))) {
-			return ValueType.Number;
+			return ValueTypeInfo.createValueTypeInfo(ValueType.Number, null);
 		}
 
 		for (int i = 0; i < tokens.size(); i++) {
@@ -40,8 +40,10 @@ public class StandardNumberTypeResolver {
 				int currentNumberIndex = i;
 				for (; windowSize >= 1; windowSize--) {
 
-					String suffixUnit = getSuffixUnit(tokens, currentNumberIndex, windowSize);
-					if (suffixUnit != null) {
+					String[] result = getSuffixUnit(tokens, currentNumberIndex, windowSize);
+					String suffixUnit = result[0];
+					String suffixPosTag = result[1];
+					if(isNoun(suffixPosTag) || isDefinedSufixUnit(suffixUnit)) {
 
 						//
 						i = currentNumberIndex + windowSize;
@@ -71,10 +73,9 @@ public class StandardNumberTypeResolver {
 			}
 		}
 
-		ValueType type = null;
+		ValueTypeInfo type = null;
 		if (unit != null) {
-			type = ValueType.NumberPhrase;
-			type.setUnit(unit);
+			type = ValueTypeInfo.createValueTypeInfo(ValueType.NumberPhrase, unit);
 		}
 		return type;
 	}
@@ -84,13 +85,17 @@ public class StandardNumberTypeResolver {
 	 * @param tokens
 	 * @param currentNumberIndex
 	 * @param windowSize
-	 * @return
+	 * @return an array of string with two elements: the element at position 0
+	 *         is the suffix unit and the element at position 1 is the POS tag.
+	 *         Both element cannot be null but can be empty string is suffix
+	 *         unit or POS tag does not exists
 	 */
-	private String getSuffixUnit(List<POSTaggedToken> tokens, int currentNumberIndex, int windowSize) {
+	private String[] getSuffixUnit(List<POSTaggedToken> tokens, int currentNumberIndex, int windowSize) {
+		String[] result = { "", "" };
 		StringBuilder suffixUnitBuilder = new StringBuilder();
 		for (int i = currentNumberIndex + 1; i <= currentNumberIndex + windowSize; i++) {
 			if (i >= tokens.size()) {
-				return null;
+				return result;
 			}
 			String value = tokens.get(i).getValue().trim();
 			String stdUnit = UnitUtil.toStandard(value);
@@ -100,7 +105,9 @@ public class StandardNumberTypeResolver {
 				suffixUnitBuilder.append(stdUnit + " ");
 			}
 		}
-		return suffixUnitBuilder.toString().trim();
+		result[0] = suffixUnitBuilder.toString().trim();
+		result[1] = currentNumberIndex + 1 < tokens.size() ? tokens.get(currentNumberIndex + 1).getPOSTag() : "";
+		return result;
 	}
 
 	private boolean isDefinedSufixUnit(String sufixUnit) {
@@ -121,5 +128,9 @@ public class StandardNumberTypeResolver {
 
 	private boolean isNoun(POSTaggedToken token) {
 		return POSTagUtil.isNoun(token.getPOSTag());
+	}
+	
+	private boolean isNoun(String posTagName) {
+		return POSTagUtil.isNoun(posTagName);
 	}
 }

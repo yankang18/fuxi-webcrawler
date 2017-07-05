@@ -14,6 +14,7 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeEntityNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreePropertyNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeValueNode;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueTypeInfo;
 
 /**
  * This utility class transforms IHTMLTreeNode to JSON string or JSON object
@@ -48,9 +49,9 @@ public class HTMLTree2JSONTranslator {
 	/*
 	 * Possible attributes for JSON object of type VALUE.
 	 */
-	public static final String VALUE_CONTENT_ATTRIBUTE = "vcontent";
-	public static final String VALUE_TYPE_ATTRIBUTE = "vtype";
-	public static final String PRIMITIVE_TYPE_ATTRIBUTE = "ptype";
+	public static final String VALUE_CONTENT_ATTRIBUTE = "v_content";
+	public static final String VALUE_TYPE_ATTRIBUTE = "v_type";
+	public static final String VALUE_UNIT_ATTRIBUTE = "v_unit";
 
 	/*
 	 * Node names for possible BNODE
@@ -126,9 +127,14 @@ public class HTMLTree2JSONTranslator {
 				HTMLTreeNodeValue nodeValue = valueNode.getMainValue();
 
 				JSONObject attributes = new JSONObject();
-				attributes.put(VALUE_CONTENT_ATTRIBUTE, nodeValue.getValue());
-				attributes.put(VALUE_TYPE_ATTRIBUTE, nodeValue.getValueType().name());
-
+				attributes.put(VALUE_CONTENT_ATTRIBUTE, nodeValue.getContent());
+				ValueTypeInfo valueType = nodeValue.getValueTypeInfo();
+				attributes.put(VALUE_TYPE_ATTRIBUTE, valueType.getValueType().name());
+				String unit = valueType.getUnit();
+//				System.out.println(nodeValue.getContent() + ", " + unit);
+				if (unit != null && !unit.trim().isEmpty()) {
+					attributes.put(VALUE_UNIT_ATTRIBUTE, unit.trim());
+				}
 				values.put(VALUE_DEFAULT_NAME, attributes);
 
 				translateChildren(c, attributes);
@@ -164,7 +170,6 @@ public class HTMLTree2JSONTranslator {
 				bnodes.put(BNODE_DEFAULT_NAME, attributes);
 
 				translateChildren(c, attributes);
-
 			}
 		}
 	}

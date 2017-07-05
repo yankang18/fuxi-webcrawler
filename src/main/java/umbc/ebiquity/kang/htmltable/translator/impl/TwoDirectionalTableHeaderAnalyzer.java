@@ -1,15 +1,7 @@
 package umbc.ebiquity.kang.htmltable.translator.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.jsoup.nodes.Element;
-
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.IValueTypeResolver;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.StandardValueTypeResolver;
-import umbc.ebiquity.kang.htmltable.core.TableCell;
 import umbc.ebiquity.kang.htmltable.core.TableRecord;
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable;
 import umbc.ebiquity.kang.htmltable.delimiter.impl.HeaderDelimitedTable;
@@ -62,7 +54,6 @@ public class TwoDirectionalTableHeaderAnalyzer {
 			double hDataPurityScore = tableRecordDataTypePurityCalculator.computeDataTypePurityScore(hDataRecords,
 					hRecordOffset, hBeta);
 
-			System.out.println();
 			double vDataPurityScore = tableRecordDataTypePurityCalculator.computeDataTypePurityScore(vDataRecords,
 					vRecordOffset, vBeta);
 

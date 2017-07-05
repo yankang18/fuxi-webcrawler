@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IValueTypeResolver;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue;
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueType;
 
 public class StandardValueTypeResolver implements IValueTypeResolver {
 
@@ -37,7 +36,7 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 	}
 
 	@Override
-	public ValueType resolve(String text) {
+	public ValueTypeInfo resolve(String text) {
 
 		if (text == null || text.trim().isEmpty())
 			throw new IllegalArgumentException("The input text should not be empty");
@@ -53,7 +52,7 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 		ITaggedText taggedText = annotate(text);
 
 		if (hasMultiSentences(taggedText)) {
-			return ValueType.Paragraph;
+			return ValueTypeInfo.createValueTypeInfo(ValueType.Paragraph, null);
 		}
 
 		List<POSTaggedToken> taggedTokens = preAnalyzingProcess(
@@ -96,7 +95,7 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 		return tokens;
 	}
 
-	private ValueType analyze(List<POSTaggedToken> taggedTokens) {
+	private ValueTypeInfo analyze(List<POSTaggedToken> taggedTokens) {
 		
 		List<List<POSTaggedToken>> tokensList = new ArrayList<List<POSTaggedToken>>();
 		List<POSTaggedToken> tokens = new ArrayList<>();
@@ -113,11 +112,11 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 
 		boolean hasToken = false;
 		boolean isNumberToken = true;
-		ValueType valueType = null;
+		ValueTypeInfo valueType = null;
 		for (List<POSTaggedToken> list : tokensList) {
 			if (list.size() != 0) {
 				hasToken = true;
-				ValueType type = numberTypeResolver.resolve(list);
+				ValueTypeInfo type = numberTypeResolver.resolve(list);
 				if (type == null) {
 					isNumberToken = false;
 					break;
@@ -132,7 +131,7 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 		} else if (isNumberToken) {
 			return valueType;
 		} else {
-			return ValueType.Term;
+			return ValueTypeInfo.createValueTypeInfo(ValueType.Term, null);
 		}
 	}
 
@@ -151,5 +150,4 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 	private boolean hasMultiSentences(ITaggedText taggedText) {
 		return taggedText.getTaggedSentences().size() > 1;
 	}
-
 }

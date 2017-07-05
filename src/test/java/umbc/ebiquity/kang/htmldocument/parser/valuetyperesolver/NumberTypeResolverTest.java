@@ -2,15 +2,15 @@ package umbc.ebiquity.kang.htmldocument.parser.valuetyperesolver;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
-import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeNodeValue.ValueType;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.POSTaggedToken;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.StandardNumberTypeResolver;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueType;
+import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueTypeInfo;
 
 public class NumberTypeResolverTest {
 
@@ -21,8 +21,8 @@ public class NumberTypeResolverTest {
 		List<POSTaggedToken> tokens = new ArrayList<>();
 		POSTaggedToken taggedToken = new POSTaggedToken("88.8", "CD");
 		tokens.add(taggedToken);
-		ValueType type = numberTypeResolver.resolve(tokens);
-		assertEquals(ValueType.Number, type);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
+		assertEquals(ValueType.Number, type.getValueType());
 	}
 
 	@Test
@@ -36,8 +36,8 @@ public class NumberTypeResolverTest {
 		tokens.add(taggedToken1);
 		tokens.add(taggedToken2);
 		tokens.add(taggedToken3);
-		ValueType type = numberTypeResolver.resolve(tokens);
-		assertEquals(ValueType.NumberPhrase, type);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
+		assertEquals(ValueType.NumberPhrase, type.getValueType());
 		assertEquals("inch", type.getUnit());
 	}
 
@@ -50,8 +50,8 @@ public class NumberTypeResolverTest {
 		tokens.add(taggedToken1);
 		tokens.add(taggedToken2);
 		tokens.add(taggedToken3);
-		ValueType type = numberTypeResolver.resolve(tokens);
-		assertEquals(ValueType.NumberPhrase, type);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
+		assertEquals(ValueType.NumberPhrase, type.getValueType());
 		assertEquals("square foot", type.getUnit());
 	}
 
@@ -65,8 +65,8 @@ public class NumberTypeResolverTest {
 		tokens.add(taggedToken1);
 		tokens.add(taggedToken2);
 		tokens.add(taggedToken3);
-		ValueType type = numberTypeResolver.resolve(tokens);
-		assertEquals(ValueType.NumberPhrase, type);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
+		assertEquals(ValueType.NumberPhrase, type.getValueType());
 		assertEquals("$", type.getUnit());
 	}
 
@@ -78,8 +78,8 @@ public class NumberTypeResolverTest {
 
 		tokens.add(taggedToken1);
 		tokens.add(taggedToken2);
-		ValueType type = numberTypeResolver.resolve(tokens);
-		assertEquals(ValueType.NumberPhrase, type);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
+		assertEquals(ValueType.NumberPhrase, type.getValueType());
 		assertEquals("random", type.getUnit());
 	}
 
@@ -92,7 +92,7 @@ public class NumberTypeResolverTest {
 		tokens.add(taggedToken1);
 		tokens.add(taggedToken2);
 		tokens.add(taggedToken3);
-		ValueType type = numberTypeResolver.resolve(tokens);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
 		assertEquals(null, type);
 	}
 	
@@ -105,7 +105,7 @@ public class NumberTypeResolverTest {
 		tokens.add(taggedToken1);
 		tokens.add(taggedToken2);
 		tokens.add(taggedToken3);
-		ValueType type = numberTypeResolver.resolve(tokens);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
 		assertEquals(null, type);
 	}
 	
@@ -116,7 +116,7 @@ public class NumberTypeResolverTest {
 		POSTaggedToken taggedToken2 = new POSTaggedToken("88.8", "CD");
 		tokens.add(taggedToken1);
 		tokens.add(taggedToken2);
-		ValueType type = numberTypeResolver.resolve(tokens);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
 		assertEquals(null, type);
 	}
 	
@@ -131,7 +131,7 @@ public class NumberTypeResolverTest {
 		tokens.add(taggedToken2);
 		tokens.add(taggedToken3);
 		tokens.add(taggedToken4);
-		ValueType type = numberTypeResolver.resolve(tokens);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
 		assertEquals(null, type);
 	}
 	
@@ -144,7 +144,7 @@ public class NumberTypeResolverTest {
 		tokens.add(taggedToken1);
 		tokens.add(taggedToken2);
 		tokens.add(taggedToken3);
-		ValueType type = numberTypeResolver.resolve(tokens);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
 		assertEquals(null, type);
 	}
 	
@@ -153,7 +153,7 @@ public class NumberTypeResolverTest {
 		List<POSTaggedToken> tokens = new ArrayList<>();
 		POSTaggedToken taggedToken1 = new POSTaggedToken("random", "TO");
 		tokens.add(taggedToken1);
-		ValueType type = numberTypeResolver.resolve(tokens);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
 		assertEquals(null, type);
 	}
 	
@@ -164,7 +164,7 @@ public class NumberTypeResolverTest {
 		POSTaggedToken taggedToken2 = new POSTaggedToken("random", "TO");
 		tokens.add(taggedToken1);
 		tokens.add(taggedToken2);
-		ValueType type = numberTypeResolver.resolve(tokens);
+		ValueTypeInfo type = numberTypeResolver.resolve(tokens);
 		assertEquals(null, type);
 	}
 
