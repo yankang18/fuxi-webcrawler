@@ -13,15 +13,15 @@ import org.junit.Test;
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.TableStatus;
 import umbc.ebiquity.kang.htmltable.delimiter.impl.ClusteringBasedTableHeaderDelimiter;
 import umbc.ebiquity.kang.htmltable.delimiter.impl.HeaderDelimitedTable;
-import umbc.ebiquity.kang.htmltable.translator.impl.TwoDirectionalTableHeaderAnalyzer;
-import umbc.ebiquity.kang.htmltable.translator.impl.TwoDirectionalTableHeaderAnalyzer.TwoDirectionalHeaderType;
+import umbc.ebiquity.kang.htmltable.translator.impl.TwoDirectionalTablePropertyHeaderAnalyzer;
+import umbc.ebiquity.kang.htmltable.translator.impl.TwoDirectionalTablePropertyHeaderAnalyzer.TwoDirectionalHeaderType;
 
 public class TwoDirectionalTableHeaderAnalyzerTest extends BaseTableHeaderTranslatorTest {
-	private static final String TEST_FILE_FOLDER = "TableHeaderDelimiterTest/";
+	private static final String TEST_FILE_FOLDER = "TableHeaderAnalyzerTest/";
 
 	// @Ignore
 	@Test
-	public void testTwoDirectionalHeaderTableHeaderTable() throws IOException {
+	public void testAnalyzeTwoDirectionalHeaderTableWithVerticalPropertyHeader() throws IOException {
 
 		ClusteringBasedTableHeaderDelimiter delimiter = new ClusteringBasedTableHeaderDelimiter();
 		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "TwoDirectionalHeaderTable.html");
@@ -30,9 +30,8 @@ public class TwoDirectionalTableHeaderAnalyzerTest extends BaseTableHeaderTransl
 		HeaderDelimitedTable delimitedTable = delimiter.delimit(element);
 		assertEquals(TableStatus.RegularTable, delimitedTable.getTableStatus());
 
-		TwoDirectionalTableHeaderAnalyzer analyzer = new TwoDirectionalTableHeaderAnalyzer();
+		TwoDirectionalTablePropertyHeaderAnalyzer analyzer = new TwoDirectionalTablePropertyHeaderAnalyzer();
 		TwoDirectionalHeaderType type = analyzer.analyze(delimitedTable);
-		System.out.println(type.name());
 		assertEquals(TwoDirectionalHeaderType.VerticalPropertyHeader, type);
 	}
 }

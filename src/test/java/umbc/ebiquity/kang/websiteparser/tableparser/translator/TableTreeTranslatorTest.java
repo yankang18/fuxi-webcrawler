@@ -65,8 +65,26 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 		
 		prettyPrintJSON(tree);
 	}
-
+	
 //	@Ignore
+	@Test
+	public void testVerticalPropertyHeaderWithIrregularDataRecordsTable() throws IOException {
+		ClusteringBasedVerticalTableHeaderDelimiter delimiter = new ClusteringBasedVerticalTableHeaderDelimiter();
+		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "VerticalPropertyHeaderWithIrregularDataRecords.html");
+		Document doc = Jsoup.parse(input, "UTF-8");
+		Element element = doc.getElementsByTag("table").get(0);
+		HeaderDelimitedTable delimitedTable = delimiter.delimit(element);
+		assertEquals(TableStatus.RegularTable, delimitedTable.getTableStatus());
+
+		TableTreeTranslator tableTranslator = new TableTreeTranslator();
+		IHTMLTreeNode tree = tableTranslator.translate(delimitedTable);
+
+		HTMLTreeUtil.prettyPrint(tree);
+		
+		prettyPrintJSON(tree);
+	}
+
+	@Ignore
 	@Test
 	public void testTwoDirectionalHeaderTableHeaderTable() throws IOException {
 		

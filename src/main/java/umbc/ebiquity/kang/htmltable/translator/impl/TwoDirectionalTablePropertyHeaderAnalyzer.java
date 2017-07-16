@@ -9,7 +9,7 @@ import umbc.ebiquity.kang.htmltable.translator.IPropertyTableHeaderLikelihoodCal
 import umbc.ebiquity.kang.htmltable.translator.ITableRecordDataTypePurityCalculator;
 import umbc.ebiquity.kang.machinelearning.math.util.BasicMath;
 
-public class TwoDirectionalTableHeaderAnalyzer {
+public class TwoDirectionalTablePropertyHeaderAnalyzer {
 
 	public enum TwoDirectionalHeaderType {
 		VerticalPropertyHeader, HorizontalPropertyHeader, Indeterminable

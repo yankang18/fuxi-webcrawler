@@ -25,7 +25,7 @@ import umbc.ebiquity.kang.htmltable.delimiter.impl.HeaderDelimitedTable;
 import umbc.ebiquity.kang.htmltable.translator.IEntityTableHeaderTranslator;
 import umbc.ebiquity.kang.htmltable.translator.IPropertyTableHeaderTranslator;
 import umbc.ebiquity.kang.htmltable.translator.TableHeaderTranslationResult;
-import umbc.ebiquity.kang.htmltable.translator.impl.TwoDirectionalTableHeaderAnalyzer.TwoDirectionalHeaderType;
+import umbc.ebiquity.kang.htmltable.translator.impl.TwoDirectionalTablePropertyHeaderAnalyzer.TwoDirectionalHeaderType;
 
 /**
  * 
@@ -39,7 +39,7 @@ public class TableTreeTranslator {
 	private IEntityTableHeaderTranslator entityTableHeaderTranslator;
 	private List<IPropertyTableHeaderTranslator> propertyTableHeaderTranslatorList;
 	
-	private TwoDirectionalTableHeaderAnalyzer twoDirectionalTableHeaderAnalyzer;
+	private TwoDirectionalTablePropertyHeaderAnalyzer twoDirectionalTableHeaderAnalyzer;
 
 	public TableTreeTranslator() {
 		treeOverlayConstructor = new HTMLTreeOverlayConstructor();
@@ -52,7 +52,7 @@ public class TableTreeTranslator {
 		propertyTableHeaderTranslatorList.add(mainPropertyTableHeaderTranslator);
 		propertyTableHeaderTranslatorList.add(new SimplePropertyTableHeaderTranslator());
 		
-		twoDirectionalTableHeaderAnalyzer = new TwoDirectionalTableHeaderAnalyzer();
+		twoDirectionalTableHeaderAnalyzer = new TwoDirectionalTablePropertyHeaderAnalyzer();
 	}
 
 	public IHTMLTreeNode translate(HeaderDelimitedTable headerDelimitedTable) {
