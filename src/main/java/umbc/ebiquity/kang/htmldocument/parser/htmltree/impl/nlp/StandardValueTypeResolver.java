@@ -44,8 +44,11 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 		text = text.trim();
 		
 		/*
-		 * Step (1): pre-annotation Step (2): annotation Step (3):
-		 * post-annotation Step (4): pre-analyzing Step (5): analyzing
+		 * Step (1): pre-annotation 
+		 * Step (2): annotation 
+		 * Step (3): post-annotation 
+		 * Step (4): pre-analyzing 
+		 * Step (5): analyzing
 		 */
 		text = preAnnotationProcess(text);
 		
@@ -57,6 +60,9 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 
 		List<POSTaggedToken> taggedTokens = preAnalyzingProcess(
 				taggedText.getTaggedSentences().get(0).getTaggedTokens());
+		
+		if (taggedTokens.size() == 0)
+			return ValueTypeInfo.createValueTypeInfo(ValueType.Term, null);
 
 		return analyze(taggedTokens);
 	}
@@ -126,9 +132,7 @@ public class StandardValueTypeResolver implements IValueTypeResolver {
 			}
 		}
 
-		if (!hasToken) {
-			return null;
-		} else if (isNumberToken) {
+		if (isNumberToken) {
 			return valueType;
 		} else {
 			return ValueTypeInfo.createValueTypeInfo(ValueType.Term, null);

@@ -104,10 +104,13 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 	}
 
 	private void prettyPrintJSON(IHTMLTreeNode tree) {
-		System.out.println("----------------------------------------");
+		System.out.println("##################################################################");
 		IHTMLTreeOverlay overlay = HTMLTreeOverlay.createDefaultHTMLTreeOverlay(tree);
+		
 		StandardHTMLTreeBlankNodeConsolidator cc = new StandardHTMLTreeBlankNodeConsolidator();
 		overlay = cc.refine(overlay);
+		HTMLTreeUtil.prettyPrint(overlay.getTreeRoot());
+		
 		// HTMLTreeUtil.prettyPrint(overlay.getTreeRoot());
 		System.out.println("--------");
 		JSONObject object = HTMLTree2JSONTranslator.translate(overlay.getTreeRoot());

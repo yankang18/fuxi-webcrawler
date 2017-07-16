@@ -41,17 +41,30 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 			return parsedPathHolder;
 
 		Element body = htmlElement.getBody();
-		for (Element elem : body.children()) {
-			String childTagName = elem.tagName().toLowerCase();
-			if (isTargetTagName(childTagName)) {
-				HtmlPath path = new HtmlPath();
-				parsedPathList.add(path);
-				HtmlNode webPageNode = this.createWebPageNode(elem);
-				webPageNode.setLeafNode(false);
-				path.addNode(webPageNode);
-				appendWebPagePathNode(path, elem);
-			}
+		// body children not necessarily element
+		
+		if (isTargetTagName(body.tagName().toLowerCase())) {
+			HtmlNode node = this.createHtmlElementNode(body);
+			HtmlPath path = new HtmlPath();
+			parsedPathList.add(path);
+			node.setLeafNode(false);
+			path.addNode(node);
+			appendPathNode(path, body);
 		}
+		
+//		for (Element elem : body.children()) {
+//			String childTagName = elem.tagName().toLowerCase();
+//			if (isTargetTagName(childTagName)) {
+//				HtmlPath path = new HtmlPath();
+//				parsedPathList.add(path);
+//				HtmlNode node = this.createHtmlNode(elem);
+//				node.setLeafNode(false);
+//				path.addNode(node);
+//				appendPathNode(path, elem);
+//			}
+//		}
+		
+		
 		parsed = true;
 		parsedPathHolder = new DefaultHtmlParsedPathsHolder(htmlElement.getUniqueIdentifier(),
 				htmlElement.getDomainName(), parsedPathList);
@@ -62,12 +75,12 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 		return !HTMLTags.getEliminatedTags().contains(childTagName) && !HTMLTags.getIgnoredTags().contains(childTagName);
 	}
 
-	private void appendWebPagePathNode(HtmlPath path, Element elem) {
+	private void appendPathNode(HtmlPath parentPath, Element elem) {
 
 		if (isLeafElement(elem)) {
 			System.out.println("LeafElement: " + elem.tagName());
-			HtmlNode webPageNode = path.getLastNode();
-			webPageNode.toValueNode();
+			HtmlNode node = parentPath.getLastNode();
+			node.toValueNode();
 //			WebPageNode newWebPageNode = this.createWebPageNode(webPageNode.getFullContent());
 //			newWebPageNode.setLeafNode(true);
 //			path.addNode(newWebPageNode); 
@@ -79,9 +92,9 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 
 			// Clone paths before navigating children of current element.
 			int numOfPaths = numOfChildrenNode;
-			HtmlPath[] webPagePaths = null;
+			HtmlPath[] paths = null;
 			if (numOfPaths > 0) {
-				webPagePaths = new HtmlPath[numOfPaths];
+				paths = new HtmlPath[numOfPaths];
 
 //				/*
 //				 * The first path is not cloned but the path that has already
@@ -102,13 +115,14 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 				// Clone other paths to hold children except the first child of
 				// current element
 				for (int i = 0; i < numOfPaths; i++) {
-					webPagePaths[i] = path.clone();
+					paths[i] = parentPath.clone();
 				}
 			}
 
-			String textContent = "";
+			// cntTxt stores concatenated test content if ignored tags
+			String cntTxt = "";
 			int indexOfNode = 0;
-			int indexOfPath = 0;
+			int pathIndexCursor = 0;
 			for (; indexOfNode < numOfChildrenNode; indexOfNode++) {
 
 				Node childNode = childNodeList.get(indexOfNode);
@@ -116,99 +130,88 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 					TextNode textNode = (TextNode) childNode;
 					String text = textNode.text();
 					if (!TextProcessingUtils.isStringEmpty(text)) {
-						textContent += text;
+						cntTxt += text;
 					}
 
 				} else if (childNode instanceof Element) {
 
+					
 					Element elementNode = (Element) childNode;
 					String elemText = elementNode.text();
 					String tagName = elementNode.tagName().toLowerCase();
-					System.out.println("tagName: " + tagName);
-					if (HTMLTags.getIgnoredTags().contains(tagName)) {
+					
+					if ("br".equalsIgnoreCase(tagName)) {
+						
+						if (!TextProcessingUtils.isStringEmpty(cntTxt)) {
+							HtmlNode node = createHtmlTextNode(cntTxt);
+							node.setLeafNode(true);
+							HtmlPath path = paths[pathIndexCursor++];
+							path.addNode(node);
+							this.parsedPathList.add(path);
+							cntTxt = "";
+						}
 
-						// String text = elementNode.text();
-						System.out.println("ignore: " + tagName);
+					} else if (HTMLTags.getIgnoredTags().contains(tagName)) {
+
 						if (!TextProcessingUtils.isStringEmpty(elemText)) {
-							textContent += elemText;
+							cntTxt += elemText;
 						}
 
 					} else if (HTMLTags.isTopicTag(tagName)) {
 
-						// System.out.println("#### Topic Tag: " +
-						// elementNodeTagName);
-						if (textContent != null && !TextProcessingUtils.isStringEmpty(textContent)) {
-							HtmlNode newWebPageNode = createWebPageNode(textContent);
-							newWebPageNode.setLeafNode(true);
-							HtmlPath webPagePath = webPagePaths[indexOfPath];
-							webPagePath.addNode(newWebPageNode);
-
-							/*
-							 * The first path has already been added to the web
-							 * page path list. Other paths are clones, thus they
-							 * should be added to the web page path list.
-							 */
-//							if (indexOfPath != 0) {
-								this.parsedPathList.add(webPagePath);
-//							}
-							indexOfPath++;
-							textContent = "";
+						if (cntTxt != null && !TextProcessingUtils.isStringEmpty(cntTxt)) {
+							HtmlNode node = createHtmlTextNode(cntTxt);
+							node.setLeafNode(true);
+							HtmlPath path = paths[pathIndexCursor];
+							path.addNode(node);
+							this.parsedPathList.add(path);
+							pathIndexCursor++;
+							cntTxt = "";
 						}
 
-						// String text = elementNode.text();
 						if (!TextProcessingUtils.isStringEmpty(elemText)) {
-							// System.out.println("#### content: " +
-							// combinedText);
-							HtmlNode newWebPageNode = createWebPageNode(elementNode);
-							newWebPageNode.setLeafNode(true);
-							HtmlPath webPagePath = webPagePaths[indexOfPath];
-							webPagePath.addNode(newWebPageNode);
-//							if (indexOfPath != 0) {
-								this.parsedPathList.add(webPagePath);
-//							}
-							indexOfPath++;
+							HtmlNode node = createHtmlElementNode(elementNode);
+							node.setLeafNode(true);
+							HtmlPath path = paths[pathIndexCursor];
+							path.addNode(node);
+							this.parsedPathList.add(path);
+							pathIndexCursor++;
 						}
 
 					} else if (HTMLTags.getEliminatedTags().contains(tagName)) {
 
 						// TODO: refactor following if statement
-						if (textContent != null && !TextProcessingUtils.isStringEmpty(textContent)) {
-							HtmlNode newWebPageNode = createWebPageNode(textContent);
-							newWebPageNode.setLeafNode(true);
-							HtmlPath webPagePath = webPagePaths[indexOfPath];
-							webPagePath.addNode(newWebPageNode);
-//							if (indexOfPath != 0) {
-								this.parsedPathList.add(webPagePath);
-//							}
-							indexOfPath++;
-							textContent = "";
+						if (cntTxt != null && !TextProcessingUtils.isStringEmpty(cntTxt)) {
+							HtmlNode node = createHtmlTextNode(cntTxt);
+							node.setLeafNode(true);
+							HtmlPath path = paths[pathIndexCursor];
+							path.addNode(node);
+							this.parsedPathList.add(path);
+							pathIndexCursor++;
+							cntTxt = "";
 						}
 
 					} else {
 
-						if (textContent != null && !TextProcessingUtils.isStringEmpty(textContent)) {
-							HtmlNode newWebPageNode = createWebPageNode(textContent);
-							newWebPageNode.setLeafNode(true);
-							HtmlPath webPagePath = webPagePaths[indexOfPath];
-							webPagePath.addNode(newWebPageNode);
-//							if (indexOfPath != 0) {
-								this.parsedPathList.add(webPagePath);
-//							}
-							indexOfPath++;
-							textContent = "";
+						if (cntTxt != null && !TextProcessingUtils.isStringEmpty(cntTxt)) {
+							HtmlNode node = createHtmlTextNode(cntTxt);
+							node.setLeafNode(true);
+							HtmlPath path = paths[pathIndexCursor];
+							path.addNode(node);
+							this.parsedPathList.add(path);
+							pathIndexCursor++;
+							cntTxt = "";
 						}
 
 						if (!TextProcessingUtils.isStringEmpty(elemText)) {
 
-							HtmlNode newWebPageNode = createWebPageNode(elementNode);
-							HtmlPath webPagePath = webPagePaths[indexOfPath];
-							webPagePath.addNode(newWebPageNode);
-//							if (indexOfPath != 0) {
-								this.parsedPathList.add(webPagePath);
-//							}
-							newWebPageNode.setLeafNode(false);
-							appendWebPagePathNode(webPagePath, elementNode);
-							indexOfPath++;
+							HtmlNode node = createHtmlElementNode(elementNode);
+							HtmlPath path = paths[pathIndexCursor];
+							path.addNode(node);
+							parsedPathList.add(path);
+							node.setLeafNode(false);
+							appendPathNode(path, elementNode);
+							pathIndexCursor++;
 						}
 					}
 				}
@@ -216,14 +219,12 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 
 			// This is dealing with the situation where the last node of current
 			// element is a text node.
-			if (textContent != null && !TextProcessingUtils.isStringEmpty(textContent)) {
-				HtmlNode newWebPageNode = this.createWebPageNode(textContent);
-				newWebPageNode.setLeafNode(true);
-				HtmlPath webPagePath = webPagePaths[indexOfPath];
-				webPagePath.addNode(newWebPageNode);
-//				if (indexOfPath != 0) {
-					this.parsedPathList.add(webPagePath);
-//				}
+			if (cntTxt != null && !TextProcessingUtils.isStringEmpty(cntTxt)) {
+				HtmlNode node = this.createHtmlTextNode(cntTxt);
+				node.setLeafNode(true);
+				HtmlPath path = paths[pathIndexCursor];
+				path.addNode(node);
+				this.parsedPathList.add(path);
 			}
 		}
 	}
@@ -264,23 +265,22 @@ public class StandardHtmlPathsParser implements IHtmlPathsParser {
 	// return true;
 	// }
 
-	private HtmlNode createWebPageNode(Element child) {
+	private HtmlNode createHtmlElementNode(Element child) {
 		String stdTagName = child.tagName().toLowerCase();
 		// Here should create a unique number for each newly
 		// created WebPageNode
 		Integer counter = tagCounterMapper.get(stdTagName);
 		if (counter == null) {
 			counter = new Integer(1);
-			tagCounterMapper.put(stdTagName, counter);
 		} else {
 			counter++;
-			tagCounterMapper.put(stdTagName, counter);
 		}
+		tagCounterMapper.put(stdTagName, counter);
 		HtmlNode node = new HtmlNode(child, counter);
 		return node;
 	}
 
-	private HtmlNode createWebPageNode(String textNodeContent) {
+	private HtmlNode createHtmlTextNode(String textNodeContent) {
 		HtmlNode node = new HtmlNode(textNodeContent);
 		return node;
 	}

@@ -30,8 +30,14 @@ public class HtmlNode implements IHtmlNode{
 	private Map<String, String> attributes;
 	private boolean isLeafNode = true;
 	
-	public HtmlNode(Element node, int tagCount) {
-		this.element = node;
+	/**
+	 * Constructor. Create an element node, which is not a leaf node by default.
+	 * 
+	 * @param element
+	 * @param tagCount
+	 */
+	public HtmlNode(Element element, int tagCount) {
+		this.element = element;
 		this.tagCount = tagCount;
 		this.nodeType = NodeType.ElementNode;
 		this.isLeafNode = false;
@@ -39,10 +45,16 @@ public class HtmlNode implements IHtmlNode{
 		this.init();
 	}
 	
-	public HtmlNode(String textNodeContent) {
+	/**
+	 * Constructor. Create a text node, which is a leaf node by default.
+	 * 
+	 * @param text
+	 *            the text of string type
+	 */
+	public HtmlNode(String text) {
 		this.nodeType = NodeType.TextNode;
 		this.isLeafNode = true;
-		this.textContent = textNodeContent;
+		this.textContent = text;
 		this.init();
 	}
 

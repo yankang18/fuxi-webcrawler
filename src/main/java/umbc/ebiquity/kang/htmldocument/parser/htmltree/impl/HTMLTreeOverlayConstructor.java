@@ -333,6 +333,7 @@ public class HTMLTreeOverlayConstructor implements IHTMLTreeOverlayBuilder {
 			return valueNode;
 		} else if (isNotEmpty(content)) {
 
+			System.out.println("##### content: " + content);
 			ValueTypeInfo valueType = valueTypeResolver.resolve(content);
 			System.out.println(content + ", " + valueType.getUnit());
 			treeNodeValue = new HTMLTreeNodeValue(content, valueType);

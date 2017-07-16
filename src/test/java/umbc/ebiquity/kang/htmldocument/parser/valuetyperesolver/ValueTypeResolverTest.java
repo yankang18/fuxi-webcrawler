@@ -111,6 +111,13 @@ public class ValueTypeResolverTest {
 		ValueTypeInfo type = valueTypeResolver.resolve(text);
 		assertEquals(ValueType.Paragraph, type.getValueType());
 	}
+	
+	@Test
+	public void testTerm2() {
+		String text = "Plastic";
+		ValueTypeInfo type = valueTypeResolver.resolve(text);
+		assertEquals(ValueType.Term, type.getValueType());
+	}
 
 	// TODO: Add exception tests
 

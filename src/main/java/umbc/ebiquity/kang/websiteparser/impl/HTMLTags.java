@@ -82,7 +82,7 @@ public class HTMLTags {
 		eliminatedTages.add("label");
 		eliminatedTages.add("fieldset");
 		eliminatedTages.add("legend");
-		eliminatedTages.add("br");
+//		eliminatedTages.add("br");
 		
 		eliminatedTages.add("FORM");
 		eliminatedTages.add("INPUT");
@@ -94,7 +94,7 @@ public class HTMLTags {
 		eliminatedTages.add("LABEL");
 		eliminatedTages.add("FIELDSET");
 		eliminatedTages.add("LEGEND");
-		eliminatedTages.add("BR");
+//		eliminatedTages.add("BR");
 		
 		/*
 		 * 

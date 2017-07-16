@@ -98,7 +98,7 @@ public class HTMLTree2JSONTranslator {
 			JSONObject attributes = new JSONObject();
 			attributes.put(NAME_ATTRIBUTE, BNODE_DEFAULT_NAME);
 			attributes.put(TYPE_ATTRIBUTE, BNODE_TYPE);
-			object.put(BNODE_DEFAULT_NAME, attributes);
+			object.put(BNODE_DEFAULT_NAME + "_1", attributes);
 			translateChildren(node, attributes);
 		}
 
@@ -117,6 +117,8 @@ public class HTMLTree2JSONTranslator {
 	@SuppressWarnings("unchecked")
 	private static void translateChildren(IHTMLTreeNode parentNode, JSONObject parentObject) {
 
+		int valueNodeCount = 0;
+		int blankNodeCount = 0;
 		for (IHTMLTreeNode c : parentNode.getChildren()) {
 
 			if (c instanceof HTMLTreeValueNode) {
@@ -135,7 +137,7 @@ public class HTMLTree2JSONTranslator {
 				if (unit != null && !unit.trim().isEmpty()) {
 					attributes.put(VALUE_UNIT_ATTRIBUTE, unit.trim());
 				}
-				values.put(VALUE_DEFAULT_NAME, attributes);
+				values.put(VALUE_DEFAULT_NAME + "_" + (++valueNodeCount), attributes);
 
 				translateChildren(c, attributes);
 
@@ -167,7 +169,7 @@ public class HTMLTree2JSONTranslator {
 				attributes.put(NAME_ATTRIBUTE, BNODE_DEFAULT_NAME);
 				attributes.put(TYPE_ATTRIBUTE, BNODE_TYPE);
 
-				bnodes.put(BNODE_DEFAULT_NAME, attributes);
+				bnodes.put(BNODE_DEFAULT_NAME + "_" + (++blankNodeCount), attributes);
 
 				translateChildren(c, attributes);
 			}
@@ -195,10 +197,10 @@ public class HTMLTree2JSONTranslator {
 	}
 
 	/**
-	 * Gets an attribute of the specified JSONObject with the specified
-	 * attribute name and creates one if no attribute found for the specified
-	 * attribute name. This method only works for attribute is of type
-	 * JSONObject.
+	 * Create attribute JSONObject on demand. Get an attribute of the specified
+	 * JSONObject with the specified attribute name and creates one if no
+	 * attribute found for the specified attribute name. This method only works
+	 * for attribute is of type JSONObject.
 	 * 
 	 * @param object
 	 *            the JSONObject for which an attribute to be created
