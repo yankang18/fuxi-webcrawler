@@ -89,12 +89,17 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 	public void testTwoDirectionalHeaderTableHeaderTable() throws IOException {
 		
 		ClusteringBasedTableHeaderDelimiter delimiter = new ClusteringBasedTableHeaderDelimiter();
+		
+		// (1) Create a table element from certain source. 
 		File input = loadFileOrDirectory(TEST_FILE_FOLDER + "TwoDirectionalHeaderTable.html");
 		Document doc = Jsoup.parse(input, "UTF-8");
 		Element element = doc.getElementsByTag("table").get(0);
+		
+		// (2) table Element -- (ITableHeaderDelimiter) --> HeaderDelimitedTable
 		HeaderDelimitedTable delimitedTable = delimiter.delimit(element);
 		assertEquals(TableStatus.RegularTable, delimitedTable.getTableStatus());
 
+		// (3) HeaderDelimitedTable -- (TableTreeTranslator) --> IHTMLTreeNode representing the table
 		TableTreeTranslator tableTranslator = new TableTreeTranslator();
 		IHTMLTreeNode tree = tableTranslator.translate(delimitedTable);
 
@@ -105,16 +110,19 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 
 	private void prettyPrintJSON(IHTMLTreeNode tree) {
 		System.out.println("##################################################################");
+		
+		// (4) 
 		IHTMLTreeOverlay overlay = HTMLTreeOverlay.createDefaultHTMLTreeOverlay(tree);
 		
+		// (5) IHTMLTreeOverlay -- (StandardHTMLTreeBlankNodeConsolidator) --> IHTMLTreeOverlay
 		StandardHTMLTreeBlankNodeConsolidator cc = new StandardHTMLTreeBlankNodeConsolidator();
 		overlay = cc.refine(overlay);
 		HTMLTreeUtil.prettyPrint(overlay.getTreeRoot());
 		
+		// (6) IHTMLTreeOverlay -- (HTMLTree2JSONTranslator) --> JSONObject representing the table
 		// HTMLTreeUtil.prettyPrint(overlay.getTreeRoot());
 		System.out.println("--------");
 		JSONObject object = HTMLTree2JSONTranslator.translate(overlay.getTreeRoot());
 		System.out.println(HTMLTree2JSONTranslator.prettyPrint(object));
 	}
-
 }

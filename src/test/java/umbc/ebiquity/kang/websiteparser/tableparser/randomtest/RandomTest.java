@@ -31,7 +31,6 @@ public class RandomTest {
 				System.out.println(txtNode.nodeName() + ", " + txtNode.text());
 			}
 		}
-
 	}
 	
 	protected File loadFileOrDirectory(String fileName) {

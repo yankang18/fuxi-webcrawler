@@ -41,5 +41,4 @@ public class HTMLTreeOverlay implements IHTMLTreeOverlay {
 	public String getDomainName() {
 		return domainName;
 	}
-
 }
