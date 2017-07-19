@@ -32,7 +32,21 @@ public class WekaClassifierUtil {
 		setWekaClassAttribute(instances, dataSet.getClassAttribute());
 		return instances;
 	}
-	
+
+	/**
+	 * Converts a single point to a weka instance.
+	 * 
+	 * @param dataPoint
+	 *            the data point
+	 * @param dataSet
+	 *            the data set containing the feature schema of the specified
+	 *            data point; it not necessarily contains data points
+	 * @return a weka instance of the point
+	 */
+	public static Instance convertDataPointToInstance(DataPoint dataPoint, DataSet dataSet) {
+		return convertDataPointToInstance(dataPoint, dataSet.getFeatures(), dataSet.getClassAttribute());
+	}
+			
 	/**
 	 * Converts a single point to a weka instance
 	 * 
