@@ -1,6 +1,6 @@
-package umbc.ebiquity.kang.machinelearning.classification.evaluation.impl;
+package umbc.ebiquity.kang.machinelearning.classification.modelselection.impl;
 
-import umbc.ebiquity.kang.machinelearning.classification.evaluation.ICrossValidationSplits;
+import umbc.ebiquity.kang.machinelearning.classification.modelselection.ICrossValidationSplits;
 import weka.core.Instances;
 
 public class CrossValidationSplit implements ICrossValidationSplits {

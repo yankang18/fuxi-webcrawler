@@ -1,4 +1,4 @@
-package umbc.ebiquity.kang.machinelearning.classification.evaluation;
+package umbc.ebiquity.kang.machinelearning.classification.modelselection;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;

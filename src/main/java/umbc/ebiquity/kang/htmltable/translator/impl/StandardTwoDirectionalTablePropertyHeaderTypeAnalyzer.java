@@ -5,19 +5,28 @@ import java.util.List;
 import umbc.ebiquity.kang.htmltable.core.TableRecord;
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable;
 import umbc.ebiquity.kang.htmltable.delimiter.impl.HeaderDelimitedTable;
-import umbc.ebiquity.kang.htmltable.translator.IPropertyTableHeaderLikelihoodCalculator;
+import umbc.ebiquity.kang.htmltable.translator.IPropertyHeaderLikelihoodCalculator;
 import umbc.ebiquity.kang.htmltable.translator.ITableRecordDataTypePurityCalculator;
+import umbc.ebiquity.kang.htmltable.translator.ITwoDirectionalTablePropertyHeaderTypeAnalyzer;
 import umbc.ebiquity.kang.machinelearning.math.util.BasicMath;
 
-public class TwoDirectionalTablePropertyHeaderAnalyzer {
+/**
+ * This class is to analyze whether the vertical headers are property headers or
+ * entity headers.
+ * 
+ * @author yankang
+ *
+ */
+public class StandardTwoDirectionalTablePropertyHeaderTypeAnalyzer implements ITwoDirectionalTablePropertyHeaderTypeAnalyzer {
 
 	public enum TwoDirectionalHeaderType {
 		VerticalPropertyHeader, HorizontalPropertyHeader, Indeterminable
 	}
 
-	private IPropertyTableHeaderLikelihoodCalculator propertyTableHeaderLikelihoodCalculator = new StandardPropertyTableHeaderLikelihoodCalculator();
-	private ITableRecordDataTypePurityCalculator tableRecordDataTypePurityCalculator = new StandardTableRecordDataTypePurityCalculator();
+	private IPropertyHeaderLikelihoodCalculator propertyHeadersScoreCalculator = new StandardPropertyHeaderLikelihoodCalculator();
+	private ITableRecordDataTypePurityCalculator recordDataTypePurityCalculator = new StandardTableRecordDataTypePurityCalculator();
 
+	@Override
 	public TwoDirectionalHeaderType analyze(HeaderDelimitedTable table) {
 		if (IDelimitedTable.DataTableHeaderType.TwoDirectionalHeaderTable != table.getDataTableHeaderType()) {
 			throw new IllegalArgumentException("The input table must be two-directional-header data table");
@@ -29,20 +38,23 @@ public class TwoDirectionalTablePropertyHeaderAnalyzer {
 		int hRecordOffset = vHeaderRecords.size();
 		int vRecordOffset = hHeaderRecords.size();
 
-		double hPropLikeHood = propertyTableHeaderLikelihoodCalculator.computePropertyHeaderLikelihood(hHeaderRecords,
+		double hPropScore = propertyHeadersScoreCalculator.calculate(hHeaderRecords,
 				hRecordOffset);
-		double vPropLikeHood = propertyTableHeaderLikelihoodCalculator.computePropertyHeaderLikelihood(vHeaderRecords,
+		double vPropScore = propertyHeadersScoreCalculator.calculate(vHeaderRecords,
 				vRecordOffset);
 
-		System.out.println("hPropLikeHood: " + hPropLikeHood);
-		System.out.println("vPropLikeHood: " + vPropLikeHood);
+		System.out.println("hPropScore: " + hPropScore);
+		System.out.println("vPropScore: " + vPropScore);
 
-		if (isAboveUpperThreshold(hPropLikeHood) && isBelowLowerThreshold(vPropLikeHood)) {
+		if (isAboveUpperThreshold(hPropScore) && isBelowLowerThreshold(vPropScore)) {
 			return TwoDirectionalHeaderType.HorizontalPropertyHeader;
-		} else if (isAboveUpperThreshold(vPropLikeHood) && isBelowLowerThreshold(hPropLikeHood)) {
+		} else if (isAboveUpperThreshold(vPropScore) && isBelowLowerThreshold(hPropScore)) {
 			return TwoDirectionalHeaderType.VerticalPropertyHeader;
 		} else {
 
+			/*
+			 * Further investigate to determine the property header type.
+			 */
 			List<TableRecord> hDataRecords = table.getHorizontalDataRecords();
 			List<TableRecord> vDataRecords = table.getVerticalDataRecords();
 			double hCellNum = BasicMath.log(hDataRecords.get(0).getTableCells().size() - hRecordOffset, 2);
@@ -51,17 +63,17 @@ public class TwoDirectionalTablePropertyHeaderAnalyzer {
 			double vBeta = vCellNum > hCellNum && hCellNum >= 1 ? vCellNum / hCellNum : 0;
 			System.out.println("hBeta: " + hBeta);
 			System.out.println("vBeta: " + vBeta);
-			double hDataPurityScore = tableRecordDataTypePurityCalculator.computeDataTypePurityScore(hDataRecords,
+			double hDataPurityScore = recordDataTypePurityCalculator.computeDataTypePurityScore(hDataRecords,
 					hRecordOffset, hBeta);
 
-			double vDataPurityScore = tableRecordDataTypePurityCalculator.computeDataTypePurityScore(vDataRecords,
+			double vDataPurityScore = recordDataTypePurityCalculator.computeDataTypePurityScore(vDataRecords,
 					vRecordOffset, vBeta);
 
 			System.out.println("hPurityScore: " + hDataPurityScore);
 			System.out.println("vPurityScore: " + vDataPurityScore);
 
-			double hTotalScore = computeAggregateScore(hPropLikeHood, vDataPurityScore);
-			double vTotalScore = computeAggregateScore(vPropLikeHood, hDataPurityScore);
+			double hTotalScore = computeAggregateScore(hPropScore, vDataPurityScore);
+			double vTotalScore = computeAggregateScore(vPropScore, hDataPurityScore);
 
 			if (hTotalScore - vTotalScore >= 0.3) {
 				return TwoDirectionalHeaderType.HorizontalPropertyHeader;

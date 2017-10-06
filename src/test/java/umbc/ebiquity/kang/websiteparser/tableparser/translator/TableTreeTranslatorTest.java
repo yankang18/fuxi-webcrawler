@@ -16,7 +16,7 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.IHTMLTreeOverlay;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeOverlay;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.StandardHTMLTreeBlankNodeConsolidator;
-import umbc.ebiquity.kang.htmldocument.util.HTMLTree2JSONTranslator;
+import umbc.ebiquity.kang.htmldocument.util.HTMLTree2JSONConverter;
 import umbc.ebiquity.kang.htmldocument.util.HTMLTreeUtil;
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.TableStatus;
 import umbc.ebiquity.kang.htmltable.delimiter.impl.ClusteringBasedHorizontalTableHeaderDelimiter;
@@ -122,7 +122,7 @@ public class TableTreeTranslatorTest extends BaseTableHeaderTranslatorTest {
 		// (6) IHTMLTreeOverlay -- (HTMLTree2JSONTranslator) --> JSONObject representing the table
 		// HTMLTreeUtil.prettyPrint(overlay.getTreeRoot());
 		System.out.println("--------");
-		JSONObject object = HTMLTree2JSONTranslator.translate(overlay.getTreeRoot());
-		System.out.println(HTMLTree2JSONTranslator.prettyPrint(object));
+		JSONObject object = HTMLTree2JSONConverter.convert(overlay.getTreeRoot());
+		System.out.println(HTMLTree2JSONConverter.prettyPrint(object));
 	}
 }

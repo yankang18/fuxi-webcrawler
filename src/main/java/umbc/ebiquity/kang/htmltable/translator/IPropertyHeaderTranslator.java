@@ -12,7 +12,7 @@ import umbc.ebiquity.kang.htmltable.core.TableRecord;
  * @author yankang
  *
  */
-public interface IPropertyTableHeaderTranslator {
+public interface IPropertyHeaderTranslator {
 
 	/**
 	 * Translates a list of TableRecord representing property table header to a

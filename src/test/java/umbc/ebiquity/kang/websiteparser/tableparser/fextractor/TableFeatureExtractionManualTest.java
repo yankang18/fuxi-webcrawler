@@ -32,11 +32,11 @@ import umbc.ebiquity.kang.htmltable.feature.impl.StandardTableFeaturesExtractorF
 import umbc.ebiquity.kang.htmltable.feature.impl.TrainingDataSetCreator;
 import umbc.ebiquity.kang.machinelearning.classification.FileDataSetCreator;
 import umbc.ebiquity.kang.machinelearning.classification.IFeatureData;
-import umbc.ebiquity.kang.machinelearning.classification.evaluation.ICrossValidationDetail;
-import umbc.ebiquity.kang.machinelearning.classification.evaluation.ICrossValidationSplits;
-import umbc.ebiquity.kang.machinelearning.classification.evaluation.impl.WekaClassifierEvaluationLab;
 import umbc.ebiquity.kang.machinelearning.classification.impl.DataSet;
 import umbc.ebiquity.kang.machinelearning.classification.impl.WekaClassifierUtil;
+import umbc.ebiquity.kang.machinelearning.classification.modelselection.ICrossValidationDetail;
+import umbc.ebiquity.kang.machinelearning.classification.modelselection.ICrossValidationSplits;
+import umbc.ebiquity.kang.machinelearning.classification.modelselection.impl.WekaClassifierEvaluationLab;
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.functions.supportVector.PolyKernel;

@@ -17,7 +17,7 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreePropertyNode
 import umbc.ebiquity.kang.htmldocument.util.BasicValidator;
 import umbc.ebiquity.kang.htmltable.core.TableCell;
 import umbc.ebiquity.kang.htmltable.core.TableRecord;
-import umbc.ebiquity.kang.htmltable.translator.IPropertyTableHeaderTranslator;
+import umbc.ebiquity.kang.htmltable.translator.IPropertyHeaderTranslator;
 import umbc.ebiquity.kang.textprocessing.similarity.impl.EqualStemBoostingLabelSimilarity;
 import umbc.ebiquity.kang.textprocessing.similarity.impl.OrderedTokenListSimilarity;
 
@@ -29,7 +29,7 @@ import umbc.ebiquity.kang.textprocessing.similarity.impl.OrderedTokenListSimilar
  * @author yankang
  *
  */
-public class DictionaryBasedPropertyTableHeaderTranslator implements IPropertyTableHeaderTranslator {
+public class DictionaryBasedPropertyHeaderTranslator implements IPropertyHeaderTranslator {
 	
 	private EqualStemBoostingLabelSimilarity labelSimilarity = new EqualStemBoostingLabelSimilarity(
 			new OrderedTokenListSimilarity());

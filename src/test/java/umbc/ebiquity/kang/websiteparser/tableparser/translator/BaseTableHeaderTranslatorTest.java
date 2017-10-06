@@ -13,8 +13,8 @@ import umbc.ebiquity.kang.htmltable.delimiter.AbstractClusteringBasedTableHeader
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.DataTableHeaderType;
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.TableStatus;
 import umbc.ebiquity.kang.htmltable.delimiter.impl.HeaderDelimitedTable;
-import umbc.ebiquity.kang.htmltable.translator.IPropertyTableHeaderTranslator;
-import umbc.ebiquity.kang.htmltable.translator.impl.DictionaryBasedPropertyTableHeaderTranslator;
+import umbc.ebiquity.kang.htmltable.translator.IPropertyHeaderTranslator;
+import umbc.ebiquity.kang.htmltable.translator.impl.DictionaryBasedPropertyHeaderTranslator;
 
 public class BaseTableHeaderTranslatorTest {
 	
@@ -24,7 +24,7 @@ public class BaseTableHeaderTranslatorTest {
 		HeaderDelimitedTable delimitedTable = delimiter.delimit(element);
 		assertEquals(TableStatus.RegularTable, delimitedTable.getTableStatus());
 
-		IPropertyTableHeaderTranslator propertyTableHeaderIdentifier = new DictionaryBasedPropertyTableHeaderTranslator();
+		IPropertyHeaderTranslator propertyTableHeaderIdentifier = new DictionaryBasedPropertyHeaderTranslator();
 		List<TableRecord> records = null;
 		if (DataTableHeaderType.VerticalHeaderTable.equals(delimitedTable.getDataTableHeaderType())) {
 			records = delimitedTable.getVerticalHeaderRecords();

@@ -9,6 +9,11 @@ import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable;
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.DataTableHeaderType;
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.TableStatus;
 
+/**
+ * 
+ * @author yankang
+ *
+ */
 public class HeaderDelimitedTable implements IDelimitedTable {
 
 	private IHtmlElement htmlElement;

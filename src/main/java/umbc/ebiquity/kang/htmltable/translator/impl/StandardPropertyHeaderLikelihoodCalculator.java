@@ -6,12 +6,12 @@ import org.jsoup.nodes.Element;
 
 import umbc.ebiquity.kang.htmltable.core.TableCell;
 import umbc.ebiquity.kang.htmltable.core.TableRecord;
-import umbc.ebiquity.kang.htmltable.translator.IPropertyTableHeaderLikelihoodCalculator;
+import umbc.ebiquity.kang.htmltable.translator.IPropertyHeaderLikelihoodCalculator;
 
-public class StandardPropertyTableHeaderLikelihoodCalculator implements IPropertyTableHeaderLikelihoodCalculator {
+public class StandardPropertyHeaderLikelihoodCalculator implements IPropertyHeaderLikelihoodCalculator {
 
 	@Override
-	public double computePropertyHeaderLikelihood(List<TableRecord> headerRecords, int offset) {
+	public double calculate(List<TableRecord> headerRecords, int offset) {
 		double max = 0;
 		for (TableRecord record : headerRecords) {
 			double totalSim = 0.0;
@@ -20,14 +20,14 @@ public class StandardPropertyTableHeaderLikelihoodCalculator implements IPropert
 			for (int i = offset; i < tableCells.size(); i++) {
 				// TODO: may also consider checking data type or unit
 				// information in each property record cell
-				totalSim += DictionariedPropertyScoreCalculator.calculatorScore(extractContent(tableCells.get(i)));
+				totalSim += DictionaryBasedPropertyScore.calculate(extractContent(tableCells.get(i)));
 				count++;
 			}
 			max = Math.max(max, totalSim / count);
 		}
 		return max;
 	}
-	
+
 	private String extractContent(TableCell tableCell) {
 		Element element = tableCell.getWrappedElement();
 		return element != null ? tableCell.getWrappedElement().text() : "";

@@ -8,9 +8,9 @@ import org.jsoup.nodes.Element;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreePropertyNode;
 import umbc.ebiquity.kang.htmltable.core.TableCell;
 import umbc.ebiquity.kang.htmltable.core.TableRecord;
-import umbc.ebiquity.kang.htmltable.translator.IPropertyTableHeaderTranslator;
+import umbc.ebiquity.kang.htmltable.translator.IPropertyHeaderTranslator;
 
-public class SimplePropertyTableHeaderTranslator implements IPropertyTableHeaderTranslator {
+public class SimplePropertyHeaderTranslator implements IPropertyHeaderTranslator {
 
 	@Override
 	public List<HTMLTreePropertyNode> translate(List<TableRecord> headerRecords, int skipCellNumber) {

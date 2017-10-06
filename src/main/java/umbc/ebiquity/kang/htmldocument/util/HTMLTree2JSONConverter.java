@@ -17,12 +17,12 @@ import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.HTMLTreeValueNode;
 import umbc.ebiquity.kang.htmldocument.parser.htmltree.impl.nlp.ValueTypeInfo;
 
 /**
- * This utility class transforms IHTMLTreeNode to JSON string or JSON object
+ * This utility class converts IHTMLTreeNode to JSON string or JSON object
  * 
  * @author yankang
  *
  */
-public class HTMLTree2JSONTranslator {
+public class HTMLTree2JSONConverter {
 
 	private static Gson gson;
 	private static JsonParser jp;
@@ -76,14 +76,14 @@ public class HTMLTree2JSONTranslator {
 	}
 
 	/**
-	 * Translates the specified IHTMLTreeNode to a JSON representation.
+	 * Converts the specified IHTMLTreeNode to a JSON representation.
 	 * 
 	 * @param node
 	 *            the IHTMLTreeNode
 	 * @return a JSONObject representing the IHTMLTreeNode
 	 */
 	@SuppressWarnings("unchecked")
-	public static JSONObject translate(IHTMLTreeNode node) {
+	public static JSONObject convert(IHTMLTreeNode node) {
 		JSONObject object = new JSONObject();
 
 		if (node instanceof HTMLTreeEntityNode) {
@@ -91,7 +91,7 @@ public class HTMLTree2JSONTranslator {
 			String entityName = ((HTMLTreeEntityNode) node).getContent();
 			JSONObject entityAttributes = addJSONObjectWithBasicInfo(object, entityName);
 			entityAttributes.put(TYPE_ATTRIBUTE, ENTITY_TYPE);
-			translateChildren(node, entityAttributes);
+			convertChildren(node, entityAttributes);
 
 		} else if (node instanceof HTMLTreeBlankNode) {
 
@@ -99,7 +99,7 @@ public class HTMLTree2JSONTranslator {
 			attributes.put(NAME_ATTRIBUTE, BNODE_DEFAULT_NAME);
 			attributes.put(TYPE_ATTRIBUTE, BNODE_TYPE);
 			object.put(BNODE_DEFAULT_NAME + "_1", attributes);
-			translateChildren(node, attributes);
+			convertChildren(node, attributes);
 		}
 
 		return object;
@@ -115,7 +115,7 @@ public class HTMLTree2JSONTranslator {
 	 *            the JSONObject representation of the IHTMLTreeNode
 	 */
 	@SuppressWarnings("unchecked")
-	private static void translateChildren(IHTMLTreeNode parentNode, JSONObject parentObject) {
+	private static void convertChildren(IHTMLTreeNode parentNode, JSONObject parentObject) {
 
 		int valueNodeCount = 0;
 		int blankNodeCount = 0;
@@ -139,7 +139,7 @@ public class HTMLTree2JSONTranslator {
 				}
 				values.put(VALUE_DEFAULT_NAME + "_" + (++valueNodeCount), attributes);
 
-				translateChildren(c, attributes);
+				convertChildren(c, attributes);
 
 			} else if (c instanceof HTMLTreeEntityNode) {
 
@@ -149,7 +149,7 @@ public class HTMLTree2JSONTranslator {
 				JSONObject entityAttributes = addJSONObjectWithBasicInfo(entities, entityName);
 				entityAttributes.put(TYPE_ATTRIBUTE, ENTITY_TYPE);
 
-				translateChildren(c, entityAttributes);
+				convertChildren(c, entityAttributes);
 
 			} else if (c instanceof HTMLTreePropertyNode) {
 
@@ -159,7 +159,7 @@ public class HTMLTree2JSONTranslator {
 				JSONObject propAttributes = addJSONObjectWithBasicInfo(properties, propName);
 				propAttributes.put(TYPE_ATTRIBUTE, PROPERTY_TYPE);
 
-				translateChildren(c, propAttributes);
+				convertChildren(c, propAttributes);
 
 			} else if (c instanceof HTMLTreeBlankNode) {
 
@@ -171,7 +171,7 @@ public class HTMLTree2JSONTranslator {
 
 				bnodes.put(BNODE_DEFAULT_NAME + "_" + (++blankNodeCount), attributes);
 
-				translateChildren(c, attributes);
+				convertChildren(c, attributes);
 			}
 		}
 	}

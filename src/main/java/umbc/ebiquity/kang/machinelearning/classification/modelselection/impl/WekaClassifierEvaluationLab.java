@@ -1,9 +1,9 @@
-package umbc.ebiquity.kang.machinelearning.classification.evaluation.impl;
+package umbc.ebiquity.kang.machinelearning.classification.modelselection.impl;
 
 import java.util.Random;
 
-import umbc.ebiquity.kang.machinelearning.classification.evaluation.ICrossValidationDetail;
-import umbc.ebiquity.kang.machinelearning.classification.evaluation.ICrossValidationSplits;
+import umbc.ebiquity.kang.machinelearning.classification.modelselection.ICrossValidationDetail;
+import umbc.ebiquity.kang.machinelearning.classification.modelselection.ICrossValidationSplits;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;

@@ -23,38 +23,40 @@ import umbc.ebiquity.kang.htmltable.core.TableRecord;
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.DataTableHeaderType;
 import umbc.ebiquity.kang.htmltable.delimiter.impl.HeaderDelimitedTable;
 import umbc.ebiquity.kang.htmltable.translator.IEntityTableHeaderTranslator;
-import umbc.ebiquity.kang.htmltable.translator.IPropertyTableHeaderTranslator;
+import umbc.ebiquity.kang.htmltable.translator.IPropertyHeaderTranslator;
+import umbc.ebiquity.kang.htmltable.translator.ITableTreeTranslator;
 import umbc.ebiquity.kang.htmltable.translator.TableHeaderTranslationResult;
-import umbc.ebiquity.kang.htmltable.translator.impl.TwoDirectionalTablePropertyHeaderAnalyzer.TwoDirectionalHeaderType;
+import umbc.ebiquity.kang.htmltable.translator.impl.StandardTwoDirectionalTablePropertyHeaderTypeAnalyzer.TwoDirectionalHeaderType;
 
 /**
  * 
  * @author yankang
  *
  */
-public class TableTreeTranslator {
+public class TableTreeTranslator implements ITableTreeTranslator {
 
 	private HTMLTreeOverlayConstructor treeOverlayConstructor;
-	private IPropertyTableHeaderTranslator mainPropertyTableHeaderTranslator;
+	private IPropertyHeaderTranslator mainPropertyTableHeaderTranslator;
 	private IEntityTableHeaderTranslator entityTableHeaderTranslator;
-	private List<IPropertyTableHeaderTranslator> propertyTableHeaderTranslatorList;
+	private List<IPropertyHeaderTranslator> propertyTableHeaderTranslatorList;
 	
-	private TwoDirectionalTablePropertyHeaderAnalyzer twoDirectionalTableHeaderAnalyzer;
+	private StandardTwoDirectionalTablePropertyHeaderTypeAnalyzer twoDirectionalTableHeaderAnalyzer;
 
 	public TableTreeTranslator() {
 		treeOverlayConstructor = new HTMLTreeOverlayConstructor();
 		treeOverlayConstructor.registerCustomizedHtmlNodeProcessors(new IgnoringHTMLTableNodeProcessor());
-		mainPropertyTableHeaderTranslator = new DictionaryBasedPropertyTableHeaderTranslator();
+		mainPropertyTableHeaderTranslator = new DictionaryBasedPropertyHeaderTranslator();
 		entityTableHeaderTranslator = new SimpleEntityTableHeaderTranslator();
 		
 		// Note, the order of the translators in the list matters
 		propertyTableHeaderTranslatorList = new ArrayList<>(2);
 		propertyTableHeaderTranslatorList.add(mainPropertyTableHeaderTranslator);
-		propertyTableHeaderTranslatorList.add(new SimplePropertyTableHeaderTranslator());
+		propertyTableHeaderTranslatorList.add(new SimplePropertyHeaderTranslator());
 		
-		twoDirectionalTableHeaderAnalyzer = new TwoDirectionalTablePropertyHeaderAnalyzer();
+		twoDirectionalTableHeaderAnalyzer = new StandardTwoDirectionalTablePropertyHeaderTypeAnalyzer();
 	}
 
+	@Override 
 	public IHTMLTreeNode translate(HeaderDelimitedTable headerDelimitedTable) {
 
 		// General Rules:
@@ -270,7 +272,7 @@ public class TableTreeTranslator {
 	 */
 	private List<HTMLTreePropertyNode> translatePropertyHeaderRecords(List<TableRecord> headerRecords, int cellOffset) {
 		List<HTMLTreePropertyNode> propertyHeaderRecord = null;
-		for (IPropertyTableHeaderTranslator translator : propertyTableHeaderTranslatorList) {
+		for (IPropertyHeaderTranslator translator : propertyTableHeaderTranslatorList) {
 			propertyHeaderRecord = translator.translate(headerRecords, cellOffset);
 			if (propertyHeaderRecord != null)
 				return propertyHeaderRecord;
