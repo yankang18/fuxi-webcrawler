@@ -10,20 +10,20 @@ import umbc.ebiquity.kang.htmltable.util.HTMLTableValidator;
 
 public class ClusteringBasedTableHeaderDelimiter implements ITableHeaderDelimiter {
 
-    private ITableHeaderDelimiter verticalTableResolver;
-    private ITableHeaderDelimiter horizontalTableResolver;
+    private ITableHeaderDelimiter verticalTableDelimiter;
+    private ITableHeaderDelimiter horizontalTableDelimiter;
     
 	public ClusteringBasedTableHeaderDelimiter() {
-		verticalTableResolver = new ClusteringBasedVerticalTableHeaderDelimiter();
-		horizontalTableResolver = new ClusteringBasedHorizontalTableHeaderDelimiter();
+		verticalTableDelimiter = new ClusteringBasedVerticalTableHeaderDelimiter();
+		horizontalTableDelimiter = new ClusteringBasedHorizontalTableHeaderDelimiter();
 	}
 
 	@Override
 	public HeaderDelimitedTable delimit(Element element) {
 		HTMLTableValidator.isTable(element); 
 		
-		HeaderDelimitedTable vResult = verticalTableResolver.delimit(element);
-		HeaderDelimitedTable hResult = horizontalTableResolver.delimit(element);
+		HeaderDelimitedTable vResult = verticalTableDelimiter.delimit(element);
+		HeaderDelimitedTable hResult = horizontalTableDelimiter.delimit(element);
 		
 		
 		System.out.println("vertical header type: " + vResult.getDataTableHeaderType().name());

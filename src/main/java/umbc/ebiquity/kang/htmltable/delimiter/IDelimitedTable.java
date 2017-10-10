@@ -7,7 +7,6 @@ public interface IDelimitedTable {
 	}
 
 	public enum DataTableHeaderType {
-		InvalidTable, /* Invalid Table */
 		NonHeaderTable, /* Non-header Table */
 		VerticalHeaderTable, /* Vertical Header Table */
 		HorizontalHeaderTable, /* Horizontal Header Table */

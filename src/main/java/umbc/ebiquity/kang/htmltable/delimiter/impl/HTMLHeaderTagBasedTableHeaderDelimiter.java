@@ -15,20 +15,20 @@ import umbc.ebiquity.kang.htmltable.util.HTMLTableValidator;
  */
 public class HTMLHeaderTagBasedTableHeaderDelimiter implements ITableHeaderDelimiter {
 
-	private ITableHeaderDelimiter verticalTableResolver;
-	private ITableHeaderDelimiter horizontalTableResolver;
+	private ITableHeaderDelimiter verticalTableDelimiter;
+	private ITableHeaderDelimiter horizontalTableDelimiter;
 
 	public HTMLHeaderTagBasedTableHeaderDelimiter() {
-		verticalTableResolver = new HTMLHeaderTagBasedVerticalTableHeaderSpliter();
-		horizontalTableResolver = new HTMLHeaderTagBasedHorizontalTableHeaderDelimiter();
+		verticalTableDelimiter = new HTMLHeaderTagBasedVerticalTableHeaderDelimiter();
+		horizontalTableDelimiter = new HTMLHeaderTagBasedHorizontalTableHeaderDelimiter();
 	}
 
 	@Override
 	public HeaderDelimitedTable delimit(Element element) {
 		HTMLTableValidator.isTable(element); 
 		
-		HeaderDelimitedTable result1 = verticalTableResolver.delimit(element);
-		HeaderDelimitedTable result2 = horizontalTableResolver.delimit(element);
+		HeaderDelimitedTable result1 = verticalTableDelimiter.delimit(element);
+		HeaderDelimitedTable result2 = horizontalTableDelimiter.delimit(element);
 
 		if (result1.getTableStatus() == TableStatus.UnRegularTable
 				&& result2.getTableStatus() == TableStatus.UnRegularTable) {

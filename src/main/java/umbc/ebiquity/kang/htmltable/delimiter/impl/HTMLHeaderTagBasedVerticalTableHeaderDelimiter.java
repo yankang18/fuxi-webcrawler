@@ -11,11 +11,11 @@ import umbc.ebiquity.kang.htmltable.delimiter.AbstractHTMLHeaderTagBasedTableHea
 import umbc.ebiquity.kang.htmltable.delimiter.IDelimitedTable.DataTableHeaderType;
 import umbc.ebiquity.kang.htmltable.util.HTMLTableValidator;
 
-public class HTMLHeaderTagBasedVerticalTableHeaderSpliter extends AbstractHTMLHeaderTagBasedTableHeaderDelimiter {
+public class HTMLHeaderTagBasedVerticalTableHeaderDelimiter extends AbstractHTMLHeaderTagBasedTableHeaderDelimiter {
 
 	private HTMLHeaderTagBasedTableHeaderLocator headerResolver;
 
-	public HTMLHeaderTagBasedVerticalTableHeaderSpliter() {
+	public HTMLHeaderTagBasedVerticalTableHeaderDelimiter() {
 		headerResolver = new HTMLHeaderTagBasedTableHeaderLocator();
 	}
 	
