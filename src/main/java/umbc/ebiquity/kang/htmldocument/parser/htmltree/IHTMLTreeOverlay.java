@@ -9,5 +9,4 @@ public interface IHTMLTreeOverlay {
 	IHTMLTreeNode getTreeRoot();
 
 	void setRootNote(IHTMLTreeNode root); 
-
 }
